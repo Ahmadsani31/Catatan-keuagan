@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
+import { Textarea } from "@/components/ui/textarea"
+import SelectReact from '@/components/selectReact';
 
 type RegisterForm = {
     name: string;
@@ -31,11 +33,51 @@ export default function Register() {
         });
     };
 
+    const [visibleDiv, setVisibleDiv] = useState(false);
+
+    const options = [
+        { value: 'perusahaan', label: 'Perusahaan' },
+        { value: 'personal', label: 'Personal' },
+        { value: 'keluarga', label: 'Keluarga' }
+    ]
+
     return (
         <AuthLayout title="Create an account" description="Enter your details below to create your account">
             <Head title="Register" />
             <form className="flex flex-col gap-6" onSubmit={submit}>
-                <div className="grid gap-6">
+                <div className={`grid gap-4 ${visibleDiv ? 'hidden' : ''} transition delay-150 duration-300 ease-in-out`}>
+                    <div className="grid gap-2">
+                        <Label htmlFor="name">Orgainasi / Vendor / Keleompok</Label>
+                        <Input
+                            id="organisasi"
+                            type="text"
+                            required
+                            autoFocus
+                            tabIndex={1}
+                            autoComplete="name"
+                            value={data.name}
+                            onChange={(e) => setData('name', e.target.value)}
+                            disabled={processing}
+                            placeholder="Tulis"
+                        />
+                        <InputError message={errors.name} className="mt-2" />
+                    </div>
+
+                    <SelectReact items={options} title={'Type'} onSelect={(e) => setData('name', e ?? '')} errors={errors.name} />
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="password">Keterangan</Label>
+                        <Textarea />
+                        <InputError message={errors.password} />
+                    </div>
+                    <div className='flex justify-end'>
+                        <Button type="button" className="mt-2" onClick={() => setVisibleDiv(!visibleDiv)}>
+                            Next
+                        </Button>
+                    </div>
+
+                </div>
+                <div className={`grid gap-4 ${visibleDiv ? '' : 'hidden'}`}>
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
                         <Input
@@ -100,13 +142,17 @@ export default function Register() {
                         />
                         <InputError message={errors.password_confirmation} />
                     </div>
+                    <div className='flex gap-2 justify-between'>
+                        <Button type="button" className="mt-2" onClick={() => setVisibleDiv(!visibleDiv)}>
+                            Back
+                        </Button>
+                        <Button type="submit" className="mt-2" tabIndex={5} disabled={processing}>
+                            {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                            Create account
+                        </Button>
+                    </div>
 
-                    <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Create account
-                    </Button>
                 </div>
-
                 <div className="text-muted-foreground text-center text-sm">
                     Already have an account?{' '}
                     <TextLink href={route('login')} tabIndex={6}>

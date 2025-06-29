@@ -1,22 +1,21 @@
 import { cn } from '@/lib/utils'
 import { Input } from './ui/input'
+import { Label } from './ui/label'
 type itemsProps = {
+    id: string
     title: string
-    value?: string
-    placeholder: string
+    value?: any
+    placeholder?: string
     type: string
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     errors?: string
     required?: boolean
 }
-export default function TextInput({ title, value, errors, placeholder, type, onChange, required }: itemsProps) {
+export default function FormInput({ id, title, value, errors, placeholder, type, onChange, required }: itemsProps) {
     let autoComplete = "";
     switch (type) {
         case "password":
             autoComplete = "current-password";
-            break;
-        case "email":
-            autoComplete = "email";
             break;
         case "email":
             autoComplete = "email";
@@ -26,19 +25,20 @@ export default function TextInput({ title, value, errors, placeholder, type, onC
             break;
     }
     return (
-        <div className='mb-3'>
-            <label htmlFor={title} className="block text-sm mb-1">
+        <div className='grid w-full items-center'>
+            <Label htmlFor={id} className='mb-3'>
                 {title}
-            </label>
+            </Label>
             <Input
-                id={title}
+                id={id}
                 type={type}
                 placeholder={placeholder}
-                value={value}
+                value={value !== undefined ? String(value) : ''}
                 onChange={onChange}
                 autoComplete={autoComplete}
                 className={cn(errors ? "border-red-500" : "")}
                 required={required}
+                min={0}
             />
             {errors && (
                 <p className="text-sm m-0 text-red-500">{errors}</p>

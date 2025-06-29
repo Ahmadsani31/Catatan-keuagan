@@ -2,48 +2,42 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
+import { NavItemNew, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, CookieIcon, Folder, LayoutGrid, User2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
+const mainNavItems: NavItemNew[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-
+        header: 'Dashboard',
+        menu: [
+            {
+                title: 'Dashboard',
+                href: '/dashboard',
+                icon: CookieIcon,
+            }
+        ]
     },
     {
-        title: 'Master',
-        href: 'master',
-        isActive: true,
-        icon: LayoutGrid,
-        items: [
+        header: 'Master',
+        menu: [
             {
                 title: "User",
                 href: "/master/user",
+                icon: User2Icon,
             },
             {
                 title: "Roles",
                 href: "/master/roles",
+                icon: CookieIcon,
             },
             {
                 title: "Permission",
                 href: "/master/permission",
+                icon: CookieIcon,
             }
         ],
-    },
-    {
-        title: 'Organizations',
-        href: '/organizations',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Categories',
-        href: '/categories',
-        icon: LayoutGrid,
-    },
+    }
 ];
 
 const footerNavItems: NavItem[] = [

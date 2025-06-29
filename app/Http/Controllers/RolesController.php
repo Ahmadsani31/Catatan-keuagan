@@ -7,42 +7,63 @@ use App\Http\Resources\RolesResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolesController extends Controller
 {
     public function index()
     {
-        $role = Role::paginate(10);
-        return Inertia::render('master/rolesIndex', [
-            'role' => RolesResource::collection($role),
+        return Inertia::render('master/role/index', [
+            'role' => RolesResource::collection(Role::all()),
             'title' => 'Roles'
         ]);
     }
 
-    public function create($id)
+    public function edit($id)
     {
-        $role = [];
-        if ($id != 0) {
-            $param = Role::findById(Crypt::decrypt($id));
-            $role = new RolesResource($param);
-        }
-        return Inertia::render('master/rolesCreate', [
+        $role = Role::findById(Crypt::decrypt($id));
+        $permission =  $role->permissions->pluck('id');
+
+        return Inertia::render('master/role/edit', [
+            'role' => new RolesResource($role),
+            'title' => 'Roles Edit',
+            'permission' => Permission::all(),
+            'permissionRole' => $permission
+        ]);
+    }
+
+
+    public function create()
+    {
+        return Inertia::render('master/role/create', [
             'title' => 'Roles Create',
-            'role' => $role,
+            'permission' =>  Permission::all(),
         ]);
     }
 
     public function store(RolesRequest $request)
     {
-        if ($request->id == 0) {
-            Role::create($request->validated());
-        } else {
-            $param = Role::findById(Crypt::decrypt($request->id));
-            $param->name = $request->name;
-            $param->save();
-        }
+        $role = Role::create($request->validated());
+        $role->givePermissionTo($request->permission);
 
-        return to_route('roles.index');
+        return to_route('roles.index')->with('message', 'Roles berhasil disimpan!');
+    }
+
+    public function update(Request $request)
+    {
+        $role = Role::findById($request->id);
+        $role->name = $request->name;
+        $role->save();
+        $role->syncPermissions($request->permission);
+
+        return to_route('roles.index')->with('message', 'Roles berhasil disimpan!');
+    }
+
+    public function destroy($id)
+    {
+        $param = Role::findById(Crypt::decrypt($id));
+        $param->delete();
+        return to_route('roles.index')->with('message', 'Delete berhasil!');
     }
 }
