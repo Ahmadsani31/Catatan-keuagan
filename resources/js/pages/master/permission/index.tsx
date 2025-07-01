@@ -83,53 +83,13 @@ export default function RolesIndex({ permissions, page_info }: pageIndex) {
         });
     };
 
-    const handleEditModal = (id: string) => {
-        axios.get(route('permission.show', { id: id }))
-            .then(function (response) {
-                // handle success
-                setData('id', response.data?.data.id);
-                setData('name', response.data?.data.name);
-                console.log('response', response.data);
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .finally(function () {
-                // always executed
-                setOpen(true);
-
-            });
-        // router.visit(route('permission.show', { id: id }), {
-        //     method: 'get',
-        //     preserveState: true,
-        //     preserveScroll: true,
-        //     onSuccess: (page) => {
-        //         console.log('page', page);
-
-        //     },
-        // })
-
-    }
-
-    const handeleDelte = (id: string) => {
-        if (confirm('Are you sure you want to delete this permission?')) {
-            router.delete(route('permission.destroy', { id: id }), {
-                onSuccess: () => {
-                    console.log('Permission deleted successfully');
-                },
-            });
-        }
-    };
-
-
     const handleOpenModal = () => {
-        reset('id');
-        reset('name');
+        reset();
         setOpen(true);
     }
 
     const handleCloseModal = () => {
+        reset();
         setOpen(false);
     }
 
@@ -141,7 +101,7 @@ export default function RolesIndex({ permissions, page_info }: pageIndex) {
                 <div className='flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center'>
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
 
-                    <Button variant={'default'} size={'lg'} onClick={() => setOpen(true)} >
+                    <Button variant={'default'} size={'lg'} onClick={handleOpenModal} >
                         <PlusCircle /> Tambah
                     </Button>
 
@@ -178,7 +138,7 @@ export default function RolesIndex({ permissions, page_info }: pageIndex) {
                             />
                         </div>
                         <DialogFooter>
-                            <Button type='button' size={'lg'} variant={'outline'} onClick={() => setOpen(false)}>Cancel</Button>
+                            <Button type='button' size={'lg'} variant={'outline'} onClick={handleCloseModal}>Cancel</Button>
                             <Button type='submit' size={'lg'} disabled={processing}>
                                 {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Submit

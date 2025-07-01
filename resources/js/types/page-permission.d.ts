@@ -27,6 +27,12 @@ export interface PropsFormUserEdit {
     _method: string;
 };
 
+export interface useFormEdit {
+    id: number;
+    name: string;
+}
+
+
 export interface pageUserEdit {
     users: userProps,
     page_info: pageInfo,
