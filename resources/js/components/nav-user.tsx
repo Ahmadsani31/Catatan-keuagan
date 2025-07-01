@@ -6,34 +6,14 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { ChevronsUpDown } from 'lucide-react';
-import { useState } from 'react';
 
 export function NavUser() {
     const { auth } = usePage<SharedData>().props;
     const { state } = useSidebar();
     const isMobile = useIsMobile();
-    const [open, setOpen] = useState(false)
     return (
         <SidebarMenu>
             <SidebarMenuItem>
-                <DropdownMenu open={open} onOpenChange={setOpen}>
-                    <div
-                        onMouseEnter={() => setOpen(true)}
-                        onMouseLeave={() => setOpen(false)}
-                    >
-                        <DropdownMenuTrigger asChild>
-                            <SidebarMenuButton size="lg" className="text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent group">
-                                Hover Me
-                            </SidebarMenuButton>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg" side={isMobile ? 'bottom' : state === 'collapsed' ? 'left' : 'bottom'} align='start'>
-                            <DropdownMenuItem>Item 1</DropdownMenuItem>
-                            <DropdownMenuItem>Item 2</DropdownMenuItem>
-                            <DropdownMenuItem>Item 3</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </div>
-                </DropdownMenu>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <SidebarMenuButton size="lg" className="text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent group">

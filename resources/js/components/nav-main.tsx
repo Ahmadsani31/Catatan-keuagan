@@ -10,6 +10,7 @@ import {
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
+    useSidebar,
 } from "@/components/ui/sidebar"
 
 type AuthProps = {
@@ -24,15 +25,20 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
     const permissions: Record<string, boolean> = page.props.auth?.permissions ?? {};
 
     // const permission = page.props?.auth?.permissions;
-    console.log(permissions);
+    // console.log(page.props.sidebarOpen);
+
+    const { state } = useSidebar();
 
     return (
         <SidebarGroup className="px-2 py-0">
             {items.map((item, index) => (
                 <div key={index}>
-                    <SidebarGroupLabel>
-                        <h3 className='font-light'>{item.header}</h3>
-                    </SidebarGroupLabel>
+                    {state == 'expanded' ? (
+                        <SidebarGroupLabel>
+                            <h3 className='font-light'>{item.header}</h3>
+                        </SidebarGroupLabel>
+                    ) : null}
+
                     <SidebarMenu>
                         {item.menu
                             .filter(menuItem => {

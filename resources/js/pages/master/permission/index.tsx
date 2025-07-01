@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { SquarePen, SquarePlus, Trash } from 'lucide-react';
+import { AlignCenterHorizontalIcon, Loader2, PlusCircle, SquarePen, SquarePlus, Trash } from 'lucide-react';
 
 import ButtonCostum from '@/components/buttonCostum';
 
@@ -22,9 +22,12 @@ import TextInput from '@/components/textInput';
 import Select from 'react-select'
 import SelectComponent from '@/components/SelectComponent';
 import axios from 'axios';
-import { DataTable } from './datatable/data-table';
-import { columns } from './datatable/columns';
+import { DataTable } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
+import HeaderTitle from '@/components/header-title';
+import { pageIndex } from '@/types/page-permission';
+import { ColumnsPermission } from '@/components/columns-permission';
+import { Card, CardContent } from '@/components/ui/card';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -58,10 +61,10 @@ type LoginForm = {
 };
 
 
-export default function RolesIndex({ permission, title }: any) {
+export default function RolesIndex({ permissions, page_info }: pageIndex) {
     const [open, setOpen] = useState<boolean>(false);
 
-    console.log('permission', permission);
+    console.log('permission', permissions);
 
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
@@ -133,45 +136,30 @@ export default function RolesIndex({ permission, title }: any) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={title ?? 'Aplikasi'} />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border md:min-h-min">
-                    <div className='bg-gray-300 flex justify-between items-center px-4 py-2'>
-                        <p className='font-bold'>Permission</p>
-                        <Button variant={'outline'} size={'sm'} className='cursor-pointer rounded' onClick={handleOpenModal}>
-                            <SquarePlus size={18} />Add
-                        </Button>
-                        {/* <LinkHref href='/master/permission/0' className={`${colors.primary} text-white`} icon={<SquarePlus size={18} />} text='Add' /> */}
-                    </div>
-                    <div className='bg-white m-2 rounded-lg p-2'>
-                        <DataTable columns={columns} data={permission} />
-                        {/* <Table>
-                            <TableHeader className='bg-gray-200'>
-                                <TableRow>
-                                    <TableHead className="font-bold w-[10px]">No</TableHead>
-                                    <TableHead className="font-bold">Name</TableHead>
-                                    <TableHead className="font-bold text-center">Action</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {permission?.data.map((item, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell className='text-center'>{(permission.current_page - 1) * permission.per_page + index + 1}</TableCell>
-                                        <TableCell>{item.name}</TableCell>
-                                        <TableCell className="font-bold text-center">
-                                            <button onClick={() => handleEditModal(item.id.toString())} className='p-2 m-1 border hover:bg-gray-200 rounded-lg'><SquarePen size={16} /></button>
-                                            <button onClick={() => handeleDelte(item.id.toString())} className='p-2 m-1 border hover:bg-gray-200 rounded-lg'><Trash size={16} /></button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table> */}
+            <Head title={page_info.title ?? 'Aplikasi'} />
+            <div className="flex h-full flex-1 flex-col gap-4 p-4">
+                <div className='flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center'>
+                    <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
 
-                    </div>
+                    <Button variant={'default'} size={'lg'} onClick={() => setOpen(true)} >
+                        <PlusCircle /> Tambah
+                    </Button>
+
                 </div>
+                <Card className='py-1 [&_td]:px-3 [&_th]:px-3'>
+                    <CardContent className='[&-td]:whitespace-nowrap'>
+                        <DataTable
+                            columns={ColumnsPermission}
+                            sortableColumns={["name", "created_at"]}
+                            searchableColumns={["name"]}
+                            data={permissions.data}
+                            defaultPageLength={10} />
+                    </CardContent>
+                </Card>
             </div>
+
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="sm:max-w-[525px]">
+                <DialogContent className="sm:max-w-[625px]">
                     <form onSubmit={handleSubmit}>
                         <DialogHeader>
                             <DialogTitle>Create Permission</DialogTitle>
@@ -180,12 +168,21 @@ export default function RolesIndex({ permission, title }: any) {
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-2 py-4">
-                            {/* <SelectComponent title='Role' value={data.role} options={role} onChange={(e) => setData('role', e?.value ?? "")} placeholder="Search role..." required={true} /> */}
-                            {/* <Select options={role} onChange={(e) => setData('role', e.value)} className='text-sm' placeholder="Search role..." /> */}
-                            <TextInput title="Name" type="text" placeholder='set role name' value={data.name} onChange={(e) => setData('name', e.target.value)} errors={errors.name} />
+                            <TextInput
+                                title="Name"
+                                type="text"
+                                placeholder='Nama permission'
+                                value={data.name}
+                                onChange={(e) => setData('name', e.target.value)}
+                                errors={errors.name}
+                            />
                         </div>
                         <DialogFooter>
-                            <ButtonCostum isLoading={processing}>Save changes</ButtonCostum>
+                            <Button type='button' size={'lg'} variant={'outline'} onClick={() => setOpen(false)}>Cancel</Button>
+                            <Button type='submit' size={'lg'} disabled={processing}>
+                                {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Submit
+                            </Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>

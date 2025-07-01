@@ -17,11 +17,12 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permission = Permission::all();
-
         return Inertia::render('master/permission/index', [
-            'permission' => $permission,
-            'title' => 'Permission',
+            'permissions' => PermissionResource::collection(Permission::latest()->get()),
+            'page_info' => [
+                'title' => 'Permission',
+                'subtitle' => 'Menampilkan semua data permission yang ada di platform ini, untuk di kelola',
+            ],
         ]);
     }
 

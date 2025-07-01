@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RolesRequest;
+use App\Http\Resources\PermissionResource;
 use App\Http\Resources\RolesResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -15,8 +16,11 @@ class RolesController extends Controller
     public function index()
     {
         return Inertia::render('master/role/index', [
-            'role' => RolesResource::collection(Role::all()),
-            'title' => 'Roles'
+            'roles' => RolesResource::collection(Role::all()),
+            'page_info' => [
+                'title' => 'Roles',
+                'subtitle' => 'Menampilkan semua data roles yang ada di platform ini, untuk di kelola',
+            ],
         ]);
     }
 
@@ -37,8 +41,11 @@ class RolesController extends Controller
     public function create()
     {
         return Inertia::render('master/role/create', [
-            'title' => 'Roles Create',
-            'permission' =>  Permission::all(),
+            'permissions' =>  PermissionResource::collection(Permission::all()),
+            'page_info' => [
+                'title' => 'Buat Roles',
+                'subtitle' => 'Menampilkan semua data buat roles yang ada di platform ini, untuk di kelola',
+            ],
         ]);
     }
 
