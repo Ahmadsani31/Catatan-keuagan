@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Transactions extends Model
+class Debt extends Model
 {
     protected $fillable = [
         'organization_id',
-        'type',
+        'debtor_name',
         'amount',
+        'status',
         'date',
-        'description',
+        'notes',
         'created_by',
     ];
 
@@ -21,7 +21,12 @@ class Transactions extends Model
         return $this->belongsTo(Organizations::class);
     }
 
-    public function creator(): BelongsTo
+    public function payments()
+    {
+        return $this->hasMany(DebtPayment::class);
+    }
+
+    public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }

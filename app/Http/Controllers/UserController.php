@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrganizationsStatus;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserUpdatePasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
@@ -15,8 +18,14 @@ class UserController extends Controller
     public function index(): Response
     {
 
+        $organization = Auth::user()->organizations()->first();
+
+        $users = User::whereHas('organizations', function ($q) use ($organization) {
+            $q->where('organizations.id', $organization->id)->where('users.id', '!=', auth()->user()->id);
+        })->latest()->get();
+
         return Inertia::render('master/user/index', [
-            'users' => UserResource::collection(User::latest()->get()),
+            'users' => UserResource::collection($users),
             'page_info' => [
                 'title' => 'User',
                 'subtitle' => 'Menampilkan semua data user yang ada di platform ini, untuk di kelola',
@@ -26,6 +35,9 @@ class UserController extends Controller
 
     public function create(): Response
     {
+        // $auth = Auth::user()->organizations()->first();
+
+        // dd($auth->name);
         return Inertia::render('master/user/create', [
             'page_info' => [
                 'title' => 'Buat User',
@@ -46,7 +58,7 @@ class UserController extends Controller
     public function edit(User $user): Response
     {
         return Inertia::render('master/user/edit', [
-            'users' => $user,
+            'users' => new UserResource($user->load(['roles'])),
             'page_info' => [
                 'title' => 'Buat User',
                 'subtitle' => 'Buat data user baru, klik simpan jika sudah selesai',
@@ -65,20 +77,27 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
+
+        DB::beginTransaction();
+
         try {
             $user =  User::create($request->validated());
-            if ($request->roles) {
-                $user->assignRole($request->roles);
-            }
+
+            $organization = Auth::user()->organizations()->first();
+
+            $organization->users()->attach($user->id);
+            $user->assignRole($request->roles);
+            DB::commit();
+
             return to_route('master.users.index')->with([
                 'type' => 'success',
                 'message' => 'Tambah Successfully'
             ]);
         } catch (\Exception $err) {
+            DB::rollBack();
             return back()->with([
                 'type' => 'error',
-                'message',
-                $err->getMessage()
+                'message' => $err->getMessage()
             ]);
         }
     }

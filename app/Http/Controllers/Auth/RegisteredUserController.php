@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\OrganizationsStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRegisterRequest;
+use App\Models\Organizations;
+use App\Models\OrganizationUser;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
@@ -28,24 +33,38 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(UserRegisterRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        DB::beginTransaction();
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+            $organization = Organizations::create([
+                'name' => $name = $request->organization,
+                'slug' => str()->lower(str()->slug($name) . str()->random(4)),
+                'address' => $request->address,
+                'keterangan' => $request->keterangan,
+            ]);
 
-        event(new Registered($user));
+            $organization->users()->attach($user->id);
+            $user->assignRole('Admin');
+            DB::commit();
 
-        Auth::login($user);
+            event(new Registered($user));
 
-        return to_route('dashboard');
+            Auth::login($user);
+
+            return to_route('dashboard');
+        } catch (\Throwable $err) {
+            DB::rollBack();
+            return back()->with([
+                'type' => 'error',
+                'message' => $err->getMessage()
+            ]);
+        }
     }
 }

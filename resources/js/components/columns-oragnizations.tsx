@@ -17,8 +17,8 @@ export const ColumnsOrganizations: ColumnDef<columnsItemsUser>[] = [
         header: "Nama",
     },
     {
-        accessorKey: "type",
-        header: "Type",
+        accessorKey: "address",
+        header: "Alamat",
     },
     {
         accessorKey: "keterangan",

@@ -21,6 +21,7 @@ type AuthProps = {
 
 export function NavMain({ items = [] }: { items: NavItemNew[] }) {
     const page = usePage<AuthProps>();
+
     // const permissions: string[] = page.props?.auth?.permissions ?? [];
     const permissions: Record<string, boolean> = page.props.auth?.permissions ?? {};
 
@@ -41,16 +42,16 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
 
                     <SidebarMenu>
                         {item.menu
-                            .filter(menuItem => {
-                                if (!menuItem.permissions) return true;
+                            // .filter(menuItem => {
+                            //     if (!menuItem.permissions) return true;
 
-                                if (Array.isArray(menuItem.permissions)) {
-                                    return menuItem.permissions.some(permiss => permissions?.[permiss]);
-                                }
+                            //     if (Array.isArray(menuItem.permissions)) {
+                            //         return menuItem.permissions.some(permiss => permissions?.[permiss]);
+                            //     }
 
-                                return permissions?.[menuItem.permissions];
-                            }
-                            )
+                            //     return permissions?.[menuItem.permissions];
+                            // }
+                            // )
                             .map((menuItem, idx) => (
                                 <SidebarMenuItem key={idx}>
                                     <SidebarMenuButton

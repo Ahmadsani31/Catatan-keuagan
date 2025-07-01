@@ -26,13 +26,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Edit({ users, page_info, page_data }: pageUserEdit) {
 
+    console.log(users);
+
+
     const { data, setData, post, reset, errors, processing } = useForm<Required<PropsFormUserEdit>>({
-        id: users.id,
-        name: users.name,
-        roles: users.roles?.name ?? null,
-        email: users.email,
+        id: users.data.id,
+        name: users.data.name,
+        roles: users.data.role ?? null,
+        email: users.data.email,
         _method: page_info.method
     });
+
+    console.log(data);
+
 
     const onHandleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -86,6 +92,7 @@ export default function Edit({ users, page_info, page_data }: pageUserEdit) {
                             />
                             <ReactSelect id='role'
                                 title='Role'
+                                value={data.roles}
                                 dataValue={page_data.roles}
                                 onValueChange={(value) => setData('roles', value)}
                                 placeholder='Pilih rules'

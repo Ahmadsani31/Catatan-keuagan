@@ -66,7 +66,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::get('organizations', [OrganizationsController::class, 'index']);
     // Route::get('organizations/create/{id}', [OrganizationsController::class, 'create'])->name('organizations.create');
     // Route::get('organizations/{id}/detail', [OrganizationsController::class, 'detail'])->name('organizations.detail');
-    Route::get('categories', [CategoriesController::class, 'index']);
+    Route::get('categorys', [CategoriesController::class, 'index'])->name('categorys.index');
 });
 
 require __DIR__ . '/settings.php';

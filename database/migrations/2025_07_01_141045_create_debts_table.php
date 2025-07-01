@@ -1,6 +1,7 @@
 <?php
 
-use App\Enums\TransactionType;
+use App\Enums\DebtPaymentStatus;
+use App\Enums\DebtStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('debts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained('organizations')->onDelete('cascade');
-            $table->string('type')->default(TransactionType::INCOME->value);
+            $table->foreignId('organization_id')->constrained()->onDelete('cascade');
+            $table->string('debtor_name');
             $table->decimal('amount', 15, 2);
+            $table->string('status')->default(DebtStatus::UNPAID->value);
             $table->date('date');
-            $table->text('description')->nullable();
+            $table->text('notes')->nullable();
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('debts');
     }
 };

@@ -28,7 +28,9 @@ export interface PropsFormUserEdit {
 };
 
 export interface pageUserEdit {
-    users: userProps,
+    users: {
+        data: userProps
+    },
     page_info: pageInfo,
     page_data: {
         roles: []
@@ -58,10 +60,7 @@ type userProps = {
     id: number;
     name: string;
     email: string;
-    roles: {
-        id: number,
-        name: string
-    };
+    role: string
     password: string;
     password_confirmation: string;
     created_at: string;

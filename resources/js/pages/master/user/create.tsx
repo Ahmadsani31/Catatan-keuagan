@@ -49,7 +49,13 @@ export default function Create({ page_info, page_data }: pageUserIndex) {
             preserveScroll: true,
             preserveState: true,
             onSuccess: (success) => {
-                toast.success('successfully');
+
+                const { type, message } = success.props.flash_message as { type: string; message: string };
+
+                if (type == "error") toast.error(message);
+                if (type == "success") toast.error(message);
+                console.log(success.props.flash_message);
+
             },
         });
     };

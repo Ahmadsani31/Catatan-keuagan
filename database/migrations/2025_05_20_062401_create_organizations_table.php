@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('keterangan');
+            $table->string('slug')->unique();
+            $table->text('address');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

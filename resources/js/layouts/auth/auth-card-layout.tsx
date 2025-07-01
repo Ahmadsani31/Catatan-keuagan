@@ -22,7 +22,7 @@ export default function AuthCardLayout({
                 </Link>
 
                 <div className="flex flex-col gap-6">
-                    <div className="px-10 pt-8 pb-0 text-center">
+                    <div className="px-1 pt-8 pb-0 text-center">
                         <h3 className="text-xl">{title}</h3>
                         <p className='text-muted-foreground'>{description}</p>
                     </div>

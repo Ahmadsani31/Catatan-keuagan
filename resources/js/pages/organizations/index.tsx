@@ -33,14 +33,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 
-type ItemsData = {
-    id: string;
-    name: string;
-    keterangan: string;
-    type: string;
-}
-
 export default function Index({ organizations, page_info }: pageIndex) {
+    console.log(organizations);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -55,8 +49,8 @@ export default function Index({ organizations, page_info }: pageIndex) {
                         <DataTable
                             columns={ColumnsOrganizations}
                             data={organizations.data}
-                            sortableColumns={["name", "type", "created_at"]}
-                            searchableColumns={["name", "type"]}// Now searchable in name, email, and phone
+                            sortableColumns={["name", "keterangan", "address", "created_at"]}
+                            searchableColumns={["name", "keterangan", "address",]}// Now searchable in name, email, and phone
                             showIndex={true}
                             dynamicIndex={true}
                         />

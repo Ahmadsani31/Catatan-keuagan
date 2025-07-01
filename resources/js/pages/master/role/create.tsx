@@ -39,7 +39,6 @@ export default function RolesIndex({ permissions, page_info }: pageCreate) {
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        return
         post(route('roles.store'), {
             onFinish: () => reset('name'),
             onSuccess: page => {
