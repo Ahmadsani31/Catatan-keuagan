@@ -20,6 +20,7 @@ export interface NavItemNew {
     menu: {
         title: string;
         href: string;
+        permissions?: string[] | undefined;
         icon?: LucideIcon | null;
         isActive?: boolean;
     }[]

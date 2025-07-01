@@ -18,7 +18,18 @@ class UserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => [
+                Rule::when($this->routeIs('master.user.store'), [
+                    'required',
+                    'email',
+                    'unique:users,email'
+                ]),
+                Rule::when($this->routeIs('master.user.update'), [
+                    'nullable',
+                    'email',
+                    'unique:users,email'
+                ]),
+            ],
             'password' => [
                 Rule::when($this->routeIs('master.user.store'), [
                     'required',

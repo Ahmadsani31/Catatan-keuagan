@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavItemNew, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, CookieIcon, Folder, LayoutGrid, User2Icon } from 'lucide-react';
+import { BookOpen, CookieIcon, CookingPotIcon, DollarSign, Folder, LayoutGrid, LucideALargeSmall, User2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItemNew[] = [
@@ -15,6 +15,7 @@ const mainNavItems: NavItemNew[] = [
                 title: 'Dashboard',
                 href: '/dashboard',
                 icon: CookieIcon,
+                permissions: ['dashboard_list']
             }
         ]
     },
@@ -23,21 +24,48 @@ const mainNavItems: NavItemNew[] = [
         menu: [
             {
                 title: "User",
-                href: "/master/user",
+                href: "/master/users",
                 icon: User2Icon,
+                permissions: ['user_list']
             },
             {
                 title: "Roles",
                 href: "/master/roles",
                 icon: CookieIcon,
+                permissions: ['roles_list']
             },
             {
                 title: "Permission",
                 href: "/master/permission",
-                icon: CookieIcon,
+                icon: LucideALargeSmall,
+                permissions: ['permission_list']
             }
         ],
-    }
+    },
+    {
+        header: 'Data',
+        menu: [
+            {
+                title: 'Organizations',
+                href: '/organizations',
+                icon: CookingPotIcon,
+                permissions: ['organizations_list']
+
+            }
+        ]
+    },
+    {
+        header: 'Transaksi',
+        menu: [
+            {
+                title: 'Transaksi',
+                href: '#',
+                icon: DollarSign,
+                permissions: ['organizations_list']
+
+            }
+        ]
+    },
 ];
 
 const footerNavItems: NavItem[] = [

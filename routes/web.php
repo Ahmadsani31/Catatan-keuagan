@@ -18,11 +18,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::prefix('master')->group(function () {
-        Route::get('/user', [UserController::class, 'index'])->name('master.user.index');
-        Route::get('/user/create', [UserController::class, 'create'])->name('master.user.create');
-        Route::post('/user/store', [UserController::class, 'store'])->name('master.user.store');
-        Route::post('/user/{user}/update', [UserController::class, 'update'])->name('master.user.update');
-        Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.delete');
+
+        Route::controller(UserController::class)->group(function () {
+            Route::get('users', 'index')->name('master.users.index');
+            Route::get('users/create', 'create')->name('master.users.create');
+            Route::post('users/store', 'store')->name('master.users.store');
+            Route::get('users/edit/{user}', 'edit')->name('master.users.edit');
+            Route::put('users/update/{user}', 'update')->name('master.users.update');
+            Route::put('users/update-password/{user}', 'update_password')->name('master.users.update-password');
+            Route::delete('users/destroy/{user}', 'destroy')->name('master.users.destroy');
+        });
+
+
+
 
         Route::get('/roles', [RolesController::class, 'index'])->name('roles.index');
         Route::get('/roles/create', [RolesController::class, 'create'])->name('roles.create');
@@ -50,9 +58,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     });
 
-    Route::get('organizations', [OrganizationsController::class, 'index']);
-    Route::get('organizations/create/{id}', [OrganizationsController::class, 'create'])->name('organizations.create');
-    Route::get('organizations/{id}/detail', [OrganizationsController::class, 'detail'])->name('organizations.detail');
+    Route::controller(OrganizationsController::class)->group(function () {
+        Route::get('organizations', 'index')->name('organizations.index');
+    });
+
+
+    // Route::get('organizations', [OrganizationsController::class, 'index']);
+    // Route::get('organizations/create/{id}', [OrganizationsController::class, 'create'])->name('organizations.create');
+    // Route::get('organizations/{id}/detail', [OrganizationsController::class, 'detail'])->name('organizations.detail');
     Route::get('categories', [CategoriesController::class, 'index']);
 });
 

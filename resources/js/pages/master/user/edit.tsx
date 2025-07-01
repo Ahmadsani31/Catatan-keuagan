@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import AppLayout from '@/layouts/app-layout'
+import { flashMessage } from '@/lib/utils'
 import { BreadcrumbItem } from '@/types'
-import { pageUserIndex, PropsFormUserCreate } from '@/types/page-user'
+import { pageUserEdit, pageUserIndex, PropsFormUserCreate, PropsFormUserEdit } from '@/types/page-user'
 import { Head, Link, useForm } from '@inertiajs/react'
 import { AlignCenterHorizontalIcon, ArrowLeft, BackpackIcon, CassetteTape, LoaderCircle } from 'lucide-react'
 import { FormEventHandler } from 'react'
@@ -18,34 +19,34 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Buat User',
+        title: 'Edit User',
         href: '',
     },
 ];
 
-export default function Create({ page_info, page_data }: pageUserIndex) {
+export default function Edit({ users, page_info, page_data }: pageUserEdit) {
 
-    console.log(page_data.roles);
-
-
-    const { data, setData, post, reset, errors, processing } = useForm<Required<PropsFormUserCreate>>({
-        name: '',
-        email: '',
-        roles: null,
-        password: '',
-        password_confirmation: '',
+    const { data, setData, post, reset, errors, processing } = useForm<Required<PropsFormUserEdit>>({
+        id: users.id,
+        name: users.name,
+        roles: users.roles?.name ?? null,
+        email: users.email,
         _method: page_info.method
-
     });
 
     const onHandleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
 
+
         post(page_info.action, {
             preserveScroll: true,
             preserveState: true,
             onSuccess: (success) => {
-                toast.success('successfully');
+                const flash = flashMessage(success)
+
+                if (flash.type == 'success') toast.success(flash.message);
+                if (flash.type == 'error') toast.error(flash.message);
+
             },
         });
     };
@@ -86,30 +87,10 @@ export default function Create({ page_info, page_data }: pageUserIndex) {
                             <ReactSelect id='role'
                                 title='Role'
                                 dataValue={page_data.roles}
-                                onValueChange={(value) => setData('roles', value ? Number(value) : null)}
+                                onValueChange={(value) => setData('roles', value)}
                                 placeholder='Pilih rules'
                                 errors={errors.roles}
                             />
-                            <div className='grid lg:grid-cols-2 grid-cols-1 lg:gap-4 sm:gap-6 items-start'>
-                                <FormInput
-                                    id='password'
-                                    title="Password"
-                                    type="password"
-                                    placeholder='Masukan password...'
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    errors={errors.password}
-                                />
-                                <FormInput
-                                    id='password_confirmation'
-                                    title="Konfirmasi password"
-                                    type="password"
-                                    placeholder='Konfirmasi password...'
-                                    value={data.password_confirmation}
-                                    onChange={(e) => setData('password_confirmation', e.target.value)}
-                                    errors={errors.password_confirmation}
-                                />
-                            </div>
                             <div className='flex justify-end gap-x-2'>
                                 <Button type='button' variant={'outline'} size={'lg'} onClick={() => reset()}>
                                     Reset

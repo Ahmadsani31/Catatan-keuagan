@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrganizationResource;
 use App\Models\Organizations;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -10,9 +11,12 @@ class OrganizationsController extends Controller
 {
     public function index()
     {
-        $organizations = Organizations::paginate(15);
-        return Inertia::render('organizations/organizationsIndex', [
-            'organizations' => $organizations
+        return Inertia::render('organizations/index', [
+            'organizations' => OrganizationResource::collection(Organizations::latest()->get()),
+            'page_info' => [
+                'title' => 'Organisasi',
+                'subtitle' => 'Menampilkan semua data organisasi yang ada di platform ini, untuk di kelola',
+            ],
         ]);
     }
 

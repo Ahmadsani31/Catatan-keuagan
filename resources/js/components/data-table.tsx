@@ -268,13 +268,14 @@ export function DataTable<TData>({
                 </Table>
             </div>
 
-            {!isAllSelected && (
-                <div className="flex flex-col items-center justify-between w-full gap-3 lg:flex-row mb-4">
-                    <div className="flex-1 text-sm text-muted-foreground">
-                        <p className="text-sm text-muted-foreground">
-                            Showing {from} to {to} of {totalEntries} entries
-                        </p>
-                    </div>
+            <div className="flex flex-col items-center justify-between w-full gap-3 lg:flex-row mb-4">
+                <div className="flex-1 text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground">
+                        Showing {from} to {to} of {totalEntries} entries
+                    </p>
+                </div>
+                {!isAllSelected && (
+
                     <div className="space-x-2">
                         <Pagination>
                             <PaginationContent>
@@ -323,8 +324,9 @@ export function DataTable<TData>({
                             </PaginationContent>
                         </Pagination>
                     </div>
-                </div>
-            )}
+                )}
+
+            </div>
         </div>
     );
 }

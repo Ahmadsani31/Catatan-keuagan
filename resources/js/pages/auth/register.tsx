@@ -9,9 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 import { Textarea } from "@/components/ui/textarea"
-import SelectReact from '@/components/selectReact';
 
 type RegisterForm = {
+    organisasi: string;
+    keterangan: string;
     name: string;
     email: string;
     password: string;
@@ -20,6 +21,8 @@ type RegisterForm = {
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
+        organisasi: '',
+        keterangan: '',
         name: '',
         email: '',
         password: '',
@@ -35,43 +38,50 @@ export default function Register() {
 
     const [visibleDiv, setVisibleDiv] = useState(false);
 
-    const options = [
-        { value: 'perusahaan', label: 'Perusahaan' },
-        { value: 'personal', label: 'Personal' },
-        { value: 'keluarga', label: 'Keluarga' }
-    ]
+    const [formError, setFormError] = useState({ organisasi: '', keterangan: '' });
+
+    const handleNext = () => {
+        if (!data.organisasi) {
+            setFormError({ ...formError, organisasi: 'Organisasi required' })
+            return
+        }
+
+        setVisibleDiv(!visibleDiv);
+    }
+
+
 
     return (
         <AuthLayout title="Create an account" description="Enter your details below to create your account">
             <Head title="Register" />
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className={`grid gap-4 ${visibleDiv ? 'hidden' : ''} transition delay-150 duration-300 ease-in-out`}>
-                    <div className="grid gap-2">
-                        <Label htmlFor="name">Orgainasi / Vendor / Keleompok</Label>
+                    <div className="grid">
+                        <Label htmlFor="name" className='mb-2'>Organisasi / Company</Label>
                         <Input
                             id="organisasi"
                             type="text"
+                            className={formError.organisasi ? 'border-red-500' : ''}
                             required
                             autoFocus
                             tabIndex={1}
                             autoComplete="name"
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
+                            value={data.organisasi}
+                            onChange={(e) => setData('organisasi', e.target.value)}
                             disabled={processing}
                             placeholder="Tulis"
                         />
-                        <InputError message={errors.name} className="mt-2" />
+                        <InputError message={formError.organisasi} />
                     </div>
-
-                    <SelectReact items={options} title={'Type'} onSelect={(e) => setData('name', e ?? '')} errors={errors.name} />
 
                     <div className="grid gap-2">
                         <Label htmlFor="password">Keterangan</Label>
-                        <Textarea />
-                        <InputError message={errors.password} />
+                        <Textarea value={data.keterangan}
+                            onChange={(e) => setData('keterangan', e.target.value)} placeholder='keterangan..' />
+                        <InputError message={errors.keterangan} />
                     </div>
                     <div className='flex justify-end'>
-                        <Button type="button" className="mt-2" onClick={() => setVisibleDiv(!visibleDiv)}>
+                        <Button type="button" className="mt-2" onClick={handleNext}>
                             Next
                         </Button>
                     </div>
