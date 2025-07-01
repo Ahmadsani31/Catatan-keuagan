@@ -19,23 +19,25 @@ export interface PropsFormCreate {
 };
 
 //USER EDIT
-export interface PropsFormUserEdit {
-    id: number;
-    name: string;
-    email: string;
-    roles: string;
-    _method: string;
+export interface pageEdit {
+    role: {
+        data: {
+            id: number
+            name: string
+            permissions: string[]
+        }
+    };
+    permissions: {
+        data: dataProps[];
+    },
+    page_info: pageInfo
 };
 
-export interface pageUserEdit {
-    users: userProps,
-    page_info: pageInfo,
-    page_data: {
-        roles: []
-    }
+export interface useFormEdit {
+    id: number;
+    name: string;
+    permission: string[];
 }
-
-
 
 //COLUMNS DATATABLE
 export interface columnsItems {

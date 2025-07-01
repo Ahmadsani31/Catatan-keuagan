@@ -1,37 +1,19 @@
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { AlignCenterHorizontalIcon, ArrowBigLeft, Camera, LoaderCircle, NotebookText, SquarePen, Trash } from 'lucide-react';
-import { Input } from "@/components/ui/input"
+import { Head, Link, useForm } from '@inertiajs/react';
+import { AlignCenterHorizontalIcon, ArrowBigLeft, LoaderCircle } from 'lucide-react';
 import { Label } from "@/components/ui/label"
 
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+
 import { Button } from '@/components/ui/button';
 import { FormEventHandler, useState } from 'react';
-import TextInput from '@/components/textInput';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
+
 import { Card, CardContent } from '@/components/ui/card';
 import FormInput from '@/components/form-input';
 import HeaderTitle from '@/components/header-title';
-import { dataProps } from '@/types/page-roles';
+import { dataProps, pageEdit, useFormEdit } from '@/types/page-roles';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -47,30 +29,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-type itemsProps = {
-    title: string
-    role: ItemsData
-}
 
-type LoginForm = {
-    id: number;
-    name: string;
-    permission: string[];
-};
+export default function RolesIndex({ role, permissions, page_info }: pageEdit) {
 
-type ItemsData = {
-    id: string;
-    name: string;
-    encrypted_id: string;
-}
-
-
-export default function RolesIndex({ role, permissions, page_info }: any) {
-
-    console.log(role);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
-    const { data, setData, post, put, processing, errors, reset } = useForm<Required<LoginForm>>({
+    const { data, setData, post, put, processing, errors, reset } = useForm<Required<useFormEdit>>({
         id: role.data.id,
         name: role.data.name,
         permission: role.data.permissions,
@@ -92,7 +56,7 @@ export default function RolesIndex({ role, permissions, page_info }: any) {
     const handleSelectAllChange = (checked: boolean) => {
         if (checked) {
             setSelectedItems(permissions.data.map((item: dataProps) => item.id));
-            setData('permission', permissions.data.map((item: dataProps) => item.id))
+            setData('permission', permissions.data.map((item: dataProps) => item.id.toString()))
         } else {
             reset('permission');
             setSelectedItems([]);
@@ -101,9 +65,9 @@ export default function RolesIndex({ role, permissions, page_info }: any) {
 
     const handleIndividualChange = (itemId: number, checked: boolean) => {
         if (checked) {
-            setData('permission', [...data.permission, itemId])
+            setData('permission', [...data.permission, itemId.toString()])
         } else {
-            setData('permission', data.permission.filter((perm) => perm !== itemId))
+            setData('permission', data.permission.filter((perm) => perm !== itemId.toString()))
         }
     };
 
