@@ -27,13 +27,15 @@ class RolesController extends Controller
     public function edit($id)
     {
         $role = Role::findById(Crypt::decrypt($id));
-        $permission =  $role->permissions->pluck('id');
 
         return Inertia::render('master/role/edit', [
             'role' => new RolesResource($role),
             'title' => 'Roles Edit',
-            'permission' => Permission::all(),
-            'permissionRole' => $permission
+            'permissions' => PermissionResource::collection(Permission::latest()->get()),
+            'page_info' => [
+                'title' => 'Roles Edit',
+                'subtitle' => 'Menampilkan semua data roles yang ada di platform ini, untuk di kelola',
+            ],
         ]);
     }
 

@@ -20,6 +20,7 @@ class RolesResource extends JsonResource
             'id'              => $this->id,
             'name'            => $this->name,
             'encrypted_id' => Crypt::encrypt($this->id),
+            'permissions' => $this->permissions->pluck('id'),
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i')
         ];
     }
