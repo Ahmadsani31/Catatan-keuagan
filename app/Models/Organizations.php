@@ -22,6 +22,12 @@ class Organizations extends Model
             ->withTimestamps();
     }
 
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class, 'organization_id');
+    }
+
+
     public function transactions(): HasMany
     {
         return $this->hasMany(Transactions::class);

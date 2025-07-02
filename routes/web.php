@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,18 +33,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
 
-
-
-        Route::get('/roles', [RolesController::class, 'index'])->name('roles.index');
-        Route::get('/roles/create', [RolesController::class, 'create'])->name('roles.create');
-        Route::get('/roles/edit/{id}', [RolesController::class, 'edit'])->name('roles.edit');
-        Route::post('/roles/store', [RolesController::class, 'store'])->name('roles.store');
-        Route::put('/roles/update', [RolesController::class, 'update'])->name('roles.update');
-        Route::delete('/roles/delete/{id}', [RolesController::class, 'destroy'])->name('roles.delete');
-
-        Route::get('/permission', [PermissionController::class, 'index']);
+        Route::controller(RolesController::class)->group(function () {
+            Route::get('/roles', 'index')->name('roles.index');
+            Route::get('/roles/create', 'create')->name('roles.create');
+            Route::get('/roles/edit/{id}', 'edit')->name('roles.edit');
+            Route::post('/roles/store', 'store')->name('roles.store');
+            Route::put('/roles/update', 'update')->name('roles.update');
+            Route::delete('/roles/delete/{id}', 'destroy')->name('roles.delete');
+        });
 
         Route::apiResource('permission', PermissionController::class);
+
+        Route::controller(CategoryController::class)->group(function () {
+            Route::get('categories', 'index')->name('master.categories.index');
+            Route::get('categories/create', 'create')->name('master.categories.create');
+            Route::post('categories/store', 'store')->name('master.categories.store');
+            Route::get('categories/edit/{category}', 'edit')->name('master.categories.edit');
+            Route::put('categories/update/{category}', 'update')->name('master.categories.update');
+            Route::delete('categories/destroy/{category}', 'destroy')->name('master.categories.destroy');
+        });
+
+
+
+        // Route::get('/permission', [PermissionController::class, 'index']);
+
 
         // Route::apiResource('permission', [PermissionController::class, 'index', 'store', 'show', 'update', 'destroy'])
         //     ->only(['index', 'store', 'show', 'update', 'destroy'])
@@ -58,15 +73,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     });
 
-    Route::controller(OrganizationsController::class)->group(function () {
-        Route::get('organizations', 'index')->name('organizations.index');
+    Route::controller(TransactionController::class)->group(function () {
+        Route::get('/transaction', 'index')->name('transaction.index');
     });
+
+    // Route::controller(OrganizationsController::class)->group(function () {
+    //     Route::get('organizations', 'index')->name('organizations.index');
+    // });
 
 
     // Route::get('organizations', [OrganizationsController::class, 'index']);
     // Route::get('organizations/create/{id}', [OrganizationsController::class, 'create'])->name('organizations.create');
     // Route::get('organizations/{id}/detail', [OrganizationsController::class, 'detail'])->name('organizations.detail');
-    Route::get('categorys', [CategoriesController::class, 'index'])->name('categorys.index');
+    // Route::get('categorys', [CategoriesController::class, 'index'])->name('categorys.index');
 });
 
 require __DIR__ . '/settings.php';

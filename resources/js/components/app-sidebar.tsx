@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavItemNew, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, CircleDollarSign, CookieIcon, CookingPotIcon, DollarSign, Folder, LayoutGrid, LucideALargeSmall, User2Icon } from 'lucide-react';
+import { BookMarked, BookOpen, CircleDollarSign, CookieIcon, CookingPotIcon, DollarSign, Folder, LayoutGrid, LucideALargeSmall, User2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItemNew[] = [
@@ -39,6 +39,12 @@ const mainNavItems: NavItemNew[] = [
                 href: "/master/permission",
                 icon: LucideALargeSmall,
                 permissions: ['permission_list']
+            },
+            {
+                title: "Category",
+                href: "/master/categories",
+                icon: BookMarked,
+                permissions: ['permission_list']
             }
         ],
     },
@@ -47,7 +53,7 @@ const mainNavItems: NavItemNew[] = [
         menu: [
             {
                 title: 'Income',
-                href: '#',
+                href: '/transaction',
                 icon: CircleDollarSign,
                 permissions: ['organizations_list']
 

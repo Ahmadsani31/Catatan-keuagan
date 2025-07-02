@@ -16,6 +16,14 @@ class Transactions extends Model
         'created_by',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'date' => 'datetime',
+        ];
+    }
+
+
     public function organization()
     {
         return $this->belongsTo(Organizations::class);
