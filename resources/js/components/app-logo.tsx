@@ -4,7 +4,7 @@ import appLogo from '@asset/icon/app-icon.png';
 
 export default function AppLogo() {
     const page = usePage().props.auth;
-    console.log(page?.organization?.name);
+    // console.log(page?.organization?.name);
 
     return (
         <>

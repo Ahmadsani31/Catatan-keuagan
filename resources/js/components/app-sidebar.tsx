@@ -43,17 +43,6 @@ const mainNavItems: NavItemNew[] = [
         ],
     },
     {
-        header: 'Data',
-        menu: [
-            {
-                title: 'Organizations',
-                href: '/organizations',
-                icon: CookingPotIcon,
-                permissions: ['organizations_list']
-            }
-        ]
-    },
-    {
         header: 'Transaksi',
         menu: [
             {
