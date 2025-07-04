@@ -41,15 +41,6 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function type_options()
-    {
-        try {
-            return response()->json(CategoryType::options(), 200);
-        } catch (\Throwable $eer) {
-            return response()->json([], 403);
-        }
-    }
-
     public function store(CategoryRequest $request)
     {
         try {

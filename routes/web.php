@@ -51,9 +51,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('categories/edit/{category}', 'edit')->name('master.categories.edit');
             Route::put('categories/update/{category}', 'update')->name('master.categories.update');
             Route::delete('categories/destroy/{category}', 'destroy')->name('master.categories.destroy');
-
-            Route::get('categories/fetch/{id}', 'fetch_data')->name('master.categories.fetch');
-            Route::get('categories/type', 'type_options')->name('master.categories.type');
         });
 
 

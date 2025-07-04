@@ -52,19 +52,12 @@ const mainNavItems: NavItemNew[] = [
         header: 'Transaksi',
         menu: [
             {
-                title: 'Income',
+                title: 'Transaksi',
                 href: '/transaction',
                 icon: CircleDollarSign,
                 permissions: ['organizations_list']
 
             },
-            {
-                title: 'Expense',
-                href: '#',
-                icon: DollarSign,
-                permissions: ['organizations_list']
-
-            }
         ]
     },
 ];
