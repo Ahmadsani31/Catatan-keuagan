@@ -10,6 +10,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { LoaderCircle, LockKeyhole, PencilIcon, TrashIcon } from "lucide-react";
 import { FormEventHandler, useState } from "react";
 import { toast } from "react-toastify";
+import ColumnsDatatableActionDelete from "./columns-datatable-action-delete";
+import ModalCategoriesUpdate from "./modal/modal-categories-update";
+import CategoryStatusBadge from "./category-status-badge";
 
 export const ColumnsCategory: ColumnDef<columnsItems>[] = [
     {
@@ -19,6 +22,7 @@ export const ColumnsCategory: ColumnDef<columnsItems>[] = [
     {
         accessorKey: "type",
         header: "Type",
+        cell: ({ row }: any) => <CategoryStatusBadge status={row.original.type} />
     },
     {
         accessorKey: "created_at",
@@ -27,48 +31,28 @@ export const ColumnsCategory: ColumnDef<columnsItems>[] = [
     {
         id: "actions",
         header: () => (<span className='flex justify-center'>Aksi</span>),
-        cell: ({ row }) => {
+        cell: ({ row }: any) => {
 
-            const handleDetele = () => {
-                router.delete(
-                    route('roles.delete', [row.original.id]), {
-                    preserveScroll: true,
-                    preserveState: true,
-                    onSuccess: (success) => {
-                        const flash = flashMessage(success)
-                        if (flash.type == 'success') toast.success(flash.message);
-                        if (flash.type == 'error') toast.error(flash.message);
-                    }
-                })
-            }
-
+            const [open, setOpen] = useState<boolean>(false);
             return (
                 <div className='flex justify-center gap-x-1'>
                     <Button variant={'default'} size={'sm'} asChild >
-                        <Link href={route('roles.edit', { id: row.original.id })}>
+                        <Link href={route('master.categories.edit', [row.original])}>
                             <PencilIcon />
                         </Link>
                     </Button>
 
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild className='cursor-pointer'>
-                            <Button variant={'destructive'} size={'sm'} >
-                                <TrashIcon />
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Apakah anda sudah yakin?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Tindakan ini dapat menghapus data secara permanent dan tidak bisa dibatalkan. "Yes", berarti kamu sudah yakin untuk menghapus data secara permanent dari server.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleDetele}>Yes, delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                    {open && <ModalCategoriesUpdate
+                        open={open}
+                        onOpenChange={setOpen}
+                        category={row.original}
+                    />}
+
+                    <ColumnsDatatableActionDelete
+                        url="master.categories.destroy"
+                        id={row.original.id}
+                    />
+
                 </div>
             )
         },

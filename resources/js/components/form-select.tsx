@@ -20,34 +20,6 @@ export default function FormSelect({ id, title, dataValue, value, errors, placeh
     // console.log('====================================');
 
     return (
-        // <div className='grid w-full items-center gap-1.5'>
-        //     <Label htmlFor={id}>
-        //         {title}
-        //     </Label>
-        //     <Select
-        //         defaultValue={value?.toString()}
-        //         onValueChange={onValueChange}
-        //         required={required}
-        //     >
-        //         <SelectTrigger>
-        //             <SelectValue placeholder={placeholder}>
-        //                 {/* {dataValue.find((d) => d.value === value) ?? placeholder} */}
-        //                 {dataValue.find((d) => d.value === value)?.value ?? placeholder}
-        //                 {/* {value} */}
-        //             </SelectValue>
-        //         </SelectTrigger>
-        //         <SelectContent>
-        //             {dataValue.map((data, index) => (
-        //                 <SelectItem key={index} value={data.value}>
-        //                     {data.name}
-        //                 </SelectItem>
-        //             ))}
-        //         </SelectContent>
-        //     </Select>
-        //     {errors && (
-        //         <p className="text-sm m-0 text-red-500">{errors}</p>
-        //     )}
-        // </div>
         <div className='grid w-full items-center'>
             <Label htmlFor={id} className='mb-2'>
                 {title}

@@ -18,9 +18,6 @@ export default function TextInput({ title, value, errors, placeholder, type, onC
         case "email":
             autoComplete = "email";
             break;
-        case "email":
-            autoComplete = "email";
-            break;
         default:
             autoComplete = "";
             break;
@@ -39,6 +36,7 @@ export default function TextInput({ title, value, errors, placeholder, type, onC
                 autoComplete={autoComplete}
                 className={cn(errors ? "border-red-500" : "")}
                 required={required}
+                autoFocus={true}
             />
             {errors && (
                 <p className="text-sm m-0 text-red-500">{errors}</p>

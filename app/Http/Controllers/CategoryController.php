@@ -15,17 +15,25 @@ class CategoryController extends Controller
 {
     public function index(): Response
     {
-        $organization = Auth::user()->organizations()->first();
-        // $categories = Category::whereHas('organization', function ($query) use ($organization) {
-        //     $query->where('id', $organization->id);
-        // })->get();
-        $categories = Category::where('organization_id', $organization->id)->get();
+        $categories = Category::where('organization_id', getOrganizationiId())->get();
 
         return Inertia::render('master/categories/index', [
             'categories' => CategoryResource::collection($categories),
             'page_info' => [
-                'title' => 'Category',
-                'subtitle' => 'Menampilkan semua data Category yang ada di platform ini, untuk di kelola',
+                'title' => 'Kategori',
+                'subtitle' => 'Menampilkan semua data Kategori yang ada di platform ini, untuk di kelola',
+            ],
+        ]);
+    }
+
+    public function create(): Response
+    {
+        return Inertia::render('master/categories/create', [
+            'page_info' => [
+                'title' => 'Tambah Kategori',
+                'subtitle' => 'Buat kategori baru disini, klik simpan setelah selesai',
+                'method' => 'POST',
+                'action' => route('master.categories.store'),
             ],
             'page_data' => [
                 'categoryType' => CategoryType::options(),
@@ -33,13 +41,20 @@ class CategoryController extends Controller
         ]);
     }
 
+    public function type_options()
+    {
+        try {
+            return response()->json(CategoryType::options(), 200);
+        } catch (\Throwable $eer) {
+            return response()->json([], 403);
+        }
+    }
+
     public function store(CategoryRequest $request)
     {
         try {
-            $organization = Auth::user()->organizations()->first();
-
             Category::create([
-                'organization_id' => $organization->id,
+                'organization_id' =>  getOrganizationiId(),
                 'user_id' => Auth::user()->id,
                 'name' =>  $request->name,
                 'type' => $request->type,
@@ -49,7 +64,59 @@ class CategoryController extends Controller
                 'type' => 'success',
                 'message' => 'Tambah Successfully'
             ]);
-        } catch (\Throwable $ee) {
+        } catch (\Throwable $err) {
+            return back()->with([
+                'type' => 'error',
+                'message' => $err->getMessage()
+            ]);
+        }
+    }
+
+    public function edit(Category $category): Response
+    {
+        return Inertia::render('master/categories/edit', [
+            'page_info' => [
+                'title' => 'Edit Kategori',
+                'subtitle' => 'Edit kategori baru disini, klik simpan setelah selesai',
+                'method' => 'PUT',
+                'action' => route('master.categories.update', $category),
+            ],
+            'page_data' => [
+                'categoryType' => CategoryType::options(),
+            ],
+            'category' => new CategoryResource($category),
+        ]);
+    }
+
+    public function update(Category $category, CategoryRequest $request)
+    {
+        try {
+            $category->update([
+                'name' =>  $request->name,
+                'type' => $request->type,
+            ]);
+
+            return back()->with([
+                'type' => 'success',
+                'message' => 'Tambah Successfully'
+            ]);
+        } catch (\Throwable $err) {
+            return back()->with([
+                'type' => 'error',
+                'message' => $err->getMessage()
+            ]);
+        }
+    }
+
+    public function destroy(Category $category)
+    {
+        try {
+            $category->delete();
+            return back()->with([
+                'type' => 'success',
+                'message' => 'Tambah Successfully'
+            ]);
+        } catch (\Throwable $err) {
             return back()->with([
                 'type' => 'error',
                 'message' => $err->getMessage()

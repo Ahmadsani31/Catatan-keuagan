@@ -1,17 +1,18 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { AlignCenterHorizontalIcon, ArrowBigLeft, Camera, LoaderCircle, NotebookText, SquarePen, Trash } from 'lucide-react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { AlignCenterHorizontalIcon, ArrowBigLeft, LoaderCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { FormEventHandler, useState, ChangeEvent } from 'react';
-import { Checkbox } from '@/components/ui/checkbox';
+import { FormEventHandler } from 'react';
 
 import HeaderTitle from '@/components/header-title';
 import { Card, CardContent } from '@/components/ui/card';
 import FormInput from '@/components/form-input';
-import { Label } from '@/components/ui/label';
-import { dataProps, pageCreate, PropsFormCreate } from '@/types/page-roles';
+import FormSelect from '@/components/form-select';
+import { flashMessage } from '@/lib/utils';
+import { toast } from 'react-toastify';
+import { pageCreate, propsForm } from '@/types/page-categories';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,53 +20,34 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Roles',
-        href: '/master/roles',
+        title: 'Kategori',
+        href: '/master/categories',
     }, {
         title: 'Create',
         href: '',
     },
 ];
 
-export default function RolesIndex({ permissions, page_info }: pageCreate) {
-    const [selectedItems, setSelectedItems] = useState<number[]>([]);
+export default function Create({ page_info, page_data }: pageCreate) {
 
-
-    const { data, setData, post, processing, errors, reset } = useForm<Required<PropsFormCreate>>({
+    const { data, setData, post, processing, errors, reset } = useForm<Required<propsForm>>({
+        id: 0,
         name: '',
-        permission: selectedItems,
+        type: '',
+        _method: page_info.method
     });
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
-
-        post(route('roles.store'), {
-            onFinish: () => reset('name'),
+        console.log(data);
+        // return
+        post(route('master.categories.store'), {
             onSuccess: page => {
-                route('roles.index')
+                reset();
             },
         });
     };
 
-    const handleSelectAllChange = (checked: boolean) => {
-        if (checked) {
-            setSelectedItems(permissions.data.map((item: dataProps) => item.id));
-            setData('permission', permissions.data.map((item: dataProps) => item.id))
-        } else {
-            reset('permission');
-            setSelectedItems([]);
-        }
-    };
-
-    const handleIndividualChange = (itemId: number, checked: boolean) => {
-        if (checked) {
-            setData('permission', [...data.permission, itemId])
-        } else {
-            setData('permission', data.permission.filter((perm) => perm !== itemId))
-        }
-    };
-
-    const isAllSelected = selectedItems.length === permissions.data.length;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -75,7 +57,7 @@ export default function RolesIndex({ permissions, page_info }: pageCreate) {
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
 
                     <Button variant={'destructive'} size={'lg'} asChild>
-                        <Link href={route('roles.index')}>
+                        <Link href={route('master.categories.index')}>
                             <ArrowBigLeft /> Back
                         </Link>
                     </Button>
@@ -84,6 +66,15 @@ export default function RolesIndex({ permissions, page_info }: pageCreate) {
                 <Card>
                     <CardContent>
                         <form onSubmit={handleSubmit} className='space-y-4'>
+                            <FormSelect
+                                id='type'
+                                title='Type'
+                                dataValue={page_data.categoryType}
+                                value={data.type}
+                                onValueChange={(value) => setData('type', value)}
+                                placeholder='Pilih jenis transaksi'
+                                errors={errors.type}
+                            />
                             <FormInput
                                 id="roles"
                                 title="Name"
@@ -93,38 +84,6 @@ export default function RolesIndex({ permissions, page_info }: pageCreate) {
                                 onChange={(e) => setData('name', e.target.value)}
                                 errors={errors.name}
                             />
-                            <div className='grid w-full items-center'>
-                                <div className="flex flex-row justify-between">
-                                    <Label htmlFor="permission" className="mb-3">
-                                        Permission
-                                    </Label>
-                                    <div className='space-x-1'>
-                                        <Label htmlFor="permission-all" className="mb-3">
-                                            Checked ALL
-                                        </Label>
-                                        <Checkbox
-                                            id='permission-all'
-                                            checked={isAllSelected}
-                                            onCheckedChange={(checked) => handleSelectAllChange(!!checked)}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className='border rounded p-3 h-52 overflow-auto'>
-                                    {permissions.data.map((item: any, index: any) => (
-                                        <div className='mb-3 flex items-center gap-2' key={index}>
-                                            <Checkbox name='permission[]' id={item.id}
-                                                checked={data.permission.includes(item.id)}
-                                                onCheckedChange={(checked) => handleIndividualChange(item.id, !!checked)}
-                                            />
-                                            <label htmlFor={item.id} className="block">
-                                                {item.name}
-                                            </label>
-                                        </div>
-                                    )
-                                    )}
-                                </div>
-                            </div>
 
                             <div className='flex justify-end gap-x-2'>
                                 <Button type='button' variant={'outline'} size={'lg'} onClick={() => reset()} >
