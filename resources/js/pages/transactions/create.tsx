@@ -20,15 +20,15 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Kategori',
-        href: '/master/categories',
+        title: 'Transaksi',
+        href: '/transactions/index',
     }, {
-        title: 'Create',
+        title: 'Buat',
         href: '',
     },
 ];
 
-export default function Create({ page_info, page_data }: pageCreate) {
+export default function Create({ page_info }: pageCreate) {
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<propsForm>>({
         id: 0,
@@ -41,7 +41,7 @@ export default function Create({ page_info, page_data }: pageCreate) {
         e.preventDefault();
         console.log(data);
         // return
-        post(route('master.categories.store'), {
+        post(page_info.action, {
             onSuccess: page => {
                 reset();
             },
@@ -66,15 +66,6 @@ export default function Create({ page_info, page_data }: pageCreate) {
                 <Card>
                     <CardContent>
                         <form onSubmit={handleSubmit} className='space-y-4'>
-                            <FormSelect
-                                id='type'
-                                title='Type'
-                                dataValue={page_data.categoryType}
-                                value={data.type}
-                                onValueChange={(value) => setData('type', value)}
-                                placeholder='Pilih jenis transaksi'
-                                errors={errors.type}
-                            />
                             <FormInput
                                 id="roles"
                                 title="Name"

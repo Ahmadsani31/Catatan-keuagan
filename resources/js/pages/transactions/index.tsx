@@ -25,6 +25,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from 'react';
+import TransactionIncome from '@/components/transaction-income';
+import TransactionExpense from '@/components/transaction-expense';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -37,7 +39,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index({ page_info }: pageIndex) {
+export default function Index({ page_info, page_data }: any) {
+
+    console.log(page_data);
+
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -79,10 +84,12 @@ export default function Index({ page_info }: pageIndex) {
                             <TabsTrigger value="income">Pemasukan</TabsTrigger>
                             <TabsTrigger value="expense">Pengeluaran</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="income">Make changes to your account here.
-                            <Button>Back</Button>
+                        <TabsContent value="income" >
+                            <TransactionIncome categoryIncome={page_data.categoryIncome} />
                         </TabsContent>
-                        <TabsContent value="expense">Change your password here.</TabsContent>
+                        <TabsContent value="expense" >
+                            <TransactionExpense categoryExpense={page_data.categoryExpense} />
+                        </TabsContent>
                     </Tabs>
                 </DialogContent>
             </Dialog>

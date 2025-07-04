@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -22,6 +23,38 @@ class TransactionController extends Controller
             'page_info' => [
                 'title' => 'Transaksi',
                 'subtitle' => 'Menampilkan semua data transaksi yang ada di platform ini, untuk di kelola',
+            ],
+            'page_data' => [
+                'categoryIncome' => Category::where('type', 'Pemasukan')->get()->map(fn($item) => [
+                    'value' => $item->name,
+                    'label' => $item->name,
+                ]),
+                'categoryExpense' => Category::where('type', 'Pengeluaran')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+            ],
+        ]);
+    }
+
+    public function create(): Response
+    {
+        return Inertia::render('transactions/create', [
+            'page_info' => [
+                'title' => 'Tambah Transaksi',
+                'subtitle' => 'Buat transaksi baru disini, klik simpan setelah selesai',
+                'method' => 'POST',
+                'action' => route('transactions.store'),
+            ],
+            'page_data' => [
+                'categoryIncome' => Category::where('type', 'Pemasukan')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+                'categoryExpense' => Category::where('type', 'Pengeluaran')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
             ],
         ]);
     }

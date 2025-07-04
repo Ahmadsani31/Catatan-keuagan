@@ -41,7 +41,7 @@ export default function Create({ page_info, page_data }: pageCreate) {
         e.preventDefault();
         console.log(data);
         // return
-        post(route('master.categories.store'), {
+        post(page_info.action, {
             onSuccess: page => {
                 reset();
             },
