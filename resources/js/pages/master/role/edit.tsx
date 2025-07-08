@@ -34,7 +34,7 @@ export default function RolesIndex({ role, permissions, page_info }: pageEdit) {
 
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
-    const { data, setData, post, put, processing, errors, reset } = useForm<Required<useFormEdit>>({
+    const { data, setData, put, processing, errors, reset } = useForm<Required<useFormEdit>>({
         id: role.data.id,
         name: role.data.name,
         permission: role.data.permissions,
@@ -54,6 +54,8 @@ export default function RolesIndex({ role, permissions, page_info }: pageEdit) {
     };
 
     const handleSelectAllChange = (checked: boolean) => {
+        console.log(checked);
+
         if (checked) {
             setSelectedItems(permissions.data.map((item: dataProps) => item.id));
             setData('permission', permissions.data.map((item: dataProps) => item.id.toString()))
@@ -61,6 +63,8 @@ export default function RolesIndex({ role, permissions, page_info }: pageEdit) {
             reset('permission');
             setSelectedItems([]);
         }
+        console.log(selectedItems);
+
     };
 
     const handleIndividualChange = (itemId: number, checked: boolean) => {

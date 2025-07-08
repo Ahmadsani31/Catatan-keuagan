@@ -16,7 +16,6 @@ type propsModal = {
 }
 
 type propsForm = {
-    id: number,
     name: string,
     type: string,
 }
@@ -26,7 +25,6 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
     const [transaksiType, setTransaksiType] = useState([]);
 
     const { data, setData, post, processing, errors, clearErrors, reset } = useForm<Required<propsForm>>({
-        id: 0,
         name: '',
         type: '',
     });
@@ -34,9 +32,9 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
     useEffect(() => {
         async function fetchType() {
             try {
-                const response = await axios.get(route('master.categories.type'));
-                console.log(response.data);
-                setTransaksiType(response.data)
+                const response = await axios.get(route('master.categories.create'));
+                const param = response.data;
+                setTransaksiType(param.page_data.categoryType)
             } catch (error) {
                 console.error(error);
             }
@@ -53,7 +51,7 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
         // return
         post(route('master.categories.store'), {
             onSuccess: page => {
-                reset('name');
+                reset();
                 onOpenChange(false);
                 const flash = flashMessage(page)
                 if (flash.type == 'success') toast.success(flash.message);
@@ -75,9 +73,9 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
             <DialogContent className="sm:max-w-[625px]">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
-                        <DialogTitle>Tambah Category</DialogTitle>
+                        <DialogTitle>Tambah Kategori</DialogTitle>
                         <DialogDescription>
-                            Make your categories name. Click save when you're done.
+                            Buat data kategori baru disini, klik simpan setelah selesai.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-2 py-4">
@@ -101,10 +99,10 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
 
                     </div>
                     <DialogFooter>
-                        <Button type='button' size={'lg'} variant={'outline'} onClick={handleCloseModal}>Cancel</Button>
+                        <Button type='button' size={'lg'} variant={'outline'} onClick={handleCloseModal}>Close</Button>
                         <Button type='submit' size={'lg'} disabled={processing}>
                             {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Submit
+                            Simpan
                         </Button>
                     </DialogFooter>
                 </form>

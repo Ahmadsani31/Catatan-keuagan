@@ -46,11 +46,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::controller(CategoryController::class)->group(function () {
             Route::get('categories', 'index')->name('master.categories.index');
-            Route::get('categories/create', 'create')->name('master.categories.create');
+            // Route::get('categories/create', 'create')->name('master.categories.create');
             Route::post('categories/store', 'store')->name('master.categories.store');
-            Route::get('categories/edit/{category}', 'edit')->name('master.categories.edit');
+            // Route::get('categories/edit/{category}', 'edit')->name('master.categories.edit');
             Route::put('categories/update/{category}', 'update')->name('master.categories.update');
             Route::delete('categories/destroy/{category}', 'destroy')->name('master.categories.destroy');
+
+            Route::get('categories/create', 'create_json')->name('master.categories.create');
+            Route::get('categories/edit/{category}', 'edit_json')->name('master.categories.edit');
         });
 
 
@@ -74,7 +77,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::controller(TransactionController::class)->group(function () {
-        Route::get('/transaction', 'index')->name('transaction.index');
+        Route::get('/transactions', 'index')->name('transactions.index');
+        Route::get('/transactions/create', 'create')->name('transactions.create');
+
+        Route::get('/transactions/edit/{transaction}', 'edit')->name('transactions.edit');
+
+        Route::post('/transactions/store', 'store')->name('transactions.store');
+        Route::put('/transactions/update/{transaction}', 'update')->name('transactions.update');
+
+        Route::delete('/transactions/destroy/{transaction}', 'destroy')->name('transactions.destroy');
+
+        Route::get('/transactions/type/{type}', 'type_json')->name('transactions.type');
     });
 
     // Route::controller(OrganizationsController::class)->group(function () {

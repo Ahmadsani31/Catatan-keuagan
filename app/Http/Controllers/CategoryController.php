@@ -6,6 +6,7 @@ use App\Enums\CategoryType;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -15,7 +16,7 @@ class CategoryController extends Controller
 {
     public function index(): Response
     {
-        $categories = Category::where('organization_id', getOrganizationiId())->get();
+        $categories = Category::where('organization_id', getOrganizationiId())->latest()->get();
 
         return Inertia::render('master/categories/index', [
             'categories' => CategoryResource::collection($categories),
@@ -26,22 +27,22 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function create(): Response
-    {
-        return Inertia::render('master/categories/create', [
-            'page_info' => [
-                'title' => 'Tambah Kategori',
-                'subtitle' => 'Buat kategori baru disini, klik simpan setelah selesai',
-                'method' => 'POST',
-                'action' => route('master.categories.store'),
-            ],
-            'page_data' => [
-                'categoryType' => CategoryType::options(),
-            ],
-        ]);
-    }
+    // public function create(): Response
+    // {
+    //     return Inertia::render('master/categories/create', [
+    //         'page_info' => [
+    //             'title' => 'Tambah Kategori',
+    //             'subtitle' => 'Buat kategori baru disini, klik simpan setelah selesai',
+    //             'method' => 'POST',
+    //             'action' => route('master.categories.store'),
+    //         ],
+    //         'page_data' => [
+    //             'categoryType' => CategoryType::options(),
+    //         ],
+    //     ]);
+    // }
 
-    public function store(CategoryRequest $request)
+    public function store(CategoryRequest $request): RedirectResponse
     {
         try {
             Category::create([
@@ -63,21 +64,21 @@ class CategoryController extends Controller
         }
     }
 
-    public function edit(Category $category): Response
-    {
-        return Inertia::render('master/categories/edit', [
-            'page_info' => [
-                'title' => 'Edit Kategori',
-                'subtitle' => 'Edit kategori baru disini, klik simpan setelah selesai',
-                'method' => 'PUT',
-                'action' => route('master.categories.update', $category),
-            ],
-            'page_data' => [
-                'categoryType' => CategoryType::options(),
-            ],
-            'category' => new CategoryResource($category),
-        ]);
-    }
+    // public function edit(Category $category): Response
+    // {
+    //     return Inertia::render('master/categories/edit', [
+    //         'page_info' => [
+    //             'title' => 'Edit Kategori',
+    //             'subtitle' => 'Edit kategori baru disini, klik simpan setelah selesai',
+    //             'method' => 'PUT',
+    //             'action' => route('master.categories.update', $category),
+    //         ],
+    //         'page_data' => [
+    //             'categoryType' => CategoryType::options(),
+    //         ],
+    //         'category' => new CategoryResource($category),
+    //     ]);
+    // }
 
     public function update(Category $category, CategoryRequest $request)
     {
@@ -89,7 +90,7 @@ class CategoryController extends Controller
 
             return back()->with([
                 'type' => 'success',
-                'message' => 'Tambah Successfully'
+                'message' => 'Update Successfully'
             ]);
         } catch (\Throwable $err) {
             return back()->with([
@@ -105,7 +106,7 @@ class CategoryController extends Controller
             $category->delete();
             return back()->with([
                 'type' => 'success',
-                'message' => 'Tambah Successfully'
+                'message' => 'Delete Successfully'
             ]);
         } catch (\Throwable $err) {
             return back()->with([
@@ -113,5 +114,30 @@ class CategoryController extends Controller
                 'message' => $err->getMessage()
             ]);
         }
+    }
+
+    public function create_json()
+    {
+        return response()->json([
+            'page_data' => [
+                'categoryType' => CategoryType::options(),
+            ],
+        ]);
+    }
+
+    public function edit_json(Category $category)
+    {
+        return response()->json([
+            'page_info' => [
+                'title' => 'Edit Kategori',
+                'subtitle' => 'Edit kategori baru disini, klik simpan setelah selesai',
+                'method' => 'PUT',
+                'action' => route('master.categories.update', $category),
+            ],
+            'page_data' => [
+                'categoryType' => CategoryType::options(),
+            ],
+            'category' => new CategoryResource($category),
+        ]);
     }
 }

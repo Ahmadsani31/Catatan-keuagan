@@ -1,73 +1,15 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
+import { Card, CardAction, CardDescription, CardFooter, CardHeader } from '@/components/ui/card';
 
-import { Badge } from "@/components/ui/badge"
-import {
-    Card,
-    CardAction,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import { BiDollar, BiLineChart, BiLineChartDown } from "react-icons/bi"
+import { ComponentType, createElement } from 'react';
 
-export function SectionCards() {
+export function SectionCards({ name, icon, value }: { name: string; icon: ComponentType; value: number }) {
     return (
-        <div className="grid auto-rows-min gap-4 lg:grid-cols-3 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs">
-            <Card className="@container/card">
-                <CardHeader>
-                    <CardDescription>
-                        Income
-                    </CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        Rp.10,250.00
-                    </CardTitle>
-                    <CardAction>
-                        <BiLineChart size={30} />
-                    </CardAction>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="text-muted-foreground">
-                        Total pemasukan
-                    </div>
-                </CardFooter>
-            </Card>
-            <Card className="@container/card">
-                <CardHeader>
-                    <CardDescription>
-                        Expense
-                    </CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        Rp.1,250.00
-                    </CardTitle>
-                    <CardAction>
-                        <BiLineChartDown size={30} />
-                    </CardAction>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="text-muted-foreground">
-                        Total Pengeluaran
-                    </div>
-                </CardFooter>
-            </Card>
-            <Card className="@container/card">
-                <CardHeader>
-                    <CardDescription>
-                        Profit
-                    </CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        Rp.423,250.00
-                    </CardTitle>
-                    <CardAction>
-                        <BiDollar size={30} />
-                    </CardAction>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="text-muted-foreground">
-                        Total Penghasilan
-                    </div>
-                </CardFooter>
-            </Card>
-        </div>
-    )
+        <Card className="@container/card">
+            <CardHeader>
+                <CardDescription>{name}</CardDescription>
+                <CardAction>{icon && createElement(icon)}</CardAction>
+            </CardHeader>
+            <CardFooter className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">{value}</CardFooter>
+        </Card>
+    );
 }

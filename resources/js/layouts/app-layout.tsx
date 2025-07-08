@@ -22,7 +22,6 @@ export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (
             draggable
             pauseOnHover
             stacked
-            theme="colored"
             transition={Bounce}
         />
     </AppLayoutTemplate>

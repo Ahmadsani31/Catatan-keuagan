@@ -21,6 +21,22 @@ import FormTextarea from '@/components/form-textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import FormInputFile from '@/components/form-input-file';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import DialogPreviewImage from '@/components/dialog-preview-image';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -31,19 +47,26 @@ const breadcrumbs: BreadcrumbItem[] = [
         title: 'Transaksi',
         href: '/transactions',
     }, {
-        title: 'Tambah',
+        title: 'Edit',
         href: '',
     },
 ];
 
 interface pageCreate {
     transactions: {
-        id: number,
-        date: string,
-        type: string,
-        category_id: number | string,
-        description: string,
-        amount: string,
+        data: {
+            id: number,
+            date: string,
+            type: string,
+            category: {
+                id: number
+                name: string
+            },
+            description: string,
+            file_image: string;
+            amount: string,
+        }
+
     },
     page_info: {
         title: string;
@@ -65,6 +88,7 @@ interface pageCreate {
 }
 
 type propsForm = {
+    id: number,
     date: string,
     type: string,
     category_id: number | string,
@@ -75,20 +99,22 @@ type propsForm = {
 }
 
 
-export default function Create({ page_info, page_data }: pageCreate) {
+export default function Edit({ transactions, page_info, page_data }: pageCreate) {
 
     const fileInputCover = useRef<HTMLInputElement | null>(null);
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<propsForm>>({
-        date: format(new Date(), 'yyyy-MM-dd'),
-        type: '',
-        category_id: "",
-        amount: '',
+        id: transactions.data.id,
+        date: transactions.data.date,
+        type: transactions.data.type,
+        category_id: transactions.data.category.id,
+        amount: transactions.data.amount,
+        description: transactions.data.description,
         file_image: null,
-        description: '',
         _method: page_info.method
     });
 
+    // console.log(data);
 
     // useEffect(() => {
     //     setData('category_id', transactions.category_id);
@@ -102,22 +128,20 @@ export default function Create({ page_info, page_data }: pageCreate) {
         post(page_info.action, {
             onSuccess: page => {
                 reset();
-                const flash = flashMessage(page)
-                if (flash.type == 'success') toast.success(flash.message);
-                if (flash.type == 'error') toast.error(flash.message);
             },
         });
     };
 
-    useEffect(() => {
-        setData("type", "Pemasukan")
-    }, [])
-
     const handleChangeTabs = (val: string) => {
-        setData('type', val)
-        reset('category_id');
+        setData('type', val);
+        if (val == 'Pengeluaran') {
+            page_data.categoryExpense.find((e) => e.value == transactions.data.category.id) ? setData('category_id', transactions.data.category.id) : setData('category_id', 0);
+        } else {
+            page_data.categoryIncome.find((e) => e.value == transactions.data.category.id) ? setData('category_id', transactions.data.category.id) : setData('category_id', 0);
+        }
     }
 
+    // console.log(data);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={page_info.title ?? 'Aplikasi'} />
@@ -134,7 +158,7 @@ export default function Create({ page_info, page_data }: pageCreate) {
                 </div>
                 <Card>
                     <CardContent>
-                        <form onSubmit={handleSubmit} className='space-y-4'>
+                        <form onSubmit={handleSubmit} className='space-y-4' encType='multipart/form-data'>
 
                             <FormDatePicker
                                 id="date"
@@ -145,7 +169,7 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                 placeholder="Pilih tanggal"
                                 modal={true}
                             />
-                            <Tabs defaultValue="Pemasukan" onValueChange={(val) => handleChangeTabs(val)}>
+                            <Tabs defaultValue={transactions.data.type} onValueChange={(val) => handleChangeTabs(val)}>
                                 <TabsList className='w-full h-12'>
                                     <TabsTrigger value="Pemasukan" className='data-[state=active]:bg-green-300 '>Pemasukan</TabsTrigger>
                                     <TabsTrigger value="Pengeluaran" className='data-[state=active]:bg-red-300 '>Pengeluaran</TabsTrigger>
@@ -166,7 +190,10 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                             onValueChange={(value) => setData('category_id', value)}
                                         >
                                             <SelectTrigger className={`border h-10 ${errors.category_id ? 'border-red-500' : ''}`}>
-                                                <SelectValue placeholder='Pilih Kategori pemasukan' />
+                                                {/* <SelectValue placeholder='Pilih Kategori' /> */}
+                                                <SelectValue>
+                                                    {page_data.categoryIncome.find((d: { value: number, label: string }) => d.value === Number(data.category_id)) ? page_data.categoryIncome.find((d: { value: number, label: string }) => d.value === Number(data.category_id))?.label : (<p className="text-muted-foreground">Pilih Kategori</p>)}
+                                                </SelectValue>
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {page_data.categoryIncome.map((data, index: number) => (
@@ -197,8 +224,10 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                             onValueChange={(value) => setData('category_id', value)}
                                         >
                                             <SelectTrigger className={`border h-10 ${errors.category_id ? 'border-red-500' : ''}`}>
-                                                <SelectValue placeholder='Pilih Kategori pengeluaran' />
-
+                                                {/* <SelectValue placeholder='Pilih Kategori' /> */}
+                                                <SelectValue>
+                                                    {page_data.categoryExpense.find((d: { value: number, label: string }) => d.value === Number(data.category_id)) ? page_data.categoryExpense.find((d: { value: number, label: string }) => d.value === Number(data.category_id))?.label : (<p className="text-muted-foreground">Pilih Kategori</p>)}
+                                                </SelectValue>
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {page_data.categoryExpense.map((data, index: number) => (
@@ -234,12 +263,15 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                     <p className="text-sm m-0 text-red-500">{errors.amount}</p>
                                 )}
                             </div>
-                            <FormInputFile id='file_image' title="Bukti Transaksi (opsional)" onChange={(e) =>
-                                setData(
-                                    'file_image',
-                                    e.target.files && e.target.files[0] ? e.target.files[0] : null
-                                )
-                            } ref={fileInputCover} errors={errors.file_image} />
+                            <div className="flex flex-row items-center gap-2 mb-2">
+                                <FormInputFile id='file_image' title="Bukti Transaksi (opsional)" onChange={(e) =>
+                                    setData(
+                                        'file_image',
+                                        e.target.files && e.target.files[0] ? e.target.files[0] : null
+                                    )
+                                } ref={fileInputCover} errors={errors.file_image} />
+                                <DialogPreviewImage url_image={transactions.data.file_image} size='size-14' />
+                            </div>
                             <FormTextarea
                                 id='keterangan'
                                 title="Keterangan"

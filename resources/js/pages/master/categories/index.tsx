@@ -10,6 +10,8 @@ import { DataTable } from '@/components/data-table';
 
 import { flashMessage, progressToast } from '@/lib/utils';
 import { ColumnsCategory } from '@/components/columns-category';
+import ModalCategoriesCreate from '@/components/modal/modal-categories-create';
+import { useState } from 'react';
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -24,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function RolesIndex({ categories, page_info }: any) {
-    progressToast
+    const [open, setOpen] = useState<boolean>(false);
 
     console.log(categories);
 
@@ -35,10 +37,8 @@ export default function RolesIndex({ categories, page_info }: any) {
                 <div className='flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center'>
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
 
-                    <Button variant={'default'} size={'lg'} asChild >
-                        <Link href={route('master.categories.create')}>
-                            <PlusCircle /> Tambah
-                        </Link>
+                    <Button variant={'default'} size={'lg'} onClick={() => setOpen(true)}>
+                        <PlusCircle /> Tambah
                     </Button>
 
                 </div>
@@ -53,6 +53,7 @@ export default function RolesIndex({ categories, page_info }: any) {
                     </CardContent>
                 </Card>
             </div>
+            <ModalCategoriesCreate open={open} onOpenChange={setOpen} />
         </AppLayout>
     );
 }

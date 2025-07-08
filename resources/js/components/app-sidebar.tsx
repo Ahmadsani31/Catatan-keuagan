@@ -41,7 +41,7 @@ const mainNavItems: NavItemNew[] = [
                 permissions: ['permission_list']
             },
             {
-                title: "Category",
+                title: "Kategori",
                 href: "/master/categories",
                 icon: BookMarked,
                 permissions: ['permission_list']
@@ -53,7 +53,7 @@ const mainNavItems: NavItemNew[] = [
         menu: [
             {
                 title: 'Transaksi',
-                href: '/transaction',
+                href: '/transactions',
                 icon: CircleDollarSign,
                 permissions: ['organizations_list']
 

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionResource extends JsonResource
 {
@@ -16,11 +17,16 @@ class TransactionResource extends JsonResource
     {
         return [
             'id'              => $this->id,
-            'type'            => $this->name,
+            'category' => $this->whenLoaded('category', [
+                'id' => $this->category?->id,
+                'name' => $this->category?->name,
+            ]),
+            'type'            => $this->type,
             'amount' => $this->amount,
-            'date' => $this->date,
+            'date' => $this->date->format('d M Y'),
             'description' => $this->description,
-            'created_by' => $this->created_by,
+            'user_id' => $this->user_id,
+            'file_image' => $this->file_image ? Storage::url($this->file_image) : null,
             'created_at' => $this->created_at->format('Y-m-d H:i')
         ];
     }

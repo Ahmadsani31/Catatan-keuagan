@@ -11,8 +11,8 @@ import { LoaderCircle, LockKeyhole, PencilIcon, TrashIcon } from "lucide-react";
 import { FormEventHandler, useState } from "react";
 import { toast } from "react-toastify";
 import ColumnsDatatableActionDelete from "./columns-datatable-action-delete";
-import ModalCategoriesUpdate from "./modal/modal-categories-update";
 import CategoryStatusBadge from "./category-status-badge";
+import ModalCategoriesEdit from "./modal/modal-categories-edit";
 
 export const ColumnsCategory: ColumnDef<columnsItems>[] = [
     {
@@ -34,15 +34,20 @@ export const ColumnsCategory: ColumnDef<columnsItems>[] = [
         cell: ({ row }: any) => {
 
             const [open, setOpen] = useState<boolean>(false);
+
             return (
                 <div className='flex justify-center gap-x-1'>
-                    <Button variant={'default'} size={'sm'} asChild >
+                    {/* <Button variant={'default'} size={'sm'} asChild >
                         <Link href={route('master.categories.edit', [row.original])}>
                             <PencilIcon />
                         </Link>
+                    </Button> */}
+
+                    <Button variant={'default'} size={'sm'} onClick={() => setOpen(true)}>
+                        <PencilIcon />
                     </Button>
 
-                    {open && <ModalCategoriesUpdate
+                    {open && <ModalCategoriesEdit
                         open={open}
                         onOpenChange={setOpen}
                         category={row.original}

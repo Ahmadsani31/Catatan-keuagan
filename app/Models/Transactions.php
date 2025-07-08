@@ -9,11 +9,13 @@ class Transactions extends Model
 {
     protected $fillable = [
         'organization_id',
+        'category_id',
         'type',
         'amount',
         'date',
+        'file_image',
         'description',
-        'created_by',
+        'user_id',
     ];
 
     protected function casts(): array
@@ -24,13 +26,19 @@ class Transactions extends Model
     }
 
 
-    public function organization()
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organizations::class);
     }
 
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -29,7 +29,7 @@ export default function ReactSelect({ id, title, dataValue, value, errors, place
                 styles={{
                     control: (baseStyles, state) => ({
                         ...baseStyles,
-                        borderColor: errors ? 'red' : 'gray',
+                        borderColor: errors ? 'red' : '',
                         fontSize: '14px',
                     }),
                 }}

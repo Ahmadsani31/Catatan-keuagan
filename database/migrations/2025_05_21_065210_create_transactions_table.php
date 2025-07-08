@@ -19,7 +19,8 @@ return new class extends Migration
             $table->decimal('amount', 15, 2);
             $table->date('date');
             $table->text('description')->nullable();
-            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->text('image')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

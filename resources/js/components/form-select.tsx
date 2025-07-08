@@ -1,5 +1,5 @@
 import { Label } from './ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select'
 
 type itemsProps = {
     id: string
@@ -15,7 +15,7 @@ type itemsProps = {
 export default function FormSelect({ id, title, dataValue, value, errors, placeholder, onValueChange, required }: itemsProps) {
 
     // console.log('====================================');
-    // console.log(dataValue);
+    console.log(dataValue);
     // console.log(value);
     // console.log('====================================');
 
@@ -25,21 +25,24 @@ export default function FormSelect({ id, title, dataValue, value, errors, placeh
                 {title}
             </Label>
             <Select
-                defaultValue={dataValue?.toString() ?? ''}
+                value={value}
                 onValueChange={onValueChange}
                 required={required}
             >
                 <SelectTrigger className={`border h-10 ${errors ? 'border-red-500' : ''}`}>
-                    <SelectValue>
-                        {dataValue.find((d) => d.value.toString() === value) ? dataValue.find((d) => d.value.toString() === value)?.value : placeholder}
+                    <SelectValue placeholder={placeholder}>
+                        {/* {dataValue.find((d) => d.value.toString() === value) ? dataValue.find((d) => d.value.toString() === value)?.value : placeholder} */}
                     </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                    {dataValue.map((data, index) => (
-                        <SelectItem className='hover:bg-green-100' key={index} value={data.value.toString()}>
-                            {data.value}
-                        </SelectItem>
-                    ))}
+                    <SelectGroup>
+                        <SelectLabel>Pilih salah satu</SelectLabel>
+                        {dataValue.map((data, index) => (
+                            <SelectItem className='hover:bg-green-100 hover:cursor-pointer h-10' key={index} value={data.value.toString()}>
+                                {data.label}
+                            </SelectItem>
+                        ))}
+                    </SelectGroup>
                 </SelectContent>
             </Select>
             {errors && (

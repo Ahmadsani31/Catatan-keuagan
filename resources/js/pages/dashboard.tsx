@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 
-import { SectionCards } from '@/components/section-cards';
+import { SectionCardDashboard } from '@/components/section-card-dashboard';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ChartArea from '@/components/chart-area';
@@ -57,7 +57,7 @@ export default function Dashboard() {
                         <TabsTrigger value="4">12 Mouth</TabsTrigger>
                     </TabsList>
                 </Tabs>
-                <SectionCards />
+                <SectionCardDashboard />
                 <ChartArea />
             </div>
         </AppLayout>
