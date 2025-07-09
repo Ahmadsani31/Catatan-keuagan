@@ -2,9 +2,15 @@ import { Button } from '@/components/ui/button';
 import { router } from '@inertiajs/react';
 import { LoaderCircle, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from './ui/alert-dialog';
-import { flashMessage } from '@/lib/utils';
-import { toast } from 'react-toastify';
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from './ui/alert-dialog';
 
 export default function ColumnsDatatableActionDelete({ url }: { url: string }) {
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -16,9 +22,6 @@ export default function ColumnsDatatableActionDelete({ url }: { url: string }) {
             preserveScroll: true,
             preserveState: true,
             onSuccess: (success) => {
-                const flash = flashMessage(success);
-                if (flash.type == 'success') toast.success(flash.message);
-                if (flash.type == 'error') toast.error(flash.message);
                 setProcessing(false);
                 setDialogOpen(false);
             },

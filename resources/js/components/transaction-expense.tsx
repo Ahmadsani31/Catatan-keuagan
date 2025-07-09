@@ -1,24 +1,18 @@
-import { Link, useForm } from "@inertiajs/react";
-import FormTextarea from "./form-textarea";
-import TextInput from "./textInput";
-import { FormEventHandler, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal } from "react";
-import { Loader2, PencilIcon } from "lucide-react";
-import { Button } from "./ui/button";
-import FormInput from "./form-input";
-import ReactSelect from "./react-select";
-import FormDatePicker from "./form-date-picker";
-import FormSelect from "./form-select";
-import { format } from "date-fns";
-import { Label } from "./ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
-import { NumericFormat } from "react-number-format";
-import { cn } from "@/lib/utils";
-import { Input } from "./ui/input";
+import { cn } from '@/lib/utils';
+import { Link, useForm } from '@inertiajs/react';
+import { format } from 'date-fns';
+import { Loader2, PencilIcon } from 'lucide-react';
+import { FormEventHandler, Key } from 'react';
+import { NumericFormat } from 'react-number-format';
+import FormDatePicker from './form-date-picker';
+import FormTextarea from './form-textarea';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
 
 export default function TransactionExpense({ categoryExpense }: any) {
-
     // console.log(categoryExpense);
-
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<any>>({
         date: format(new Date(), 'yyyy-MM-dd'),
@@ -33,9 +27,8 @@ export default function TransactionExpense({ categoryExpense }: any) {
         console.log(data);
         // return
         post(route('transaction.store'), {
-            onSuccess: page => {
+            onSuccess: (page) => {
                 console.log(page);
-
             },
         });
     };
@@ -51,22 +44,16 @@ export default function TransactionExpense({ categoryExpense }: any) {
                     placeholder="Pilih tanggal"
                     modal={true}
                 />
-                <div className='grid w-full items-center'>
-                    <div className="flex flex-row items-center gap-2 mb-2">
-                        <Label>
-                            Katagori
-                        </Label>
-                        <Link href={route('master.categories.index')} className="bg-gray-100 p-1 rounded-md">
+                <div className="grid w-full items-center">
+                    <div className="mb-2 flex flex-row items-center gap-2">
+                        <Label>Katagori</Label>
+                        <Link href={route('master.categories.index')} className="rounded-md bg-gray-100 p-1">
                             <PencilIcon size={15} />
                         </Link>
                     </div>
-                    <Select
-                        value={data.category_id}
-                        onValueChange={(value) => setData('category_id', value)}
-                        required={true}
-                    >
-                        <SelectTrigger className={`border h-10 ${errors.category_id ? 'border-red-500' : ''}`}>
-                            <SelectValue placeholder='Transaksi Expense'>
+                    <Select value={data.category_id} onValueChange={(value) => setData('category_id', value)} required={true}>
+                        <SelectTrigger className={`h-10 border ${errors.category_id ? 'border-red-500' : ''}`}>
+                            <SelectValue placeholder="Transaksi Expense">
                                 {/* {dataValue.find((d) => d.value.toString() === value) ? dataValue.find((d) => d.value.toString() === value)?.value : placeholder} */}
                             </SelectValue>
                         </SelectTrigger>
@@ -74,25 +61,23 @@ export default function TransactionExpense({ categoryExpense }: any) {
                             <SelectGroup>
                                 <SelectLabel>Pilih salah satu</SelectLabel>
                                 {categoryExpense.map((data: { value: string; label: string }, index: Key | null | undefined) => (
-                                    <SelectItem className='hover:bg-green-100 hover:cursor-pointer h-10' key={index} value={data.value.toString()}>
+                                    <SelectItem className="h-10 hover:cursor-pointer hover:bg-green-100" key={index} value={data.value.toString()}>
                                         {data.label}
                                     </SelectItem>
                                 ))}
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    {errors && (
-                        <p className="text-sm m-0 text-red-500">{errors.category_id}</p>
-                    )}
+                    {errors && <p className="m-0 text-sm text-red-500">{errors.category_id}</p>}
                 </div>
 
-                <div className='grid w-full items-center'>
-                    <Label htmlFor={'harga'} className='mb-3'>
+                <div className="grid w-full items-center">
+                    <Label htmlFor={'harga'} className="mb-3">
                         Harga
                     </Label>
                     <NumericFormat
                         id="harga"
-                        className={cn(errors.amount ? "border-red-500" : "")}
+                        className={cn(errors.amount ? 'border-red-500' : '')}
                         value={data.amount}
                         allowLeadingZeros
                         onValueChange={(e) => setData('amount', e.value)}
@@ -101,29 +86,27 @@ export default function TransactionExpense({ categoryExpense }: any) {
                         placeholder="Harga"
                         customInput={Input}
                     />
-                    {errors.amount && (
-                        <p className="text-sm m-0 text-red-500">{errors.amount}</p>
-                    )}
+                    {errors.amount && <p className="m-0 text-sm text-red-500">{errors.amount}</p>}
                 </div>
 
                 <FormTextarea
-                    id='keterangan'
+                    id="keterangan"
                     title="Keterangan"
-                    placeholder='Keterangan...'
+                    placeholder="Keterangan..."
                     value={data.description}
                     onChange={(e) => setData('description', e.target.value)}
                     errors={errors.description}
                 />
             </div>
-            <div className='flex justify-end mt-4 gap-2'>
-                <Button type='button' variant={'outline'} size={'lg'}>
+            <div className="mt-4 flex justify-end gap-2">
+                <Button type="button" variant={'outline'} size={'lg'}>
                     Close
                 </Button>
-                <Button type='submit' size={'lg'} disabled={processing}>
+                <Button type="submit" size={'lg'} disabled={processing}>
                     {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Submit
                 </Button>
             </div>
         </form>
-    )
+    );
 }

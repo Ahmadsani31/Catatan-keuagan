@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\PaymentKrediturRequest;
+use App\Http\Resources\PaymentKrediturResource;
+use App\Models\Kreditur;
+use App\Models\PaymentKreditur;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class PaymentKrediturController extends Controller
+{
+    public function index(Kreditur $kreditur)
+    {
+
+        return Inertia::render('payment-krediturs/index', [
+            'page_info' => [
+                'title' => 'Transaksi pembayaran',
+                'subtitle' => 'Data transaksi pembayaran kredit ' . $kreditur->name . '.',
+            ],
+            'kreditur' => $kreditur->load('cash'),
+            'paymentKreditur' => PaymentKrediturResource::collection($kreditur->paymentKreditur),
+        ]);
+    }
+
+    public function store(PaymentKrediturRequest $request, Kreditur $kreditur): RedirectResponse
+    {
+        // dd($request->all());
+        try {
+            $kreditur->paymentKreditur()->create([
+                'date' => $request->date,
+                'amount' => $request->amount,
+                'payment_method' => $request->payment_method,
+                'note' => $request->note,
+            ]);
+
+            $kreditur->cash->update([
+                'available' => $kreditur->cash->available - $request->amount,
+                'pay' => $kreditur->cash->pay + $request->amount,
+            ]);
+
+            return back()->with([
+                'type' => 'success',
+                'message' => 'Transaksi pembayaran successfully'
+            ]);
+        } catch (\Throwable $err) {
+            return back()->with([
+                'type' => 'error',
+                'message' => $err->getMessage()
+            ]);
+        }
+    }
+
+    public function destroy(Kreditur $kreditur, PaymentKreditur $paymentKreditur)
+    {
+        try {
+            $kreditur->cash->update([
+                'available' => $kreditur->cash->available + $paymentKreditur->amount,
+                'pay' => $kreditur->cash->pay - $paymentKreditur->amount,
+            ]);
+            $paymentKreditur->delete();
+            return back()->with([
+                'type' => 'success',
+                'message' => 'Delete Successfully'
+            ]);
+        } catch (\Throwable $err) {
+            return back()->with([
+                'type' => 'error',
+                'message' => $err->getMessage()
+            ]);
+        }
+    }
+}

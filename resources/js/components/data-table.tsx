@@ -1,32 +1,33 @@
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
+    ColumnDef,
+    FilterFn,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
-    useReactTable,
-    ColumnDef,
-    SortingState,
     PaginationState,
     Row,
-    FilterFn,
-} from "@tanstack/react-table";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+    SortingState,
+    useReactTable,
+} from '@tanstack/react-table';
 
-import { ArrowUpDown, ChevronDown, CircleXIcon, X } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./ui/pagination";
-import getPaginationRange from "@/lib/pagination";
-import { useEffect, useMemo, useState } from "react";
+import getPaginationRange from '@/lib/pagination';
+import { ArrowUpDown, CircleXIcon } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from './ui/pagination';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface DataTableProps<TData> {
     columns: ColumnDef<TData>[];
@@ -35,8 +36,8 @@ interface DataTableProps<TData> {
     defaultSort?: SortingState;
     searchableColumns?: string[];
     defaultSearch?: string;
-    pageLengthOptions?: (number | "all")[];
-    defaultPageLength?: number | "all";
+    pageLengthOptions?: (number | 'all')[];
+    defaultPageLength?: number | 'all';
     showIndex?: boolean;
     dynamicIndex?: boolean;
 }
@@ -47,8 +48,8 @@ export function DataTable<TData>({
     sortableColumns = [],
     defaultSort = [],
     searchableColumns = [],
-    defaultSearch = "",
-    pageLengthOptions = [5, 10, 25, 50, 100, "all"],
+    defaultSearch = '',
+    pageLengthOptions = [5, 10, 25, 50, 100, 'all'],
     defaultPageLength = 5,
     showIndex = true,
     dynamicIndex = true,
@@ -57,22 +58,22 @@ export function DataTable<TData>({
     const [globalFilter, setGlobalFilter] = useState(defaultSearch);
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
-        pageSize: defaultPageLength === "all" ? data.length : defaultPageLength,
+        pageSize: defaultPageLength === 'all' ? data.length : defaultPageLength,
     });
 
-    const [displayedRowIndices, setDisplayedRowIndices] = useState<
-        Record<string, number>
-    >({});
+    const [displayedRowIndices, setDisplayedRowIndices] = useState<Record<string, number>>({});
 
     const tableColumns = useMemo(() => {
         const indexColumn: ColumnDef<TData> = {
-            id: "index",
-            header: () => (<span className='flex justify-center'>No</span>),
+            id: 'index',
+            header: () => <span className="flex justify-center">No</span>,
             cell: ({ row }) => {
                 if (dynamicIndex) {
-                    return (<div className='flex justify-center'>
-                        <span>{displayedRowIndices[row.id] || row.index + 1}</span>
-                    </div>)
+                    return (
+                        <div className="flex justify-center">
+                            <span>{displayedRowIndices[row.id] || row.index + 1}</span>
+                        </div>
+                    );
                 } else {
                     const currentPage = pagination.pageIndex;
                     const pageSize = pagination.pageSize;
@@ -86,11 +87,12 @@ export function DataTable<TData>({
 
     const globalSearchFilter: FilterFn<TData> = (row, _, filterValue) => {
         return searchableColumns.some((key) => {
-            const value = row.getValue(key)
-            return String(value ?? "").toLowerCase().includes(String(filterValue).toLowerCase())
-        })
-    }
-
+            const value = row.getValue(key);
+            return String(value ?? '')
+                .toLowerCase()
+                .includes(String(filterValue).toLowerCase());
+        });
+    };
 
     const table = useReactTable({
         data,
@@ -123,10 +125,10 @@ export function DataTable<TData>({
         }
     }, [table.getRowModel().rows, dynamicIndex]);
 
-    const handlePageSizeChange = (size: number | "all") => {
+    const handlePageSizeChange = (size: number | 'all') => {
         console.log(size);
 
-        if (size === "all") {
+        if (size === 'all') {
             table.setPageSize(data.length);
         } else {
             table.setPageSize(size);
@@ -134,7 +136,7 @@ export function DataTable<TData>({
     };
 
     const handleClearFilters = () => {
-        setGlobalFilter("");
+        setGlobalFilter('');
         setSorting([]);
         table.setPageSize(5);
     };
@@ -150,25 +152,16 @@ export function DataTable<TData>({
     const from = pageIndex * pageSize + 1;
     const to = Math.min(from + pageSize - 1, totalEntries);
 
-    const pageCount = table.getPageCount()
-    const currentPage = table.getState().pagination.pageIndex + 1
-
+    const pageCount = table.getPageCount();
+    const currentPage = table.getState().pagination.pageIndex + 1;
 
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between mt-4">
-                <div className="flex items-center w-80 space-x-2">
-                    <Input
-                        placeholder={`Search...`}
-                        value={globalFilter ?? ""}
-                        onChange={(event) => setGlobalFilter(event.target.value)}
-                    />
+            <div className="mt-4 flex items-center justify-between">
+                <div className="flex w-80 items-center space-x-2">
+                    <Input placeholder={`Search...`} value={globalFilter ?? ''} onChange={(event) => setGlobalFilter(event.target.value)} />
                     {globalFilter && (
-                        <Button
-                            variant="destructive"
-                            size={"lg"}
-                            onClick={handleClearFilters}
-                        >
+                        <Button variant="destructive" size={'lg'} onClick={handleClearFilters}>
                             Clear
                             <CircleXIcon />
                         </Button>
@@ -176,26 +169,22 @@ export function DataTable<TData>({
                 </div>
 
                 <div className="flex items-center space-x-2">
-                    <label htmlFor="pageLength" className="text-sm text-muted-foreground">
+                    <label htmlFor="pageLength" className="text-muted-foreground text-sm">
                         Show
                     </label>
-                    <Select
-                        onValueChange={(option) =>
-                            handlePageSizeChange(option === "all" ? "all" : Number(option))
-                        }
-                    >
+                    <Select onValueChange={(option) => handlePageSizeChange(option === 'all' ? 'all' : Number(option))}>
                         <SelectTrigger className="w-[70px]">
-                            <SelectValue placeholder={isAllSelected ? "All" : currentPageSize} />
+                            <SelectValue placeholder={isAllSelected ? 'All' : currentPageSize} />
                         </SelectTrigger>
                         <SelectContent>
                             {pageLengthOptions.map((option) => (
                                 <SelectItem key={option} value={option.toString()}>
-                                    {option === "all" ? "All" : option}
+                                    {option === 'all' ? 'All' : option}
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
-                    <span className="text-sm text-muted-foreground">entries</span>
+                    <span className="text-muted-foreground text-sm">entries</span>
                 </div>
             </div>
 
@@ -206,29 +195,18 @@ export function DataTable<TData>({
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     const isSortable = sortableColumns.includes(header.id);
-                                    const isIndexColumn = header.id === "index";
+                                    const isIndexColumn = header.id === 'index';
                                     return (
                                         <TableHead key={header.id}>
                                             {header.isPlaceholder ? null : (
                                                 <div
                                                     className={
-                                                        isSortable && !isIndexColumn
-                                                            ? "flex items-center cursor-pointer hover:text-primary"
-                                                            : ""
+                                                        isSortable && !isIndexColumn ? 'hover:text-primary flex cursor-pointer items-center' : ''
                                                     }
-                                                    onClick={
-                                                        isSortable && !isIndexColumn
-                                                            ? header.column.getToggleSortingHandler()
-                                                            : undefined
-                                                    }
+                                                    onClick={isSortable && !isIndexColumn ? header.column.getToggleSortingHandler() : undefined}
                                                 >
-                                                    {flexRender(
-                                                        header.column.columnDef.header,
-                                                        header.getContext()
-                                                    )}
-                                                    {isSortable && !isIndexColumn && (
-                                                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                                                    )}
+                                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                                    {isSortable && !isIndexColumn && <ArrowUpDown className="ml-2 h-4 w-4" />}
                                                 </div>
                                             )}
                                         </TableHead>
@@ -240,26 +218,15 @@ export function DataTable<TData>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                >
+                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
+                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                                     ))}
                                 </TableRow>
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell
-                                    colSpan={columns.length + (showIndex ? 1 : 0)}
-                                    className="h-24 text-center"
-                                >
+                                <TableCell colSpan={columns.length + (showIndex ? 1 : 0)} className="h-24 text-center">
                                     No results.
                                 </TableCell>
                             </TableRow>
@@ -268,14 +235,13 @@ export function DataTable<TData>({
                 </Table>
             </div>
 
-            <div className="flex flex-col items-center justify-between w-full gap-3 lg:flex-row mb-4">
-                <div className="flex-1 text-sm text-muted-foreground">
-                    <p className="text-sm text-muted-foreground">
+            <div className="mb-4 flex w-full flex-col items-center justify-between gap-3 lg:flex-row">
+                <div className="text-muted-foreground flex-1 text-sm">
+                    <p className="text-muted-foreground text-sm">
                         Showing {from} to {to} of {totalEntries} entries
                     </p>
                 </div>
                 {!isAllSelected && (
-
                     <div className="space-x-2">
                         <Pagination>
                             <PaginationContent>
@@ -284,24 +250,24 @@ export function DataTable<TData>({
                                     <PaginationPrevious
                                         href="#"
                                         onClick={(e) => {
-                                            e.preventDefault()
-                                            table.previousPage()
+                                            e.preventDefault();
+                                            table.previousPage();
                                         }}
-                                        className={table.getCanPreviousPage() ? "" : "pointer-events-none opacity-50"}
+                                        className={table.getCanPreviousPage() ? '' : 'pointer-events-none opacity-50'}
                                     />
                                 </PaginationItem>
 
                                 {getPaginationRange(currentPage, pageCount).map((page, i) => (
                                     <PaginationItem key={i}>
-                                        {page === "..." ? (
+                                        {page === '...' ? (
                                             <PaginationEllipsis />
                                         ) : (
                                             <PaginationLink
                                                 href="#"
                                                 isActive={page === currentPage}
                                                 onClick={(e) => {
-                                                    e.preventDefault()
-                                                    table.setPageIndex(page - 1)
+                                                    e.preventDefault();
+                                                    table.setPageIndex(page - 1);
                                                 }}
                                             >
                                                 {page}
@@ -315,17 +281,16 @@ export function DataTable<TData>({
                                     <PaginationNext
                                         href="#"
                                         onClick={(e) => {
-                                            e.preventDefault()
-                                            table.nextPage()
+                                            e.preventDefault();
+                                            table.nextPage();
                                         }}
-                                        className={table.getCanNextPage() ? "" : "pointer-events-none opacity-50"}
+                                        className={table.getCanNextPage() ? '' : 'pointer-events-none opacity-50'}
                                     />
                                 </PaginationItem>
                             </PaginationContent>
                         </Pagination>
                     </div>
                 )}
-
             </div>
         </div>
     );

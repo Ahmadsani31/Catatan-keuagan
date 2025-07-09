@@ -27,10 +27,15 @@ export const progressToast = (params: FlashParams): void => {
 
     if (flash.type == 'success') toast.success(flash.message);
     if (flash.type == 'error') toast.error(flash.message);
-}
+};
 
 export const CATEGORYSTATUS = {
     INCOME: 'Pemasukan',
     EXPENSE: 'Pengeluaran',
     DEBT: 'Hutang',
-}
+};
+
+export const KREDITURSTATUS = {
+    TERHUTANG: 'Terhutang',
+    LUNAS: 'Lunas',
+};

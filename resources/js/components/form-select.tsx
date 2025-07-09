@@ -1,35 +1,30 @@
-import { Label } from './ui/label'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select'
+import { Label } from './ui/label';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
 
 type itemsProps = {
-    id: string
-    title: string
-    value?: string
-    placeholder: string
-    dataValue: any[]
-    onValueChange: (value: string) => void
-    errors?: string
-    required?: boolean
-}
+    id: string;
+    title: string;
+    value?: string;
+    placeholder: string;
+    dataValue: any[];
+    onValueChange: (value: string) => void;
+    errors?: string;
+    required?: boolean;
+};
 
 export default function FormSelect({ id, title, dataValue, value, errors, placeholder, onValueChange, required }: itemsProps) {
-
     // console.log('====================================');
     console.log(dataValue);
     // console.log(value);
     // console.log('====================================');
 
     return (
-        <div className='grid w-full items-center'>
-            <Label htmlFor={id} className='mb-2'>
+        <div className="grid w-full items-center">
+            <Label htmlFor={id} className="mb-2">
                 {title}
             </Label>
-            <Select
-                value={value}
-                onValueChange={onValueChange}
-                required={required}
-            >
-                <SelectTrigger className={`border h-10 ${errors ? 'border-red-500' : ''}`}>
+            <Select value={value} onValueChange={onValueChange} required={required}>
+                <SelectTrigger className={`h-10 border ${errors ? 'border-red-500' : ''}`}>
                     <SelectValue placeholder={placeholder}>
                         {/* {dataValue.find((d) => d.value.toString() === value) ? dataValue.find((d) => d.value.toString() === value)?.value : placeholder} */}
                     </SelectValue>
@@ -38,16 +33,14 @@ export default function FormSelect({ id, title, dataValue, value, errors, placeh
                     <SelectGroup>
                         <SelectLabel>Pilih salah satu</SelectLabel>
                         {dataValue.map((data, index) => (
-                            <SelectItem className='hover:bg-green-100 hover:cursor-pointer h-10' key={index} value={data.value.toString()}>
+                            <SelectItem className="h-10 hover:cursor-pointer hover:bg-green-100" key={index} value={data.value.toString()}>
                                 {data.label}
                             </SelectItem>
                         ))}
                     </SelectGroup>
                 </SelectContent>
             </Select>
-            {errors && (
-                <p className="text-sm m-0 text-red-500">{errors}</p>
-            )}
+            {errors && <p className="m-0 text-sm text-red-500">{errors}</p>}
         </div>
-    )
+    );
 }

@@ -1,8 +1,8 @@
 export interface pageIndex {
     organizations: {
         data: [];
-    },
-    page_info: pageInfo
+    };
+    page_info: pageInfo;
 }
 
 //USER CREATE
@@ -12,7 +12,7 @@ export interface PropsFormCreate {
     password: string;
     password_confirmation: string;
     _method: string;
-};
+}
 
 //USER EDIT
 export interface PropsFormEdit {
@@ -21,14 +21,12 @@ export interface PropsFormEdit {
     email: string;
 
     _method: string;
-};
-
-export interface pageEdit {
-    users: userProps,
-    page_info: pageInfo
 }
 
-
+export interface pageEdit {
+    users: userProps;
+    page_info: pageInfo;
+}
 
 //COLUMNS DATATABLE
 export interface columnsItems {
@@ -38,14 +36,13 @@ export interface columnsItems {
     created_at: string;
 }
 
-
 // TYPE
 type pageInfo = {
     title: string;
     subtitle: string;
     method: string;
     action: string;
-}
+};
 
 type userProps = {
     id: number;
@@ -54,5 +51,4 @@ type userProps = {
     password: string;
     password_confirmation: string;
     created_at: string;
-
-}
+};

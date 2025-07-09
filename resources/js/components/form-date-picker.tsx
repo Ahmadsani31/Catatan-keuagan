@@ -27,7 +27,12 @@ export default function FormDatePicker({ id, title, value, errors, placeholder, 
             </Label>
             <Popover open={open} onOpenChange={setOpen} modal={modal}>
                 <PopoverTrigger asChild>
-                    <Button variant="outline" id={id} size={'lg'} className={`w-full justify-between rounded-sm font-normal ${errors ? 'border-red-500' : ''}`}>
+                    <Button
+                        variant="outline"
+                        id={id}
+                        size={'lg'}
+                        className={`w-full justify-between rounded-sm font-normal ${errors ? 'border-red-500' : ''}`}
+                    >
                         {value ? format(value, 'EE MMMM dd, yyyy') : placeholder}
                         <CalendarDays />
                     </Button>
@@ -43,9 +48,7 @@ export default function FormDatePicker({ id, title, value, errors, placeholder, 
                                 onSelect(format(date, 'yyyy-MM-dd'));
                             }
                         }}
-                        disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                        }
+                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
                     />
                 </PopoverContent>
             </Popover>

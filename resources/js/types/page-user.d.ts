@@ -1,11 +1,11 @@
 export interface pageUserIndex {
     users: {
         data: [];
-    },
-    page_info: pageInfo
+    };
+    page_info: pageInfo;
     page_data: {
-        roles: []
-    }
+        roles: [];
+    };
 }
 
 //USER CREATE
@@ -16,7 +16,7 @@ export interface PropsFormUserCreate {
     password: string;
     password_confirmation: string;
     _method: string;
-};
+}
 
 //USER EDIT
 export interface PropsFormUserEdit {
@@ -25,19 +25,17 @@ export interface PropsFormUserEdit {
     email: string;
     roles: string;
     _method: string;
-};
+}
 
 export interface pageUserEdit {
     users: {
-        data: userProps
-    },
-    page_info: pageInfo,
+        data: userProps;
+    };
+    page_info: pageInfo;
     page_data: {
-        roles: []
-    }
+        roles: [];
+    };
 }
-
-
 
 //COLUMNS DATATABLE
 export interface columnsItemsUser {
@@ -47,22 +45,20 @@ export interface columnsItemsUser {
     created_at: string;
 }
 
-
 // TYPE
 type pageInfo = {
     title: string;
     subtitle: string;
     method: string;
     action: string;
-}
+};
 
 type userProps = {
     id: number;
     name: string;
     email: string;
-    role: string
+    role: string;
     password: string;
     password_confirmation: string;
     created_at: string;
-
-}
+};

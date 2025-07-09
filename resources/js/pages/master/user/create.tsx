@@ -1,16 +1,15 @@
-import FormInput from '@/components/form-input'
-import HeaderTitle from '@/components/header-title'
-import ReactSelect from '@/components/react-select'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import AppLayout from '@/layouts/app-layout'
-import { BreadcrumbItem } from '@/types'
-import { pageUserIndex, PropsFormUserCreate } from '@/types/page-user'
-import { Head, Link, useForm } from '@inertiajs/react'
-import { AlignCenterHorizontalIcon, ArrowLeft, BackpackIcon, CassetteTape, LoaderCircle } from 'lucide-react'
-import { FormEventHandler } from 'react'
-import { toast } from 'react-toastify'
+import FormInput from '@/components/form-input';
+import HeaderTitle from '@/components/header-title';
+import ReactSelect from '@/components/react-select';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem } from '@/types';
+import { pageUserIndex, PropsFormUserCreate } from '@/types/page-user';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, CassetteTape, LoaderCircle } from 'lucide-react';
+import { FormEventHandler } from 'react';
+import { toast } from 'react-toastify';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,9 +27,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Create({ page_info, page_data }: pageUserIndex) {
-
     console.log(page_data.roles);
-
 
     const { data, setData, post, reset, errors, processing } = useForm<Required<PropsFormUserCreate>>({
         name: '',
@@ -38,8 +35,7 @@ export default function Create({ page_info, page_data }: pageUserIndex) {
         roles: null,
         password: '',
         password_confirmation: '',
-        _method: page_info.method
-
+        _method: page_info.method,
     });
 
     const onHandleSubmit: FormEventHandler = (e) => {
@@ -49,13 +45,11 @@ export default function Create({ page_info, page_data }: pageUserIndex) {
             preserveScroll: true,
             preserveState: true,
             onSuccess: (success) => {
-
                 const { type, message } = success.props.flash_message as { type: string; message: string };
 
-                if (type == "error") toast.error(message);
-                if (type == "success") toast.error(message);
+                if (type == 'error') toast.error(message);
+                if (type == 'success') toast.error(message);
                 console.log(success.props.flash_message);
-
             },
         });
     };
@@ -64,7 +58,7 @@ export default function Create({ page_info, page_data }: pageUserIndex) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={page_info.title ?? 'Aplikasi'} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
-                <div className='flex flex-col items-start justify-between mb-8 gap-y-4 md:flex-row md:items-center'>
+                <div className="mb-8 flex flex-col items-start justify-between gap-y-4 md:flex-row md:items-center">
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={CassetteTape} />
                     <Button variant={'destructive'} size={'lg'} asChild>
                         <Link href={route('master.users.index')}>
@@ -74,57 +68,58 @@ export default function Create({ page_info, page_data }: pageUserIndex) {
                 </div>
                 <Card>
                     <CardContent>
-                        <form className='space-y-4' onSubmit={onHandleSubmit}>
+                        <form className="space-y-4" onSubmit={onHandleSubmit}>
                             <FormInput
-                                id='name'
+                                id="name"
                                 title="Name"
                                 type="text"
-                                placeholder='Masukan nama...'
+                                placeholder="Masukan nama..."
                                 value={data.name}
                                 onChange={(e) => setData('name', e.target.value)}
                                 errors={errors.name}
                             />
                             <FormInput
-                                id='email'
+                                id="email"
                                 title="Email"
                                 type="text"
-                                placeholder='Masukan email...'
+                                placeholder="Masukan email..."
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
                                 errors={errors.email}
                             />
-                            <ReactSelect id='role'
-                                title='Role'
+                            <ReactSelect
+                                id="role"
+                                title="Role"
                                 dataValue={page_data.roles}
                                 onValueChange={(value) => setData('roles', value ? Number(value) : null)}
-                                placeholder='Pilih rules'
+                                placeholder="Pilih rules"
                                 errors={errors.roles}
                             />
-                            <div className='grid lg:grid-cols-2 grid-cols-1 lg:gap-4 sm:gap-6 items-start'>
+                            <div className="grid grid-cols-1 items-start sm:gap-6 lg:grid-cols-2 lg:gap-4">
                                 <FormInput
-                                    id='password'
+                                    id="password"
                                     title="Password"
                                     type="password"
-                                    placeholder='Masukan password...'
+                                    placeholder="Masukan password..."
                                     value={data.password}
                                     onChange={(e) => setData('password', e.target.value)}
                                     errors={errors.password}
                                 />
                                 <FormInput
-                                    id='password_confirmation'
+                                    id="password_confirmation"
                                     title="Konfirmasi password"
                                     type="password"
-                                    placeholder='Konfirmasi password...'
+                                    placeholder="Konfirmasi password..."
                                     value={data.password_confirmation}
                                     onChange={(e) => setData('password_confirmation', e.target.value)}
                                     errors={errors.password_confirmation}
                                 />
                             </div>
-                            <div className='flex justify-end gap-x-2'>
-                                <Button type='button' variant={'outline'} size={'lg'} onClick={() => reset()}>
+                            <div className="flex justify-end gap-x-2">
+                                <Button type="button" variant={'outline'} size={'lg'} onClick={() => reset()}>
                                     Reset
                                 </Button>
-                                <Button type='submit' variant={'default'} size={'lg'} disabled={processing}>
+                                <Button type="submit" variant={'default'} size={'lg'} disabled={processing}>
                                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                                     Submit
                                 </Button>
@@ -134,5 +129,5 @@ export default function Create({ page_info, page_data }: pageUserIndex) {
                 </Card>
             </div>
         </AppLayout>
-    )
+    );
 }

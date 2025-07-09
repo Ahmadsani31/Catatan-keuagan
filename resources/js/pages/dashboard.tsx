@@ -1,13 +1,11 @@
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 
 import { SectionCardDashboard } from '@/components/section-card-dashboard';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ChartArea from '@/components/chart-area';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -15,7 +13,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
-
 
 interface Organization {
     name: string;
@@ -40,10 +37,10 @@ export default function Dashboard() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className='flex flex-row border p-4 rounded-md items-center justify-between bg-gradient-to-t from-teal-50 to-green-50'>
+                <div className="flex flex-row items-center justify-between rounded-md border bg-gradient-to-t from-teal-50 to-green-50 p-4">
                     <div>
-                        <span className='text-sm text-secondary-foreground'>Nama Organisasi / Company</span>
-                        <h3 className='font-bold text-3xl'>{page?.name}</h3>
+                        <span className="text-secondary-foreground text-sm">Nama Organisasi / Company</span>
+                        <h3 className="text-3xl font-bold">{page?.name}</h3>
                         <p>{page?.address}</p>
                         {/* <p className='text-muted-foreground italic'>"{page.keterangan}"</p> */}
                     </div>
@@ -51,7 +48,9 @@ export default function Dashboard() {
                 </div>
                 <Tabs defaultValue="1" className="w-[400px]">
                     <TabsList>
-                        <TabsTrigger value="1" onClick={() => alert('a')}>1 Mouth</TabsTrigger>
+                        <TabsTrigger value="1" onClick={() => alert('a')}>
+                            1 Mouth
+                        </TabsTrigger>
                         <TabsTrigger value="2">3 Mouth</TabsTrigger>
                         <TabsTrigger value="3">6 Mouth</TabsTrigger>
                         <TabsTrigger value="4">12 Mouth</TabsTrigger>

@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\KrediturController;
 use App\Http\Controllers\OrganizationsController;
+use App\Http\Controllers\PaymentKrediturController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\TransactionController;
@@ -88,6 +90,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/transactions/destroy/{transaction}', 'destroy')->name('transactions.destroy');
 
         Route::get('/transactions/type/{type}', 'type_json')->name('transactions.type');
+    });
+
+
+    Route::controller(KrediturController::class)->group(function () {
+        Route::get('/krediturs', 'index')->name('krediturs.index');
+        Route::get('/krediturs/create', 'create')->name('krediturs.create');
+        Route::post('/krediturs/store', 'store')->name('krediturs.store');
+
+        Route::get('/krediturs/edit/{kreditur}', 'edit')->name('krediturs.edit');
+        Route::put('/krediturs/update/{kreditur}', 'update')->name('krediturs.update');
+        Route::delete('/krediturs/delete/{kreditur}', 'destroy')->name('krediturs.destroy');
+    });
+
+    Route::controller(PaymentKrediturController::class)->group(function () {
+        Route::get('/payment-krediturs/{kreditur:slug}', 'index')->name('payment-krediturs.index');
+        Route::get('/payment-krediturs/create', 'create')->name('payment-krediturs.create');
+        Route::post('/payment-krediturs/store/{kreditur}', 'store')->name('payment-krediturs.store');
+        Route::get('/payment-krediturs/edit/{paymentKreditur}', 'edit')->name('payment-krediturs.edit');
+        Route::put('/payment-krediturs/update/{paymentKreditur}', 'update')->name('payment-krediturs.update');
+        Route::delete('/payment-krediturs/delete/{kreditur}/{paymentKreditur}', 'destroy')->name('payment-krediturs.destroy');
     });
 
     // Route::controller(OrganizationsController::class)->group(function () {

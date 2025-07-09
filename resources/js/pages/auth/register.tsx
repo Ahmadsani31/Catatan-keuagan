@@ -5,11 +5,11 @@ import { FormEventHandler, useState } from 'react';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import AuthLayout from '@/layouts/auth-layout';
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent } from '@/components/ui/card';
 
 type RegisterForm = {
     organization: string;
@@ -38,8 +38,7 @@ export default function Register() {
             onFinish: () => reset('password', 'password_confirmation'),
             onSuccess: (success) => {
                 console.log(success.props);
-
-            }
+            },
         });
     };
 
@@ -65,19 +64,22 @@ export default function Register() {
         setFormError(newErrors);
         isValid ? setVisibleDiv(true) : setVisibleDiv(false);
         return isValid;
-    }
-
-
+    };
 
     return (
-        <AuthLayout title="Buat Keuangan mu lebih mudah dimonitor" description="Silahkan masukan nama organisasi / company kamu dan lanjutkan untuk langkah awal buat akun">
+        <AuthLayout
+            title="Buat Keuangan mu lebih mudah dimonitor"
+            description="Silahkan masukan nama organisasi / company kamu dan lanjutkan untuk langkah awal buat akun"
+        >
             <Head title="Register" />
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <Card className="rounded-xl">
                     <CardContent className="px-10 py-8">
                         <div className={`grid gap-4 ${visibleDiv ? 'hidden' : ''} transition delay-150 duration-300 ease-in-out`}>
                             <div className="grid">
-                                <Label htmlFor="organization" className='mb-2'>Organisasi / Company</Label>
+                                <Label htmlFor="organization" className="mb-2">
+                                    Organisasi / Company
+                                </Label>
                                 <Input
                                     id="organization"
                                     type="text"
@@ -95,22 +97,28 @@ export default function Register() {
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="password">Alamat</Label>
-                                <Textarea value={data.address} className={formError.address ? 'border-red-500' : ''}
-                                    onChange={(e) => setData('address', e.target.value)} placeholder='alamat..' />
+                                <Textarea
+                                    value={data.address}
+                                    className={formError.address ? 'border-red-500' : ''}
+                                    onChange={(e) => setData('address', e.target.value)}
+                                    placeholder="alamat.."
+                                />
                                 <InputError message={formError.address} />
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="password">Keterangan</Label>
-                                <Textarea value={data.keterangan}
-                                    onChange={(e) => setData('keterangan', e.target.value)} placeholder='keterangan.. (opsional)' />
+                                <Textarea
+                                    value={data.keterangan}
+                                    onChange={(e) => setData('keterangan', e.target.value)}
+                                    placeholder="keterangan.. (opsional)"
+                                />
                                 <InputError message={errors.keterangan} />
                             </div>
-                            <div className='flex justify-end'>
+                            <div className="flex justify-end">
                                 <Button type="button" className="mt-2" onClick={handleNext}>
                                     Next
                                 </Button>
                             </div>
-
                         </div>
                         <div className={`grid gap-4 ${visibleDiv ? '' : 'hidden'}`}>
                             <div className="grid gap-2">
@@ -177,7 +185,7 @@ export default function Register() {
                                 />
                                 <InputError message={errors.password_confirmation} />
                             </div>
-                            <div className='flex gap-2 justify-between'>
+                            <div className="flex justify-between gap-2">
                                 <Button type="button" className="mt-2" onClick={() => setVisibleDiv(!visibleDiv)}>
                                     Back
                                 </Button>
@@ -186,7 +194,6 @@ export default function Register() {
                                     Create account
                                 </Button>
                             </div>
-
                         </div>
                     </CardContent>
                 </Card>
@@ -197,6 +204,6 @@ export default function Register() {
                     </TextLink>
                 </div>
             </form>
-        </AuthLayout >
+        </AuthLayout>
     );
 }

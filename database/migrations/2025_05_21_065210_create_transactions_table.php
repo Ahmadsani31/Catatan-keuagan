@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('amount', 15, 2);
             $table->date('date');
             $table->text('description')->nullable();
-            $table->text('image')->nullable();
+            $table->text('file_image')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

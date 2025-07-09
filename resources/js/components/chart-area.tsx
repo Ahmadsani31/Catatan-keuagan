@@ -1,28 +1,27 @@
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp } from 'lucide-react';
+import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from './ui/chart';
 
 const chartConfig = {
     desktop: {
-        label: "Desktop",
-        color: "var(--chart-1)",
+        label: 'Desktop',
+        color: 'var(--chart-1)',
     },
     mobile: {
-        label: "Mobile",
-        color: "var(--chart-2)",
+        label: 'Mobile',
+        color: 'var(--chart-2)',
     },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 const chartData = [
-    { month: "January", desktop: 186 },
-    { month: "February", desktop: 305 },
-    { month: "March", desktop: 237 },
-    { month: "April", desktop: 73 },
-    { month: "May", desktop: 209 },
-    { month: "June", desktop: 214 },
-]
-
+    { month: 'January', desktop: 186 },
+    { month: 'February', desktop: 305 },
+    { month: 'March', desktop: 237 },
+    { month: 'April', desktop: 73 },
+    { month: 'May', desktop: 209 },
+    { month: 'June', desktop: 214 },
+];
 
 export default function ChartArea() {
     return (
@@ -43,24 +42,15 @@ export default function ChartArea() {
                             }}
                         >
                             <CartesianGrid vertical={false} />
-                            <XAxis
-                                dataKey="month"
-                                tickLine={false}
-                                axisLine={false}
-                                tickMargin={8}
-                                tickFormatter={(value) => value.slice(0, 3)}
-                            />
-                            <ChartTooltip
-                                cursor={false}
-                                content={<ChartTooltipContent hideLabel />}
-                            />
+                            <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
+                            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
                             <Line
                                 dataKey="desktop"
                                 type="natural"
                                 stroke="var(--color-desktop)"
                                 strokeWidth={2}
                                 dot={{
-                                    fill: "var(--color-desktop)",
+                                    fill: 'var(--color-desktop)',
                                 }}
                                 activeDot={{
                                     r: 6,
@@ -73,12 +63,10 @@ export default function ChartArea() {
                     <div className="flex gap-2 leading-none font-medium">
                         Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
                     </div>
-                    <div className="text-muted-foreground leading-none">
-                        Showing total visitors for the last 6 months
-                    </div>
+                    <div className="text-muted-foreground leading-none">Showing total visitors for the last 6 months</div>
                 </CardFooter>
             </Card>
             {/* <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" /> */}
         </div>
-    )
+    );
 }

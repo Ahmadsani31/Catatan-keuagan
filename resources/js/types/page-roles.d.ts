@@ -1,37 +1,37 @@
 export interface pageIndex {
     roles: {
         data: [];
-    },
-    page_info: pageInfo
+    };
+    page_info: pageInfo;
 }
 
 //USER CREATE
 export interface pageCreate {
     permissions: {
         data: dataProps[];
-    },
-    page_info: pageInfo
+    };
+    page_info: pageInfo;
 }
 
 export interface PropsFormCreate {
     name: string;
     permission: number[];
-};
+}
 
 //USER EDIT
 export interface pageEdit {
     role: {
         data: {
-            id: number
-            name: string
-            permissions: string[]
-        }
+            id: number;
+            name: string;
+            permissions: string[];
+        };
     };
     permissions: {
         data: dataProps[];
-    },
-    page_info: pageInfo
-};
+    };
+    page_info: pageInfo;
+}
 
 export interface useFormEdit {
     id: number;
@@ -47,16 +47,15 @@ export interface columnsItems {
     created_at: string;
 }
 
-
 // TYPE
 type pageInfo = {
     title: string;
     subtitle: string;
     method: string;
     action: string;
-}
+};
 
 type dataProps = {
     id: number;
     name: string;
-}
+};
