@@ -1,33 +1,30 @@
-import { cn } from '@/lib/utils'
-import { Input } from './ui/input'
+import { cn } from '@/lib/utils';
+import { Input } from './ui/input';
 type itemsProps = {
-    title: string
-    value?: string
-    placeholder: string
-    type: string
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-    errors?: string
-    required?: boolean
-}
+    title: string;
+    value?: string;
+    placeholder: string;
+    type: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    errors?: string;
+    required?: boolean;
+};
 export default function TextInput({ title, value, errors, placeholder, type, onChange, required }: itemsProps) {
-    let autoComplete = "";
+    let autoComplete = '';
     switch (type) {
-        case "password":
-            autoComplete = "current-password";
+        case 'password':
+            autoComplete = 'current-password';
             break;
-        case "email":
-            autoComplete = "email";
-            break;
-        case "email":
-            autoComplete = "email";
+        case 'email':
+            autoComplete = 'email';
             break;
         default:
-            autoComplete = "";
+            autoComplete = '';
             break;
     }
     return (
-        <div className='mb-3'>
-            <label htmlFor={title} className="block text-sm mb-1">
+        <div className="mb-3">
+            <label htmlFor={title} className="mb-1 block text-sm">
                 {title}
             </label>
             <Input
@@ -37,12 +34,11 @@ export default function TextInput({ title, value, errors, placeholder, type, onC
                 value={value}
                 onChange={onChange}
                 autoComplete={autoComplete}
-                className={cn(errors ? "border-red-500" : "")}
+                className={cn(errors ? 'border-red-500' : '')}
                 required={required}
+                autoFocus={true}
             />
-            {errors && (
-                <p className="text-sm m-0 text-red-500">{errors}</p>
-            )}
+            {errors && <p className="m-0 text-sm text-red-500">{errors}</p>}
         </div>
-    )
+    );
 }

@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     Pagination,
     PaginationContent,
@@ -7,10 +6,10 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "@/components/ui/pagination"
+} from '@/components/ui/pagination';
 
 export default function PaginationRef({ paginateItems }: any) {
-    if (paginateItems.last_page == 1) return
+    if (paginateItems.last_page == 1) return;
     return (
         <Pagination>
             <PaginationContent>
@@ -28,5 +27,5 @@ export default function PaginationRef({ paginateItems }: any) {
                 </PaginationItem>
             </PaginationContent>
         </Pagination>
-    )
+    );
 }

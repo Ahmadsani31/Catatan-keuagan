@@ -1,17 +1,15 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { AlignCenterHorizontalIcon, PencilIcon, PlusCircle, TrashIcon } from 'lucide-react';
+import { AlignCenterHorizontalIcon, PlusCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { Card, CardContent } from '@/components/ui/card';
-import { DataTable } from '@/components/data-table';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { ColumnDef } from '@tanstack/react-table';
-import HeaderTitle from '@/components/header-title';
-import { pageUserIndex } from '@/types/page-user';
 import { ColumnsUser } from '@/components/columns-user';
+import { DataTable } from '@/components/data-table';
+import HeaderTitle from '@/components/header-title';
+import { Card, CardContent } from '@/components/ui/card';
+import { pageUserIndex } from '@/types/page-user';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -24,31 +22,27 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-
 export default function Index({ users, page_info }: pageUserIndex) {
-
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={page_info.title ?? 'Aplikasi'} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
-                <div className='flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center'>
+                <div className="flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center">
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
 
-                    <Button variant={'default'} size={'lg'} asChild >
+                    <Button variant={'default'} size={'lg'} asChild>
                         <Link href={route('master.users.create')}>
                             <PlusCircle /> Tambah
                         </Link>
                     </Button>
-
                 </div>
-                <Card className='py-1 [&_td]:px-3 [&_th]:px-3'>
-                    <CardContent className='[&-td]:whitespace-nowrap'>
+                <Card className="py-1 [&_td]:px-3 [&_th]:px-3">
+                    <CardContent className="[&-td]:whitespace-nowrap">
                         <DataTable
                             columns={ColumnsUser}
                             data={users.data}
-                            sortableColumns={["name", "email", "created_at"]}
-                            searchableColumns={["name", "email"]}// Now searchable in name, email, and phone
+                            sortableColumns={['name', 'email', 'created_at']}
+                            searchableColumns={['name', 'email']} // Now searchable in name, email, and phone
                             showIndex={true}
                             dynamicIndex={true}
                         />

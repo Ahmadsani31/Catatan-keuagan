@@ -1,33 +1,17 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import { AlignCenterHorizontalIcon, Loader2, PlusCircle, SquarePen, SquarePlus, Trash } from 'lucide-react';
+import { Head } from '@inertiajs/react';
+import { AlignCenterHorizontalIcon, PlusCircle } from 'lucide-react';
 
-import ButtonCostum from '@/components/buttonCostum';
+import { useState } from 'react';
 
-import { FormEventHandler, useState } from 'react';
-
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-
-
-import TextInput from '@/components/textInput';
-import Select from 'react-select'
-import SelectComponent from '@/components/SelectComponent';
-import axios from 'axios';
-import { DataTable } from '@/components/data-table';
-import { Button } from '@/components/ui/button';
-import HeaderTitle from '@/components/header-title';
-import { pageIndex } from '@/types/page-permission';
 import { ColumnsPermission } from '@/components/columns-permission';
+import { DataTable } from '@/components/data-table';
+import HeaderTitle from '@/components/header-title';
+import ModalPermissionCreate from '@/components/modal/modal-permission-create';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { pageIndex } from '@/types/page-permission';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -40,113 +24,46 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-type itemsProps = {
-    permission: {
-        data: ItemsData[];
-    },
-    title: string
-}
-
 type ItemsData = {
     id: string;
     name: string;
     keterangan: string;
     type: string;
-}
-
+};
 
 type LoginForm = {
     id: string;
     name: string;
 };
 
-
 export default function RolesIndex({ permissions, page_info }: pageIndex) {
     const [open, setOpen] = useState<boolean>(false);
-
-    console.log('permission', permissions);
-
-
-    const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
-        id: "",
-        name: "",
-    });
-
-    const handleSubmit: FormEventHandler = (e) => {
-        e.preventDefault();
-
-        post(route('permission.store'), {
-            onSuccess: page => {
-                reset('name');
-                setOpen(false);
-            },
-        });
-    };
-
-    const handleOpenModal = () => {
-        reset();
-        setOpen(true);
-    }
-
-    const handleCloseModal = () => {
-        reset();
-        setOpen(false);
-    }
-
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={page_info.title ?? 'Aplikasi'} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
-                <div className='flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center'>
+                <div className="flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center">
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
 
-                    <Button variant={'default'} size={'lg'} onClick={handleOpenModal} >
+                    <Button variant={'default'} size={'lg'} onClick={() => setOpen(true)}>
                         <PlusCircle /> Tambah
                     </Button>
-
                 </div>
-                <Card className='py-1 [&_td]:px-3 [&_th]:px-3'>
-                    <CardContent className='[&-td]:whitespace-nowrap'>
+                <Card className="py-1 [&_td]:px-3 [&_th]:px-3">
+                    <CardContent className="[&-td]:whitespace-nowrap">
                         <DataTable
                             columns={ColumnsPermission}
-                            sortableColumns={["name", "created_at"]}
-                            searchableColumns={["name"]}
+                            sortableColumns={['name', 'created_at']}
+                            searchableColumns={['name']}
                             data={permissions.data}
-                            defaultPageLength={10} />
+                            defaultPageLength={10}
+                        />
                     </CardContent>
                 </Card>
             </div>
 
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="sm:max-w-[625px]">
-                    <form onSubmit={handleSubmit}>
-                        <DialogHeader>
-                            <DialogTitle>Create Permission</DialogTitle>
-                            <DialogDescription>
-                                Make your permission name. Click save when you're done.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-2 py-4">
-                            <TextInput
-                                title="Name"
-                                type="text"
-                                placeholder='Nama permission'
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
-                                errors={errors.name}
-                            />
-                        </div>
-                        <DialogFooter>
-                            <Button type='button' size={'lg'} variant={'outline'} onClick={handleCloseModal}>Cancel</Button>
-                            <Button type='submit' size={'lg'} disabled={processing}>
-                                {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Submit
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
+            <ModalPermissionCreate open={open} onOpenChange={setOpen} />
         </AppLayout>
     );
 }

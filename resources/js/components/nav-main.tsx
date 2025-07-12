@@ -1,17 +1,7 @@
-import { NavItemNew, type NavItem } from '@/types';
+import { NavItemNew } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 
-import {
-    SidebarGroup,
-    SidebarGroupLabel,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
-    useSidebar,
-} from "@/components/ui/sidebar"
+import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
 
 type AuthProps = {
     auth?: {
@@ -36,7 +26,7 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
                 <div key={index}>
                     {state == 'expanded' ? (
                         <SidebarGroupLabel>
-                            <h3 className='font-light'>{item.header}</h3>
+                            <h3 className="font-light">{item.header}</h3>
                         </SidebarGroupLabel>
                     ) : null}
 
@@ -54,23 +44,17 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
                             // )
                             .map((menuItem, idx) => (
                                 <SidebarMenuItem key={idx}>
-                                    <SidebarMenuButton
-                                        asChild
-                                        isActive={page.url.startsWith(menuItem.href)}
-                                        tooltip={{ children: menuItem.title }}
-                                    >
+                                    <SidebarMenuButton asChild isActive={page.url.startsWith(menuItem.href)} tooltip={{ children: menuItem.title }}>
                                         <Link href={menuItem.href} prefetch>
                                             {menuItem.icon && <menuItem.icon />}
                                             <span>{menuItem.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-                            ))
-                        }
+                            ))}
                     </SidebarMenu>
                 </div>
             ))}
-
         </SidebarGroup>
     );
 }
