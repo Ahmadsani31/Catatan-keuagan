@@ -1,12 +1,12 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { AlignCenterHorizontalIcon, ArrowBigLeft, PlusCircle } from 'lucide-react';
+import { AlignCenterHorizontalIcon, ArrowBigLeft, CircleDollarSign, DollarSign, HandCoins, LucideDollarSign, PlusCircle, Wallet } from 'lucide-react';
 
 import { DataTable } from '@/components/data-table';
 import HeaderTitle from '@/components/header-title';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader } from '@/components/ui/card';
 
 import { ColumnsPaymnetKrediturTransaction } from '@/components/columns-payment-kreditur-transaction';
 import ModalKrediturTransaction from '@/components/modal/modal-kreditur-transaction';
@@ -26,8 +26,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Index({ kreditur, paymentKreditur, page_info }: any) {
     const [open, setOpen] = useState<boolean>(false);
 
-    console.log(kreditur);
-    console.log(paymentKreditur);
+    // console.log(kreditur);
+    // console.log(paymentKreditur);
 
     const formatter = new Intl.NumberFormat('id-ID', {
         style: 'currency',
@@ -54,31 +54,34 @@ export default function Index({ kreditur, paymentKreditur, page_info }: any) {
                     </div>
                 </div>
                 <Card className="@container/card">
-                    <CardContent className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">{kreditur.name}</CardContent>
+                    <div className='px-5'>
+                        <h1 className="text-2xl font-semibold">{kreditur.name}</h1>
+                        <p className='text-muted-foreground text-sm'>{kreditur.note}</p>
+                    </div>
                 </Card>
                 <div className="my-5 grid auto-rows-min gap-4 lg:grid-cols-3">
-                    <Card className="@container/card">
+                    <Card className="gap-2">
                         <CardHeader>
                             <CardDescription>Nominal</CardDescription>
-                            {/* <CardAction>{icon && createElement(icon)}</CardAction> */}
+                            <CardAction><CircleDollarSign /></CardAction>
                         </CardHeader>
                         <CardFooter className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             {formatter.format(kreditur.cash.amount)}
                         </CardFooter>
                     </Card>
-                    <Card className="@container/card">
+                    <Card className="gap-2">
                         <CardHeader>
                             <CardDescription>sisa</CardDescription>
-                            {/* <CardAction>{icon && createElement(icon)}</CardAction> */}
+                            <CardAction><HandCoins /></CardAction>
                         </CardHeader>
                         <CardFooter className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             {formatter.format(kreditur.cash.available)}
                         </CardFooter>
                     </Card>
-                    <Card className="@container/card">
+                    <Card className="gap-2">
                         <CardHeader>
                             <CardDescription>Terbayarkan</CardDescription>
-                            {/* <CardAction>{icon && createElement(icon)}</CardAction> */}
+                            <CardAction><Wallet /></CardAction>
                         </CardHeader>
                         <CardFooter className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                             {formatter.format(kreditur.cash.pay)}
@@ -89,10 +92,10 @@ export default function Index({ kreditur, paymentKreditur, page_info }: any) {
                     <CardContent className="[&-td]:whitespace-nowrap">
                         <DataTable
                             columns={ColumnsPaymnetKrediturTransaction}
-                            sortableColumns={['name', 'created_at']}
-                            searchableColumns={['name']}
+                            sortableColumns={['date']}
+                            searchableColumns={['note']}
                             data={paymentKreditur.data}
-                            defaultPageLength={10}
+                            defaultPageLength={5}
                         />
                     </CardContent>
                 </Card>

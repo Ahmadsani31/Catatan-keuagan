@@ -105,10 +105,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::controller(PaymentKrediturController::class)->group(function () {
         Route::get('/payment-krediturs/{kreditur:slug}', 'index')->name('payment-krediturs.index');
-        Route::get('/payment-krediturs/create', 'create')->name('payment-krediturs.create');
         Route::post('/payment-krediturs/store/{kreditur}', 'store')->name('payment-krediturs.store');
-        Route::get('/payment-krediturs/edit/{paymentKreditur}', 'edit')->name('payment-krediturs.edit');
-        Route::put('/payment-krediturs/update/{paymentKreditur}', 'update')->name('payment-krediturs.update');
+        // Route::put('/payment-krediturs/update/{kreditur}/{paymentKreditur}', 'update')->name('payment-krediturs.update');
         Route::delete('/payment-krediturs/delete/{kreditur}/{paymentKreditur}', 'destroy')->name('payment-krediturs.destroy');
     });
 

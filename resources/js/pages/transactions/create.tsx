@@ -1,10 +1,10 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { AlignCenterHorizontalIcon, ArrowBigLeft, LoaderCircle, PencilIcon } from 'lucide-react';
+import { AlignCenterHorizontalIcon, ArrowBigLeft, LoaderCircle, PencilIcon, PlusCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { FormEventHandler, useEffect, useRef } from 'react';
+import { FormEventHandler, useEffect, useRef, useState } from 'react';
 
 import FormDatePicker from '@/components/form-date-picker';
 import FormInputFile from '@/components/form-input-file';
@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { NumericFormat } from 'react-number-format';
+import ModalCategoriesCreate from '@/components/modal/modal-categories-create';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -72,6 +73,9 @@ type propsForm = {
 };
 
 export default function Create({ page_info, page_data }: pageCreate) {
+
+    const [open, setOpen] = useState<boolean>(false);
+
     const fileInputCover = useRef<HTMLInputElement | null>(null);
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<propsForm>>({
@@ -146,9 +150,9 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                     <div className="grid w-full items-center">
                                         <div className="mb-2 flex flex-row items-center gap-2">
                                             <Label>Katagori</Label>
-                                            <Link href={route('master.categories.index')} className="rounded-md bg-gray-100 p-1">
+                                            <button type='button' className='rounded bg-gray-100 p-1 cursor-pointer' onClick={() => setOpen(true)}>
                                                 <PencilIcon size={15} />
-                                            </Link>
+                                            </button>
                                         </div>
                                         <Select
                                             value={data.category_id.toString()}
@@ -177,9 +181,9 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                     <div className="grid w-full items-center">
                                         <div className="mb-2 flex flex-row items-center gap-2">
                                             <Label>Katagori</Label>
-                                            <Link href={route('master.categories.index')} className="rounded-md bg-gray-100 p-1">
+                                            <button type='button' className='rounded bg-gray-100 p-1 cursor-pointer' onClick={() => setOpen(true)}>
                                                 <PencilIcon size={15} />
-                                            </Link>
+                                            </button>
                                         </div>
                                         <Select
                                             value={data.category_id.toString()}
@@ -251,6 +255,7 @@ export default function Create({ page_info, page_data }: pageCreate) {
                     </CardContent>
                 </Card>
             </div>
+            {open && <ModalCategoriesCreate open={open} onOpenChange={setOpen} />}
         </AppLayout>
     );
 }

@@ -1,10 +1,14 @@
-import { Button } from '@/components/ui/button';
-import { columnsItems } from '@/types/page-roles';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { PencilIcon } from 'lucide-react';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 
+type columnsItems = {
+    date: string;
+    payment_method: string;
+    amount: string;
+    note: string;
+}
 export const ColumnsPaymnetKrediturTransaction: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'date',
@@ -29,26 +33,15 @@ export const ColumnsPaymnetKrediturTransaction: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'note',
         header: 'Keterangan',
-        cell: ({ row }: any) => <p className="text-wrap">{row.original.note}</p>,
+        cell: ({ row }: any) => <p className="text-wrap">{row.original.note ?? '-'}</p>,
     },
     {
         id: 'actions',
         header: () => <span className="flex justify-center">Aksi</span>,
-        cell: ({ row }: any) => {
-            console.log('====================================');
-            console.log(row.original);
-            console.log('====================================');
-            return (
-                <div className="flex justify-center gap-x-1">
-                    <Button variant={'default'} size={'sm'} asChild>
-                        <Link href={route('krediturs.edit', [row.original])}>
-                            <PencilIcon />
-                        </Link>
-                    </Button>
-
-                    <ColumnsDatatableActionDelete url={route('payment-krediturs.destroy', [row.original.kreditur.id, row.original])} />
-                </div>
-            );
-        },
+        cell: ({ row }: any) => (
+            <div className="flex justify-center">
+                <ColumnsDatatableActionDelete url={route('payment-krediturs.destroy', [row.original.kreditur.id, row.original])} />
+            </div>
+        ),
     },
 ];

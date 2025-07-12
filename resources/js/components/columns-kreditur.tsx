@@ -1,19 +1,33 @@
 import { Button } from '@/components/ui/button';
-import { columnsItems } from '@/types/page-roles';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { InfoIcon, PencilIcon } from 'lucide-react';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 import KrediturStatusBadge from './kreditur-status-badge';
 
+type columnsItems = {
+    date: string;
+    name: string;
+    cash_amount: string;
+    cash_pay: string;
+    status: string;
+    note: string;
+}
+
 export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'date',
-        header: 'Nama',
+        header: 'Tanggal',
     },
     {
         accessorKey: 'name',
         header: 'Nama',
+        cell: ({ row }: any) => (
+            <div className='items-center'>
+                <p>{row.original.name}</p>
+                <KrediturStatusBadge status={row.original.status} />
+            </div>
+        ),
     },
     {
         accessorKey: 'cash.amount',
@@ -40,11 +54,6 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
         },
     },
     {
-        accessorKey: 'status',
-        header: 'Status',
-        cell: ({ row }: any) => <KrediturStatusBadge status={row.original.status} />,
-    },
-    {
         accessorKey: 'note',
         header: 'Keterangan',
         cell: ({ row }: any) => <p className="text-wrap">{row.original.note}</p>,
@@ -54,7 +63,7 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
         header: () => <span className="flex justify-center">Aksi</span>,
         cell: ({ row }: any) => {
             return (
-                <div className="flex justify-center gap-x-1">
+                <div className="flex justify-center items-center gap-x-1">
                     <Button variant={'secondary'} size={'sm'} asChild>
                         <Link href={route('payment-krediturs.index', [row.original])}>
                             <InfoIcon />

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CategoryType;
 use App\Enums\KreditursStatus;
 use App\Http\Requests\KrediturRequest;
 use App\Http\Resources\KrediturResource;
@@ -72,14 +73,17 @@ class KrediturController extends Controller
 
     public function edit(Kreditur $kreditur): Response
     {
-        return Inertia::render('master/categories/edit', [
+        return Inertia::render('krediturs/edit', [
             'page_info' => [
                 'title' => 'Edit Kategori',
                 'subtitle' => 'Edit kategori baru disini, klik simpan setelah selesai',
                 'method' => 'PUT',
                 'action' => route('krediturs.update', $kreditur),
             ],
-            'category' => $kreditur,
+            'page_data' => [
+                'categoryType' => CategoryType::options()
+            ],
+            'kreditur' => $kreditur->load('cash'),
         ]);
     }
 
@@ -94,7 +98,7 @@ class KrediturController extends Controller
                 'date' => $request->date,
             ]);
 
-            return back()->with([
+            return to_route('krediturs.index')->with([
                 'type' => 'success',
                 'message' => 'Update Successfully'
             ]);

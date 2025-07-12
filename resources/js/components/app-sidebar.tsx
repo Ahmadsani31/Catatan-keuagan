@@ -3,7 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavItemNew, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BanknoteIcon, BookMarked, BookOpen, CircleDollarSign, CookieIcon, Folder, LucideALargeSmall, PiggyBankIcon, User2Icon } from 'lucide-react';
+import { BanknoteIcon, BookMarked, BookOpen, CircleDollarSign, CookieIcon, FileArchive, FileType, Folder, LucideALargeSmall, PiggyBankIcon, User2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItemNew[] = [
@@ -62,17 +62,34 @@ const mainNavItems: NavItemNew[] = [
         header: 'Dept',
         menu: [
             {
-                title: 'Krediturs',
+                title: 'Kreditur',
                 href: '/krediturs',
                 icon: BanknoteIcon,
                 permissions: ['organizations_list'],
-            },
+            }
+        ],
+    },
+    {
+        header: 'Laporan',
+        menu: [
             {
-                title: 'Kreditur',
+                title: 'Transaksi',
                 href: '#',
-                icon: PiggyBankIcon,
+                icon: FileArchive,
                 permissions: ['organizations_list'],
             },
+            {
+                title: 'Krediturs',
+                href: '#',
+                icon: FileArchive,
+                permissions: ['organizations_list'],
+            },
+            {
+                title: 'User',
+                href: '#',
+                icon: FileArchive,
+                permissions: ['organizations_list'],
+            }
         ],
     },
 ];

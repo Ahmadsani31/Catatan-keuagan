@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { AlignCenterHorizontalIcon, DollarSign, HandCoinsIcon, PlusCircle } from 'lucide-react';
+import { AlignCenterHorizontalIcon, CircleDollarSign, DollarSign, HandCoinsIcon, PlusCircle } from 'lucide-react';
 
 import { DataTable } from '@/components/data-table';
 import HeaderTitle from '@/components/header-title';
@@ -44,7 +44,7 @@ export default function Index({ transactions, page_info, page_data }: any) {
                 <Card className="py-1 [&_td]:px-3 [&_th]:px-3">
                     <CardContent className="[&-td]:whitespace-nowrap">
                         <div className="my-5 grid auto-rows-min gap-4 sm:grid-cols-2">
-                            <SectionCards name="Income" icon={DollarSign} value={formatter.format(page_data.income)} className="bg-green-200" />
+                            <SectionCards name="Income" icon={CircleDollarSign} value={formatter.format(page_data.income)} className="bg-green-200" />
                             <SectionCards name="Expense" icon={HandCoinsIcon} value={formatter.format(page_data.expense)} className="bg-amber-200" />
                         </div>
                         <DataTable

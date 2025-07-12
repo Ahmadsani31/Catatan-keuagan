@@ -30,14 +30,11 @@ export default function FormSelect({ id, title, dataValue, value, errors, placeh
                     </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectGroup>
-                        <SelectLabel>Pilih salah satu</SelectLabel>
-                        {dataValue.map((data, index) => (
-                            <SelectItem className="h-10 hover:cursor-pointer hover:bg-green-100" key={index} value={data.value.toString()}>
-                                {data.label}
-                            </SelectItem>
-                        ))}
-                    </SelectGroup>
+                    {dataValue.map((data, index) => (
+                        <SelectItem className="h-10 hover:cursor-pointer hover:bg-green-100" key={index} value={data.value.toString()}>
+                            {data.label}
+                        </SelectItem>
+                    ))}
                 </SelectContent>
             </Select>
             {errors && <p className="m-0 text-sm text-red-500">{errors}</p>}

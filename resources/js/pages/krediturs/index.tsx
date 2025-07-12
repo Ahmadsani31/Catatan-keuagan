@@ -41,8 +41,8 @@ export default function Index({ krediturs, page_info }: any) {
                     <CardContent className="[&-td]:whitespace-nowrap">
                         <DataTable
                             columns={ColumnsKreditur}
-                            sortableColumns={['name', 'created_at']}
-                            searchableColumns={['name']}
+                            sortableColumns={['name', 'date', 'note']}
+                            searchableColumns={['name', 'note']}
                             data={krediturs.data}
                             defaultPageLength={10}
                         />

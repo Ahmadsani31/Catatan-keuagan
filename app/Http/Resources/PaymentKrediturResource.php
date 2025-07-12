@@ -23,6 +23,7 @@ class PaymentKrediturResource extends JsonResource
             'kreditur' => $this->whenLoaded('kreditur', [
                 'id' => $this->kreditur?->id,
                 'name' => $this->kreditur?->name,
+                'slug' => $this->kreditur?->slug,
             ]),
         ];
     }

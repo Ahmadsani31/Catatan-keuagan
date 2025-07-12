@@ -53,6 +53,36 @@ class PaymentKrediturController extends Controller
         }
     }
 
+    // public function update(Kreditur $kreditur, PaymentKreditur $paymentKreditur,  PaymentKrediturRequest $request)
+    // {
+    //     try {
+    //         $paymentKreditur->update([
+    //             'date' => $request->date,
+    //             'amount' => $request->amount,
+    //             'payment_method' => $request->payment_method,
+    //             'note' => $request->note,
+    //         ]);
+
+    //         if ($paymentKreditur->amount != $request->amount) {
+    //             $sisa = $paymentKreditur->amount
+    //             $kreditur->cash->update([
+    //                 'available' => $kreditur->cash->available + $request->amount,
+    //                 'pay' => $kreditur->cash->pay - $request->amount,
+    //             ]);
+    //         }
+
+    //         return back()->with([
+    //             'type' => 'success',
+    //             'message' => 'Update Successfully'
+    //         ]);
+    //     } catch (\Throwable $err) {
+    //         return back()->with([
+    //             'type' => 'error',
+    //             'message' => $err->getMessage()
+    //         ]);
+    //     }
+    // }
+
     public function destroy(Kreditur $kreditur, PaymentKreditur $paymentKreditur)
     {
         try {

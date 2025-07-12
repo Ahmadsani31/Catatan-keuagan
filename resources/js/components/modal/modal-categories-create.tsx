@@ -20,27 +20,11 @@ type propsForm = {
 };
 
 export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal) {
-    // const [open, setOpen] = useState<boolean>(false);
-    const [transaksiType, setTransaksiType] = useState([]);
 
     const { data, setData, post, processing, errors, clearErrors, reset } = useForm<Required<propsForm>>({
         name: '',
         type: '',
     });
-
-    useEffect(() => {
-        async function fetchType() {
-            try {
-                const response = await axios.get(route('master.categories.create'));
-                const param = response.data;
-                setTransaksiType(param.page_data.categoryType);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchType();
-        reset();
-    }, [open]);
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -63,6 +47,11 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
         onOpenChange(false);
     };
 
+    const options = [
+        { value: 'Pemasukan', label: 'Pemasukan' },
+        { value: 'Pengeluaran', label: 'Pengeluaran' },
+    ];
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[625px]">
@@ -75,7 +64,7 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
                         <FormSelect
                             id="type"
                             title="Type"
-                            dataValue={transaksiType}
+                            dataValue={options}
                             value={data.type}
                             onValueChange={(value) => setData('type', value)}
                             placeholder="Pilih jenis transaksi"

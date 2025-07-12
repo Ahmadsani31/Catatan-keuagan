@@ -51,7 +51,7 @@ export default function RolesIndex({ categories, page_info }: any) {
                     </CardContent>
                 </Card>
             </div>
-            <ModalCategoriesCreate open={open} onOpenChange={setOpen} />
+            {open && <ModalCategoriesCreate open={open} onOpenChange={setOpen} />}
         </AppLayout>
     );
 }

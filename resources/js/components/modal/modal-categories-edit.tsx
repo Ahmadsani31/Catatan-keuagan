@@ -28,7 +28,6 @@ type propsForm = {
 
 export default function ModalCategoriesEdit({ open, onOpenChange, category }: propsModal) {
     const [loading, setLoading] = useState<boolean>(false);
-    const [transaksiType, setTransaksiType] = useState([]);
 
     const { data, setData, put, processing, errors, clearErrors, reset } = useForm<Required<propsForm>>({
         id: Number(category),
@@ -42,7 +41,6 @@ export default function ModalCategoriesEdit({ open, onOpenChange, category }: pr
             try {
                 const response = await axios.get(route('master.categories.edit', [category]));
                 const param = response.data;
-                setTransaksiType(param.page_data.categoryType);
                 setData('name', param.category.name);
                 setData('type', param.category.type);
             } catch (error) {
@@ -75,6 +73,11 @@ export default function ModalCategoriesEdit({ open, onOpenChange, category }: pr
         onOpenChange(false);
     };
 
+    const options = [
+        { value: 'Pemasukan', label: 'Pemasukan' },
+        { value: 'Pengeluaran', label: 'Pengeluaran' },
+    ];
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[625px]">
@@ -91,7 +94,7 @@ export default function ModalCategoriesEdit({ open, onOpenChange, category }: pr
                                 <FormSelect
                                     id="type"
                                     title="Type"
-                                    dataValue={transaksiType}
+                                    dataValue={options}
                                     value={data.type}
                                     onValueChange={(value) => setData('type', value)}
                                     placeholder="Pilih jenis transaksi"

@@ -1,18 +1,21 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { AlignCenterHorizontalIcon, ArrowBigLeft, LoaderCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { FormEventHandler } from 'react';
 
+import FormDatePicker from '@/components/form-date-picker';
 import FormInput from '@/components/form-input';
-import FormSelect from '@/components/form-select';
+import FormTextarea from '@/components/form-textarea';
 import HeaderTitle from '@/components/header-title';
 import { Card, CardContent } from '@/components/ui/card';
-import { flashMessage } from '@/lib/utils';
-import { pageEdit, propsForm } from '@/types/page-categories';
-import { toast } from 'react-toastify';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { NumericFormat } from 'react-number-format';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -20,34 +23,69 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Kategori',
+        title: 'Kreditur',
         href: '/master/categories',
     },
     {
-        title: 'Edit',
+        title: 'Tambah Kreditur',
         href: '',
     },
 ];
 
-export default function Edit({ category, page_info, page_data }: pageEdit) {
-    const { data, setData, put, processing, errors, clearErrors, reset } = useForm<Required<propsForm>>({
-        id: category.data?.id ?? 0,
-        name: category.data?.name ?? '',
-        type: category.data?.type ?? '',
+//USER CREATE
+export interface pageCreate {
+    page_info: {
+        title: string;
+        subtitle: string;
+        method: string;
+        action: string;
+    },
+    kreditur: {
+        id: number;
+        name: string;
+        phone: string;
+        address: string;
+        date: string;
+        note: string;
+        amount: string;
+        cash: {
+            amount: number
+        }
+    }
+}
+
+export interface propsForm {
+    id: number;
+    name: string;
+    phone: string;
+    address: string;
+    date: string;
+    note: string;
+    amount: number;
+    _method: string;
+}
+
+export default function Edit({ kreditur, page_info }: pageCreate) {
+    const { data, setData, post, processing, errors, reset } = useForm<Required<propsForm>>({
+        id: kreditur.id,
+        name: kreditur.name ?? '',
+        phone: kreditur.phone ?? '',
+        address: kreditur.address ?? '',
+        date: kreditur.date ?? format(new Date(), 'yyyy-MM-dd'),
+        amount: kreditur.cash.amount ?? '',
+        note: kreditur.note ?? '',
         _method: page_info.method,
     });
-
+    console.log('====================================');
+    console.log(kreditur);
+    console.log('====================================');
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
         console.log(data);
         // return
-        put(page_info.action, {
+        post(page_info.action, {
             onSuccess: (page) => {
-                reset('name');
-                const flash = flashMessage(page);
-                if (flash.type == 'success') toast.success(flash.message);
-                if (flash.type == 'error') toast.error(flash.message);
-                router.visit(route('master.categories.index'));
+                reset();
             },
         });
     };
@@ -60,7 +98,7 @@ export default function Edit({ category, page_info, page_data }: pageEdit) {
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
 
                     <Button variant={'destructive'} size={'lg'} asChild>
-                        <Link href={route('master.categories.index')}>
+                        <Link href={route('krediturs.index')}>
                             <ArrowBigLeft /> Back
                         </Link>
                     </Button>
@@ -68,23 +106,69 @@ export default function Edit({ category, page_info, page_data }: pageEdit) {
                 <Card>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
-                            <FormSelect
-                                id="type"
-                                title="Type"
-                                dataValue={page_data.categoryType}
-                                value={data.type}
-                                onValueChange={(value) => setData('type', value)}
-                                placeholder="Pilih jenis transaksi"
-                                errors={errors.type}
+                            <FormDatePicker
+                                id="date"
+                                title="Tanggal"
+                                onSelect={(value) => setData('date', value)}
+                                errors={errors.date}
+                                value={data.date}
+                                placeholder="Pilih tanggal"
+                                modal={true}
                             />
-                            <FormInput
-                                id="roles"
-                                title="Name"
-                                type="text"
-                                placeholder="Name role"
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
-                                errors={errors.name}
+                            <div className="grid w-full items-center">
+                                <Label htmlFor={'harga'} className="mb-3">
+                                    Nominal
+                                </Label>
+                                <NumericFormat
+                                    id="harga"
+                                    className={cn(errors.amount ? 'border-red-500' : '')}
+                                    value={data.amount}
+                                    allowLeadingZeros
+                                    onValueChange={(e) => setData('amount', Number(e.value))}
+                                    thousandSeparator=","
+                                    prefix="Rp. "
+                                    placeholder="Nominal"
+                                    customInput={Input}
+                                />
+                                {errors.amount && <p className="m-0 text-sm text-red-500">{errors.amount}</p>}
+                            </div>
+                            <div className="grid grid-cols-1 items-start gap-2 md:grid-cols-2">
+                                <FormInput
+                                    id="name"
+                                    title="Nama perorangan"
+                                    type="text"
+                                    placeholder="Name perorangan"
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    errors={errors.name}
+                                />
+                                <FormInput
+                                    id="phone"
+                                    title="Nomor Handphone"
+                                    type="text"
+                                    placeholder="Nomor handphone"
+                                    value={data.phone}
+                                    onChange={(e) => setData('phone', e.target.value)}
+                                    errors={errors.phone}
+                                />
+                            </div>
+
+                            <FormTextarea
+                                id="address"
+                                title="Alamat"
+                                placeholder="Alamat..."
+                                value={data.address}
+                                onChange={(e) => setData('address', e.target.value)}
+                                errors={errors.address}
+                            />
+
+                            <FormTextarea
+                                id="note"
+                                title="Keterangan"
+                                placeholder="Keterangan (opsional)..."
+                                value={data.note}
+                                onChange={(e) => setData('note', e.target.value)}
+                                errors={errors.note}
                             />
 
                             <div className="flex justify-end gap-x-2">
