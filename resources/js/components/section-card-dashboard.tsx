@@ -7,7 +7,7 @@ export function SectionCardDashboard() {
             <Card className="@container/card">
                 <CardHeader>
                     <CardDescription>Income</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">Rp.10,250.00</CardTitle>
+                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">Rp.10,300,250.00</CardTitle>
                     <CardAction>
                         <BiLineChart size={30} />
                     </CardAction>

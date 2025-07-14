@@ -6,12 +6,15 @@ use App\Http\Requests\PaymentKrediturRequest;
 use App\Http\Resources\PaymentKrediturResource;
 use App\Models\Kreditur;
 use App\Models\PaymentKreditur;
+use App\Traits\HasFile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PaymentKrediturController extends Controller
 {
+    use HasFile;
+
     public function index(Kreditur $kreditur)
     {
 
@@ -34,6 +37,7 @@ class PaymentKrediturController extends Controller
                 'amount' => $request->amount,
                 'payment_method' => $request->payment_method,
                 'note' => $request->note,
+                'file_image' => $this->upload_file($request, 'file_image', 'krediturs'),
             ]);
 
             $kreditur->cash->update([
@@ -91,6 +95,7 @@ class PaymentKrediturController extends Controller
                 'pay' => $kreditur->cash->pay - $paymentKreditur->amount,
             ]);
             $paymentKreditur->delete();
+            $this->delete_file($kreditur, 'file_image');
             return back()->with([
                 'type' => 'success',
                 'message' => 'Delete Successfully'

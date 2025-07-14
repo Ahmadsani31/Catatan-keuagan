@@ -23,7 +23,7 @@ class TransactionResource extends JsonResource
             ]),
             'type'            => $this->type,
             'amount' => $this->amount,
-            'date' => $this->date->format('d M Y'),
+            'date' => $this->date->toFormattedDateString(),
             'description' => $this->description,
             'user_id' => $this->user_id,
             'file_image' => $this->file_image ? Storage::url($this->file_image) : null,

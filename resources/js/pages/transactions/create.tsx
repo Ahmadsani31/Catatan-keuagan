@@ -19,6 +19,8 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { NumericFormat } from 'react-number-format';
 import ModalCategoriesCreate from '@/components/modal/modal-categories-create';
+import ModalCategoriesCreateIn from '@/components/modal/modal-categories-create-in';
+import ModalCategoriesCreateOut from '@/components/modal/modal-categories-create-out';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -74,7 +76,8 @@ type propsForm = {
 
 export default function Create({ page_info, page_data }: pageCreate) {
 
-    const [open, setOpen] = useState<boolean>(false);
+    const [openIn, setOpenIn] = useState<boolean>(false);
+    const [openOut, setOpenOut] = useState<boolean>(false);
 
     const fileInputCover = useRef<HTMLInputElement | null>(null);
 
@@ -150,7 +153,7 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                     <div className="grid w-full items-center">
                                         <div className="mb-2 flex flex-row items-center gap-2">
                                             <Label>Katagori</Label>
-                                            <button type='button' className='rounded bg-gray-100 p-1 cursor-pointer' onClick={() => setOpen(true)}>
+                                            <button type='button' className='rounded bg-gray-100 p-1 cursor-pointer' onClick={() => setOpenIn(true)}>
                                                 <PencilIcon size={15} />
                                             </button>
                                         </div>
@@ -181,7 +184,7 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                     <div className="grid w-full items-center">
                                         <div className="mb-2 flex flex-row items-center gap-2">
                                             <Label>Katagori</Label>
-                                            <button type='button' className='rounded bg-gray-100 p-1 cursor-pointer' onClick={() => setOpen(true)}>
+                                            <button type='button' className='rounded bg-gray-100 p-1 cursor-pointer' onClick={() => setOpenOut(true)}>
                                                 <PencilIcon size={15} />
                                             </button>
                                         </div>
@@ -255,7 +258,8 @@ export default function Create({ page_info, page_data }: pageCreate) {
                     </CardContent>
                 </Card>
             </div>
-            {open && <ModalCategoriesCreate open={open} onOpenChange={setOpen} />}
+            {openIn && <ModalCategoriesCreateIn open={openIn} onOpenChange={setOpenIn} />}
+            {openOut && <ModalCategoriesCreateOut open={openOut} onOpenChange={setOpenOut} />}
         </AppLayout>
     );
 }

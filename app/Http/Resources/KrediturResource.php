@@ -21,7 +21,7 @@ class KrediturResource extends JsonResource
             'address' => $this->address,
             'slug' => $this->slug,
             'status' => $this->status,
-            'date' => $this->date,
+            'date' => $this->date->toFormattedDateString(),
             'note' => $this->note,
             'created_at' => $this->created_at->format('d M Y'),
             'user' => [

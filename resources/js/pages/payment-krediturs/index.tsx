@@ -6,7 +6,7 @@ import { AlignCenterHorizontalIcon, ArrowBigLeft, CircleDollarSign, DollarSign, 
 import { DataTable } from '@/components/data-table';
 import HeaderTitle from '@/components/header-title';
 import { Button } from '@/components/ui/button';
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { ColumnsPaymnetKrediturTransaction } from '@/components/columns-payment-kreditur-transaction';
 import ModalKrediturTransaction from '@/components/modal/modal-kreditur-transaction';
@@ -48,9 +48,7 @@ export default function Index({ kreditur, paymentKreditur, page_info }: any) {
                             </Link>
                         </Button>
 
-                        <Button variant={'default'} size={'lg'} onClick={() => setOpen(true)}>
-                            <PlusCircle /> Tambah
-                        </Button>
+
                     </div>
                 </div>
                 <Card className="@container/card">
@@ -65,7 +63,7 @@ export default function Index({ kreditur, paymentKreditur, page_info }: any) {
                             <CardDescription>Nominal</CardDescription>
                             <CardAction><CircleDollarSign /></CardAction>
                         </CardHeader>
-                        <CardFooter className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                        <CardFooter className="text-2xl text-green-500 font-semibold tabular-nums @[250px]/card:text-3xl">
                             {formatter.format(kreditur.cash.amount)}
                         </CardFooter>
                     </Card>
@@ -74,7 +72,7 @@ export default function Index({ kreditur, paymentKreditur, page_info }: any) {
                             <CardDescription>sisa</CardDescription>
                             <CardAction><HandCoins /></CardAction>
                         </CardHeader>
-                        <CardFooter className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                        <CardFooter className="text-2xl text-red-500 font-semibold tabular-nums @[250px]/card:text-3xl">
                             {formatter.format(kreditur.cash.available)}
                         </CardFooter>
                     </Card>
@@ -83,10 +81,16 @@ export default function Index({ kreditur, paymentKreditur, page_info }: any) {
                             <CardDescription>Terbayarkan</CardDescription>
                             <CardAction><Wallet /></CardAction>
                         </CardHeader>
-                        <CardFooter className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                        <CardFooter className="text-2xl text-amber-500 font-semibold tabular-nums @[250px]/card:text-3xl">
                             {formatter.format(kreditur.cash.pay)}
                         </CardFooter>
                     </Card>
+                </div>
+                <div className='flex items-center justify-between'>
+                    <h2 className='text-xl font-bold'>Log Pembayaran</h2>
+                    <Button variant={'default'} size={'lg'} onClick={() => setOpen(true)}>
+                        <PlusCircle /> Tambah
+                    </Button>
                 </div>
                 <Card className="py-1 [&_td]:px-3 [&_th]:px-3">
                     <CardContent className="[&-td]:whitespace-nowrap">

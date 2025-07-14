@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class PaymentKrediturResource extends JsonResource
 {
@@ -19,7 +20,8 @@ class PaymentKrediturResource extends JsonResource
             'amount' => $this->amount,
             'payment_method' => $this->payment_method,
             'note' => $this->note,
-            'date' => $this->date->format('d M Y'),
+            'date' => $this->date->toFormattedDateString(),
+            'file_image' => $this->file_image ? Storage::url($this->file_image) : null,
             'kreditur' => $this->whenLoaded('kreditur', [
                 'id' => $this->kreditur?->id,
                 'name' => $this->kreditur?->name,
