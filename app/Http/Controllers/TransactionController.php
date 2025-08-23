@@ -30,7 +30,7 @@ class TransactionController extends Controller
 
 
         return Inertia::render('transactions/index', [
-            'transactions' => TransactionResource::collection(Transactions::where('organization_id', getOrganizationiId())->latest()->get()),
+            'transactions' => TransactionResource::collection(Transactions::where('organization_id', getOrganizationiId())->whereMonth('date', date('m'))->latest()->get()),
             'page_info' => [
                 'title' => 'Transaksi',
                 'subtitle' => 'Menampilkan semua data transaksi yang ada di platform ini, untuk di kelola',
@@ -39,11 +39,11 @@ class TransactionController extends Controller
                 'income' => Transactions::where([
                     'organization_id' => getOrganizationiId(),
                     'type' => 'Pemasukan'
-                ])->sum('amount'),
+                ])->whereMonth('date', date('m'))->sum('amount'),
                 'expense' => Transactions::where([
                     'organization_id' => getOrganizationiId(),
                     'type' => 'Pengeluaran'
-                ])->sum('amount'),
+                ])->whereMonth('date', date('m'))->sum('amount'),
             ],
         ]);
     }

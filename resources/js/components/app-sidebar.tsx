@@ -63,7 +63,7 @@ const mainNavItems: NavItemNew[] = [
         menu: [
             {
                 title: 'Kreditur',
-                href: '/krediturs',
+                href: '/krediturs/',
                 icon: BanknoteIcon,
                 permissions: ['organizations_list'],
             }

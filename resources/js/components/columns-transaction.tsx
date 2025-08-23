@@ -39,11 +39,11 @@ export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
         cell: ({ row }: any) => <CategoryStatusBadge status={row.original.type} />,
     },
     {
-        accessorKey: 'image',
+        accessorKey: 'file_image',
         header: () => <span className="flex justify-center">Screnshoot</span>,
         cell: ({ row }: any) => (
             <div className="flex items-center justify-center">
-                <DialogPreviewImage url_image={row.original.file_image} size="size-10" />
+                <DialogPreviewImage url_image={row.original.file_image} size="size-10" title="Bukti transaksi" description="screenshot atau foto bukti transaksi" />
             </div>
         ),
     },

@@ -38,7 +38,12 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-            return currencyFormatter.format(row.original.cash.amount);
+            return (
+                <div>
+                    {currencyFormatter.format(row.original.cash.amount)}
+                    <p className='text-xs text-teal-400'>sisa : {currencyFormatter.format(row.original.cash.available)}</p>
+                </div>
+            );
         },
     },
     {
@@ -65,7 +70,7 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
             return (
                 <div className="flex justify-center items-center gap-x-1">
                     <Button variant={'secondary'} size={'sm'} asChild>
-                        <Link href={route('payment-krediturs.index', [row.original])}>
+                        <Link href={route('krediturs.payment.index', [row.original])}>
                             <InfoIcon />
                         </Link>
                     </Button>

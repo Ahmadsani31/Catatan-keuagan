@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
-export default function DialogPreviewImage({ url_image, size }: { url_image: string; size: string }) {
+export default function DialogPreviewImage({ url_image, size, title, description }: { url_image: string; size: string; title: string; description: string }) {
     if (!url_image) {
         return (
             <Avatar>
@@ -18,12 +18,14 @@ export default function DialogPreviewImage({ url_image, size }: { url_image: str
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Gambar transaksi</DialogTitle>
-                    <DialogDescription>detail data gambar transaksi</DialogDescription>
-                    <div className="h-[calc(100vh-200px)] overflow-auto">
-                        <img src={url_image} className="object-cover" />
-                    </div>
+                    <DialogTitle>{title}</DialogTitle>
+                    <DialogDescription>{description}</DialogDescription>
                 </DialogHeader>
+
+                <div className="h-[calc(100vh-200px)] overflow-auto">
+                    <img src={url_image} className="object-cover" />
+                </div>
+
             </DialogContent>
         </Dialog>
     );

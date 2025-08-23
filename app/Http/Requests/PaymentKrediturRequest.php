@@ -25,6 +25,7 @@ class PaymentKrediturRequest extends FormRequest
             'date' => ['required', 'date'],
             'payment_method' => ['required', 'string', 'min:3', 'max:255'],
             'amount' => ['required', 'numeric', 'min:0'],
+            'file_image' =>  ['required', 'mimes:png,jpg,webp', 'max:2048'],
             'note' => ['nullable'],
         ];
     }
@@ -35,6 +36,7 @@ class PaymentKrediturRequest extends FormRequest
             'date' => 'Tanggal',
             'payment_method' => 'Metode pembayaran',
             'amount' => 'Nominal',
+            'file_image' => 'Bukti pembayaran',
         ];
     }
 }

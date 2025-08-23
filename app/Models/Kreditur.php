@@ -28,6 +28,7 @@ class Kreditur extends Model
     protected function casts(): array
     {
         return [
+            'date' => 'datetime',
             'status' => KreditursStatus::class,
         ];
     }
