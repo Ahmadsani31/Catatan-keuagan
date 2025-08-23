@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Transactions;
 use App\Traits\HasFile;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +46,30 @@ class TransactionController extends Controller
                     'type' => 'Pengeluaran'
                 ])->sum('amount'),
             ],
+        ]);
+    }
+
+    public function laporan(Request $request): Response
+    {
+        $query = Transactions::query();
+        $query->where('organization_id', getOrganizationiId());
+
+        $query->when($request->input('dateStart'), function ($q, string $dateStart) {
+            return $q->whereDate('created_at', '>=', $dateStart);
+        });
+
+        $query->when($request->input('dateEnd'), function ($q, string $dateEnd) {
+            return $q->whereDate('created_at', '<=', $dateEnd);
+        });
+
+        $transactions = $query->get();
+
+        return Inertia::render('transactions/laporan', [
+            'transactions' => TransactionResource::collection($transactions),
+            'page_info' => [
+                'title' => 'Cetak Laporan Transaksi',
+                'subtitle' => 'Menampilkan semua data transaksi yang ada di platform ini, untuk di kelola',
+            ]
         ]);
     }
 

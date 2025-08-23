@@ -26,7 +26,7 @@ class KrediturRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:3', 'max:255'],
             'phone' => ['required', 'min:10', 'max:15'],
-            'address' => ['nullable', 'string', 'min:3', 'max:255'],
+            'address' => ['required', 'string', 'min:3', 'max:255'],
             'date' => ['required', 'date'],
             'amount' => ['required', 'numeric', 'min:0'],
             'note' => ['nullable'],
