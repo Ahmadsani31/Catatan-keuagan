@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\KreditursStatus;
 use App\Http\Requests\PaymentKrediturRequest;
 use App\Http\Resources\PaymentKrediturResource;
 use App\Models\Kreditur;
@@ -44,6 +45,16 @@ class PaymentKrediturController extends Controller
                 'available' => $kreditur->cash->available - $request->amount,
                 'pay' => $kreditur->cash->pay + $request->amount,
             ]);
+
+            if ($kreditur->cash->available == 0) {
+                $kreditur->update([
+                    'status' => KreditursStatus::LUNAS->value
+                ]);
+            } else {
+                $kreditur->update([
+                    'status' => KreditursStatus::TERHUTANG->value
+                ]);
+            }
 
             return back()->with([
                 'type' => 'success',

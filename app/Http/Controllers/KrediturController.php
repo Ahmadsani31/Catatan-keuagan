@@ -98,6 +98,23 @@ class KrediturController extends Controller
                 'date' => $request->date,
             ]);
 
+            $available = $request->amount - $kreditur->cash->pay;
+
+            $kreditur->cash->update([
+                'amount' => $request->amount,
+                'available' => $available,
+            ]);
+
+            if ($available == 0) {
+                $kreditur->update([
+                    'status' => KreditursStatus::LUNAS->value
+                ]);
+            } else {
+                $kreditur->update([
+                    'status' => KreditursStatus::TERHUTANG->value
+                ]);
+            }
+
             return to_route('krediturs.index')->with([
                 'type' => 'success',
                 'message' => 'Update Successfully'

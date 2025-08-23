@@ -38,7 +38,12 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-            return currencyFormatter.format(row.original.cash.amount);
+            return (
+                <div>
+                    {currencyFormatter.format(row.original.cash.amount)}
+                    <p className='text-xs text-teal-400'>sisa : {currencyFormatter.format(row.original.cash.available)}</p>
+                </div>
+            );
         },
     },
     {
@@ -64,16 +69,16 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
         cell: ({ row }: any) => {
             return (
                 <div className="flex justify-center items-center gap-x-1">
-                    <Button variant={'default'} size={'sm'} asChild>
+                    <Button variant={'secondary'} size={'sm'} asChild>
                         <Link href={route('krediturs.payment.index', [row.original])}>
                             <InfoIcon />
                         </Link>
                     </Button>
-                    {/* <Button variant={'default'} size={'sm'} asChild>
+                    <Button variant={'default'} size={'sm'} asChild>
                         <Link href={route('krediturs.edit', [row.original])}>
                             <PencilIcon />
                         </Link>
-                    </Button> */}
+                    </Button>
 
                     <ColumnsDatatableActionDelete url={route('krediturs.destroy', [row.original])} />
                 </div>

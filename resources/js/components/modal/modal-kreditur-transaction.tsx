@@ -43,7 +43,7 @@ export default function ModalKrediturTransaction({ open, onOpenChange, kreditur 
         e.preventDefault();
         console.log(data);
         // return
-        post(route('payment-krediturs.store', [kreditur]), {
+        post(route('krediturs.payment.store', [kreditur]), {
             onSuccess: (page) => {
                 reset();
                 onOpenChange(false);
@@ -63,7 +63,7 @@ export default function ModalKrediturTransaction({ open, onOpenChange, kreditur 
     ];
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={open}>
             <DialogContent className="sm:max-w-[625px]">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>

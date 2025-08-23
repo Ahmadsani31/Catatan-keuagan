@@ -49,8 +49,8 @@ export default function Index({ transactions, page_info, page_data }: any) {
                         </div>
                         <DataTable
                             columns={ColumnsTransaction}
-                            sortableColumns={['name', 'created_at']}
-                            searchableColumns={['name']}
+                            sortableColumns={['description', 'category_name', 'created_at']}
+                            searchableColumns={['description', 'category_name']}
                             data={transactions.data}
                             defaultPageLength={10}
                         />
