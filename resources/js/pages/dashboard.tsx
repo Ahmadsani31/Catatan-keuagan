@@ -49,11 +49,11 @@ export default function Dashboard() {
                 <Tabs defaultValue="1" className="w-[400px]">
                     <TabsList>
                         <TabsTrigger value="1" onClick={() => alert('a')}>
-                            1 Mouth
+                            1 Month
                         </TabsTrigger>
-                        <TabsTrigger value="2">3 Mouth</TabsTrigger>
-                        <TabsTrigger value="3">6 Mouth</TabsTrigger>
-                        <TabsTrigger value="4">12 Mouth</TabsTrigger>
+                        <TabsTrigger value="2">3 Month</TabsTrigger>
+                        <TabsTrigger value="3">6 Month</TabsTrigger>
+                        <TabsTrigger value="4">12 Month</TabsTrigger>
                     </TabsList>
                 </Tabs>
                 <SectionCardDashboard />

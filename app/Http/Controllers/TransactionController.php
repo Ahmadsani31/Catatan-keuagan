@@ -70,30 +70,6 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function edit(Transactions $transaction): Response
-    {
-
-        return Inertia::render('transactions/edit', [
-            'page_info' => [
-                'title' => 'Edit Transaksi',
-                'subtitle' => 'Edit transaksi yang ada disini, klik simpan setelah selesai',
-                'method' => 'PUT',
-                'action' => route('transactions.update', $transaction),
-            ],
-            'page_data' => [
-                'categoryIncome' => Category::where('type', 'Pemasukan')->get()->map(fn($item) => [
-                    'value' => $item->id,
-                    'label' => $item->name,
-                ]),
-                'categoryExpense' => Category::where('type', 'Pengeluaran')->get()->map(fn($item) => [
-                    'value' => $item->id,
-                    'label' => $item->name,
-                ]),
-            ],
-            'transactions' => new TransactionResource($transaction),
-        ]);
-    }
-
     public function store(TransactionRequest $request): RedirectResponse
     {
         // dd($request->validated());
@@ -121,6 +97,32 @@ class TransactionController extends Controller
             ]);
         }
     }
+
+
+    public function edit(Transactions $transaction): Response
+    {
+
+        return Inertia::render('transactions/edit', [
+            'page_info' => [
+                'title' => 'Edit Transaksi',
+                'subtitle' => 'Edit transaksi yang ada disini, klik simpan setelah selesai',
+                'method' => 'PUT',
+                'action' => route('transactions.update', $transaction),
+            ],
+            'page_data' => [
+                'categoryIncome' => Category::where('type', 'Pemasukan')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+                'categoryExpense' => Category::where('type', 'Pengeluaran')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+            ],
+            'transactions' => new TransactionResource($transaction),
+        ]);
+    }
+
 
     public function update(Transactions $transaction, TransactionRequest $request)
     {
