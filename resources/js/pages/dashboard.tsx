@@ -6,6 +6,7 @@ import { SectionCardDashboard } from '@/components/section-card-dashboard';
 
 import ChartArea from '@/components/chart-area';
 import { MonthList } from '@/components/month-list';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -33,16 +34,17 @@ export default function Dashboard({ page_data }: { page_data: { income: number; 
 
     const page = auth?.organization;
     console.log(page_data);
-
+    const [loading, setLoading] = useState(false);
     const handleSubmit = (e: number) => {
         console.log(e);
-
+        setLoading(true);
         // Aksi yang ingin dilakukan saat form disubmit
         router.reload({
             only: ['page_data'],
             data: {
                 bulan: e,
             },
+            onFinish: () => setLoading(false),
         });
     };
 
@@ -60,7 +62,7 @@ export default function Dashboard({ page_data }: { page_data: { income: number; 
                     <img className="size-[100px]" src="/assets/icon/profit-growth.png" alt="icon-dashboard" />
                 </div>
                 <MonthList onChange={(i) => handleSubmit(i)} />
-                <SectionCardDashboard items={page_data} />
+                <SectionCardDashboard items={page_data} loading={loading} />
                 <ChartArea />
             </div>
         </AppLayout>

@@ -1,9 +1,9 @@
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { NavItemNew, type NavItem } from '@/types';
+import { NavItemNew } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BanknoteIcon, BookMarked, BookOpen, CircleDollarSign, CookieIcon, FileArchive, Folder, LucideALargeSmall, User2Icon } from 'lucide-react';
+import { BanknoteIcon, BookMarked, CircleDollarSign, CookieIcon, FileArchive, User2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItemNew[] = [
@@ -29,18 +29,18 @@ const mainNavItems: NavItemNew[] = [
                 icon: User2Icon,
                 permissions: ['user_access'],
             },
-            {
-                title: 'Roles',
-                href: '/master/roles',
-                icon: CookieIcon,
-                permissions: ['roles_access'],
-            },
-            {
-                title: 'Permission',
-                href: '/master/permission',
-                icon: LucideALargeSmall,
-                permissions: ['permission_access'],
-            },
+            // {
+            //     title: 'Roles',
+            //     href: '/master/roles',
+            //     icon: CookieIcon,
+            //     permissions: ['roles_access'],
+            // },
+            // {
+            //     title: 'Permission',
+            //     href: '/master/permission',
+            //     icon: LucideALargeSmall,
+            //     permissions: ['permission_access'],
+            // },
             {
                 title: 'Kategori',
                 href: '/master/categories',
@@ -66,7 +66,7 @@ const mainNavItems: NavItemNew[] = [
         roles: ['admin', 'editor'],
         menu: [
             {
-                title: 'Hutang',
+                title: 'Hutang-piutang',
                 href: '/krediturs/',
                 icon: BanknoteIcon,
                 permissions: ['krediturs_access'],
@@ -83,32 +83,7 @@ const mainNavItems: NavItemNew[] = [
                 icon: FileArchive,
                 permissions: ['laporan_transactions_access'],
             },
-            {
-                title: 'Krediturs',
-                href: '#',
-                icon: FileArchive,
-                permissions: ['laporan_krediturs_access'],
-            },
-            {
-                title: 'User',
-                href: '#',
-                icon: FileArchive,
-                permissions: ['laporan_user_access'],
-            },
         ],
-    },
-];
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
     },
 ];
 

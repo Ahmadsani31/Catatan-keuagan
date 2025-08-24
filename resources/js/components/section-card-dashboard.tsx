@@ -1,13 +1,8 @@
 import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { router } from '@inertiajs/react';
-import { useState } from 'react';
 import { BiDollar, BiLineChart, BiLineChartDown } from 'react-icons/bi';
 import { Skeleton } from './ui/skeleton';
 
-export function SectionCardDashboard({ items }: { items?: { income: number; expense: number; profit: number } }) {
-    const [loading, setLoading] = useState(false);
-    router.on('start', () => setLoading(true));
-    router.on('finish', () => setLoading(false));
+export function SectionCardDashboard({ items, loading }: { items?: { income: number; expense: number; profit: number }; loading: boolean }) {
     const formatter = new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',

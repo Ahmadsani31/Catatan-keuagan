@@ -21,7 +21,7 @@ export default function ColumnsDatatableActionDelete({ url }: { url: string }) {
         router.delete(url, {
             preserveScroll: true,
             preserveState: true,
-            onSuccess: (success) => {
+            onSuccess: () => {
                 setProcessing(false);
                 setDialogOpen(false);
             },

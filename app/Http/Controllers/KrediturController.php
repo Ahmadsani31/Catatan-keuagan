@@ -24,7 +24,7 @@ class KrediturController extends Controller
         return Inertia::render('krediturs/index', [
             'krediturs' => KrediturResource::collection($krediturs),
             'page_info' => [
-                'title' => 'Kreditur',
+                'title' => 'Hutang / Piutang',
                 'subtitle' => 'Menampilkan semua data kredit orang yang ada di platform ini, untuk di kelola',
             ],
         ]);

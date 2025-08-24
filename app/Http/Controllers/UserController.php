@@ -7,6 +7,7 @@ use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserUpdatePasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -21,7 +22,7 @@ class UserController extends Controller
         $organization = Auth::user()->organizations()->first();
 
         $users = User::whereHas('organizations', function ($q) use ($organization) {
-            $q->where('organizations.id', $organization->id)->where('users.id', '!=', auth()->user()->id);
+            $q->where('organizations.id', $organization->id)->where('users.id', '!=', Auth::user()->id);
         })->latest()->get();
 
         return Inertia::render('master/user/index', [
@@ -54,6 +55,25 @@ class UserController extends Controller
         ]);
     }
 
+    public function assignRole(): Response
+    {
+
+        return Inertia::render('master/user/assign-role', [
+            'page_info' => [
+                'title' => 'Terapkan Role ke User',
+                'subtitle' => 'Buat data user baru, klik simpan jika sudah selesai',
+                'method' => 'POST',
+                'action' => route('master.users.store-assign-role'),
+            ],
+            'page_data' => [
+                'roles' => Role::select('id', 'name')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+            ]
+        ]);
+    }
+
 
     public function edit(User $user): Response
     {
@@ -76,6 +96,33 @@ class UserController extends Controller
 
 
     public function store(UserRequest $request)
+    {
+
+        DB::beginTransaction();
+
+        try {
+            $user =  User::create($request->validated());
+
+            $organization = Auth::user()->organizations()->first();
+
+            $organization->users()->attach($user->id);
+            $user->assignRole($request->roles);
+            DB::commit();
+
+            return to_route('master.users.index')->with([
+                'type' => 'success',
+                'message' => 'Tambah Successfully'
+            ]);
+        } catch (\Exception $err) {
+            DB::rollBack();
+            return back()->with([
+                'type' => 'error',
+                'message' => $err->getMessage()
+            ]);
+        }
+    }
+
+    public function storeAssignRole(Request $request)
     {
 
         DB::beginTransaction();

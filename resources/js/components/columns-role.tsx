@@ -34,7 +34,7 @@ export const ColumnsRole: ColumnDef<columnsItems>[] = [
                     </Button>
                     <ModalRolesUpdate open={open} onOpenChange={setOpen} roles={row.original} />
 
-                    <ColumnsDatatableActionDelete url={route('roles.delete', [row.original])} />
+                    <ColumnsDatatableActionDelete url={route('roles.delete', { id: row.original })} />
                 </div>
             );
         },

@@ -84,9 +84,17 @@ class RolesController extends Controller
         // return to_route('roles.index')->with('message', 'Roles berhasil disimpan!');
     }
 
+    public function allRoles()
+    {
+        $roles =  Role::all();
+        return response()->json([
+            'roles' => $roles,
+        ]);
+    }
+
     public function destroy($id)
     {
-        $param = Role::findById(Crypt::decrypt($id));
+        $param = Role::findById($id);
         $param->delete();
         return to_route('roles.index')->with('message', 'Delete berhasil!');
     }
