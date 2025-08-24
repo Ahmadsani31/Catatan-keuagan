@@ -42,6 +42,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/roles/store', 'store')->name('roles.store');
             Route::put('/roles/update', 'update')->name('roles.update');
             Route::delete('/roles/delete/{id}', 'destroy')->name('roles.delete');
+
+            Route::post('/roles/assign-permissions', 'assign')->name('roles.assign-permissions');
         });
 
         Route::apiResource('permission', PermissionController::class);

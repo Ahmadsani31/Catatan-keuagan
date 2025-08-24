@@ -27,7 +27,7 @@ export const ColumnsPermission: ColumnDef<columnsItems>[] = [
                     </Button>
                     <ModalPermissionUpdate open={open} onOpenChange={setOpen} permissions={row.original} />
 
-                    <ColumnsDatatableActionDelete url="master.users.destroy" id={row.original.id} />
+                    <ColumnsDatatableActionDelete url={route('master.users.destroy', [row.original])} />
                 </div>
             );
         },

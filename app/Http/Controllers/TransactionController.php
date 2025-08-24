@@ -53,14 +53,17 @@ class TransactionController extends Controller
     {
         $query = Transactions::query();
         $query->where('organization_id', getOrganizationiId());
+        $query->whereDate('created_at', '>=', $request->input('dateStart') ?? date('Y-m-d'));
+        $query->whereDate('created_at', '<=', $request->input('dateEnd') ?? date('Y-m-d'));
 
-        $query->when($request->input('dateStart'), function ($q, string $dateStart) {
-            return $q->whereDate('created_at', '>=', $dateStart);
-        });
 
-        $query->when($request->input('dateEnd'), function ($q, string $dateEnd) {
-            return $q->whereDate('created_at', '<=', $dateEnd);
-        });
+        // $query->when($request->input('dateStart'), function ($q, string $dateStart) {
+        //     return $q->whereDate('created_at', '>=', $dateStart);
+        // });
+
+        // $query->when($request->input('dateEnd'), function ($q, string $dateEnd) {
+        //     return $q->whereDate('created_at', '<=', $dateEnd);
+        // });
 
         $transactions = $query->get();
 
@@ -101,7 +104,7 @@ class TransactionController extends Controller
         try {
             //code...
             Transactions::create([
-                'user_id' => auth()->user()->id,
+                'user_id' => Auth::user()->id,
                 'organization_id' => getOrganizationiId(),
                 'category_id' => $request->category_id,
                 'type' => $request->type,

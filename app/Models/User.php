@@ -58,7 +58,7 @@ class User extends Authenticatable
 
     public function getUserPermissions()
     {
-        return $this->getAllPermissions()->mapWithKeys(fn($permission) => [$permission['name'] => true]);
+        return $this->getAllPermissions()->pluck('name');
     }
 
     public function organizations(): BelongsToMany

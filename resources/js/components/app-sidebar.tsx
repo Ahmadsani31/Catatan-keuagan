@@ -3,93 +3,98 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavItemNew, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BanknoteIcon, BookMarked, BookOpen, CircleDollarSign, CookieIcon, FileArchive, FileType, Folder, LucideALargeSmall, PiggyBankIcon, User2Icon } from 'lucide-react';
+import { BanknoteIcon, BookMarked, BookOpen, CircleDollarSign, CookieIcon, FileArchive, Folder, LucideALargeSmall, User2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItemNew[] = [
     {
         header: 'Dashboard',
+        roles: ['admin', 'editor', 'viewer'],
         menu: [
             {
                 title: 'Dashboard',
                 href: '/dashboard',
                 icon: CookieIcon,
-                permissions: ['dashboard_list'],
+                permissions: ['dashboard_access'],
             },
         ],
     },
     {
         header: 'Master',
+        roles: ['admin', 'editor'],
         menu: [
             {
                 title: 'User',
                 href: '/master/users',
                 icon: User2Icon,
-                permissions: ['user_list'],
+                permissions: ['user_access'],
             },
             {
                 title: 'Roles',
                 href: '/master/roles',
                 icon: CookieIcon,
-                permissions: ['roles_list'],
+                permissions: ['roles_access'],
             },
             {
                 title: 'Permission',
                 href: '/master/permission',
                 icon: LucideALargeSmall,
-                permissions: ['permission_list'],
+                permissions: ['permission_access'],
             },
             {
                 title: 'Kategori',
                 href: '/master/categories',
                 icon: BookMarked,
-                permissions: ['permission_list'],
+                permissions: ['category_access'],
             },
         ],
     },
     {
         header: 'Transaksi',
+        roles: ['admin', 'editor'],
         menu: [
             {
                 title: 'Transaksi',
                 href: '/transactions',
                 icon: CircleDollarSign,
-                permissions: ['organizations_list'],
+                permissions: ['transactions_access'],
             },
         ],
     },
     {
         header: 'Dept',
+        roles: ['admin', 'editor'],
         menu: [
             {
                 title: 'Kreditur',
                 href: '/krediturs/',
                 icon: BanknoteIcon,
-                permissions: ['organizations_list'],
-            }
+                permissions: ['krediturs_access'],
+            },
         ],
     },
     {
         header: 'Laporan',
+        roles: ['admin', 'editor'],
         menu: [
             {
                 title: 'Transaksi',
                 href: '/transactions/laporan',
                 icon: FileArchive,
-                permissions: ['organizations_list'],
+                permissions: ['laporan_transactions_access'],
             },
             {
                 title: 'Krediturs',
                 href: '#',
                 icon: FileArchive,
-                permissions: ['organizations_list'],
+                permissions: ['laporan_krediturs_access'],
             },
             {
                 title: 'User',
                 href: '#',
                 icon: FileArchive,
-                permissions: ['organizations_list'],
-            }
+                permissions: ['laporan_user_access'],
+            },
         ],
     },
 ];
