@@ -17,8 +17,8 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
     const userRoles = roles;
     const userPermissions = permissions;
 
-    console.log('roles', userRoles);
-    console.log('permission', userPermissions);
+    // console.log('roles', userRoles);
+    // console.log('permission', userPermissions);
 
     return (
         <SidebarGroup className="px-2 py-0">

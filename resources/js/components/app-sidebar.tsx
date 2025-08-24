@@ -66,7 +66,7 @@ const mainNavItems: NavItemNew[] = [
         roles: ['admin', 'editor'],
         menu: [
             {
-                title: 'Kreditur',
+                title: 'Hutang',
                 href: '/krediturs/',
                 icon: BanknoteIcon,
                 permissions: ['krediturs_access'],

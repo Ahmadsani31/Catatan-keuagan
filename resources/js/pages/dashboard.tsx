@@ -1,11 +1,11 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 
 import { SectionCardDashboard } from '@/components/section-card-dashboard';
 
 import ChartArea from '@/components/chart-area';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MonthList } from '@/components/month-list';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,10 +28,23 @@ interface PageProps {
     [key: string]: unknown;
 }
 
-export default function Dashboard() {
+export default function Dashboard({ page_data }: { page_data: { income: number; expense: number; profit: number } }) {
     const { auth } = usePage<PageProps>().props;
+
     const page = auth?.organization;
-    console.log(page);
+    console.log(page_data);
+
+    const handleSubmit = (e: number) => {
+        console.log(e);
+
+        // Aksi yang ingin dilakukan saat form disubmit
+        router.reload({
+            only: ['page_data'],
+            data: {
+                bulan: e,
+            },
+        });
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -46,17 +59,8 @@ export default function Dashboard() {
                     </div>
                     <img className="size-[100px]" src="/assets/icon/profit-growth.png" alt="icon-dashboard" />
                 </div>
-                <Tabs defaultValue="1" className="w-[400px]">
-                    <TabsList>
-                        <TabsTrigger value="1" onClick={() => alert('a')}>
-                            1 Month
-                        </TabsTrigger>
-                        <TabsTrigger value="2">3 Month</TabsTrigger>
-                        <TabsTrigger value="3">6 Month</TabsTrigger>
-                        <TabsTrigger value="4">12 Month</TabsTrigger>
-                    </TabsList>
-                </Tabs>
-                <SectionCardDashboard />
+                <MonthList onChange={(i) => handleSubmit(i)} />
+                <SectionCardDashboard items={page_data} />
                 <ChartArea />
             </div>
         </AppLayout>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KrediturController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\PaymentKrediturController;
@@ -18,9 +19,10 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('dashboard', 'index')->name('dashboard');
+    });
 
     Route::prefix('master')->group(function () {
 
