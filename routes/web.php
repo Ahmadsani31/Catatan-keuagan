@@ -69,6 +69,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/transactions/destroy/{transaction}', 'destroy')->name('transactions.destroy');
 
         Route::get('/transactions/type/{type}', 'type_json')->name('transactions.type');
+
+        Route::get('/transactions/laporan', 'laporan')->name('transactions.laporan');
     });
 
 

@@ -74,7 +74,7 @@ const mainNavItems: NavItemNew[] = [
         menu: [
             {
                 title: 'Transaksi',
-                href: '#',
+                href: '/transactions/laporan',
                 icon: FileArchive,
                 permissions: ['organizations_list'],
             },

@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Transactions;
 use App\Traits\HasFile;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,30 @@ class TransactionController extends Controller
         ]);
     }
 
+    public function laporan(Request $request): Response
+    {
+        $query = Transactions::query();
+        $query->where('organization_id', getOrganizationiId());
+
+        $query->when($request->input('dateStart'), function ($q, string $dateStart) {
+            return $q->whereDate('created_at', '>=', $dateStart);
+        });
+
+        $query->when($request->input('dateEnd'), function ($q, string $dateEnd) {
+            return $q->whereDate('created_at', '<=', $dateEnd);
+        });
+
+        $transactions = $query->get();
+
+        return Inertia::render('transactions/laporan', [
+            'transactions' => TransactionResource::collection($transactions),
+            'page_info' => [
+                'title' => 'Cetak Laporan Transaksi',
+                'subtitle' => 'Menampilkan semua data transaksi yang ada di platform ini, untuk di kelola',
+            ]
+        ]);
+    }
+
     public function create(): Response
     {
         return Inertia::render('transactions/create', [
@@ -67,30 +92,6 @@ class TransactionController extends Controller
                     'label' => $item->name,
                 ]),
             ],
-        ]);
-    }
-
-    public function edit(Transactions $transaction): Response
-    {
-
-        return Inertia::render('transactions/edit', [
-            'page_info' => [
-                'title' => 'Edit Transaksi',
-                'subtitle' => 'Edit transaksi yang ada disini, klik simpan setelah selesai',
-                'method' => 'PUT',
-                'action' => route('transactions.update', $transaction),
-            ],
-            'page_data' => [
-                'categoryIncome' => Category::where('type', 'Pemasukan')->get()->map(fn($item) => [
-                    'value' => $item->id,
-                    'label' => $item->name,
-                ]),
-                'categoryExpense' => Category::where('type', 'Pengeluaran')->get()->map(fn($item) => [
-                    'value' => $item->id,
-                    'label' => $item->name,
-                ]),
-            ],
-            'transactions' => new TransactionResource($transaction),
         ]);
     }
 
@@ -121,6 +122,32 @@ class TransactionController extends Controller
             ]);
         }
     }
+
+
+    public function edit(Transactions $transaction): Response
+    {
+
+        return Inertia::render('transactions/edit', [
+            'page_info' => [
+                'title' => 'Edit Transaksi',
+                'subtitle' => 'Edit transaksi yang ada disini, klik simpan setelah selesai',
+                'method' => 'PUT',
+                'action' => route('transactions.update', $transaction),
+            ],
+            'page_data' => [
+                'categoryIncome' => Category::where('type', 'Pemasukan')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+                'categoryExpense' => Category::where('type', 'Pengeluaran')->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name,
+                ]),
+            ],
+            'transactions' => new TransactionResource($transaction),
+        ]);
+    }
+
 
     public function update(Transactions $transaction, TransactionRequest $request)
     {
