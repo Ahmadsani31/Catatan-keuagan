@@ -68,7 +68,7 @@ const FinanceFeatures = () => {
                             <CardHeader>
                                 <div
                                     className={`h-12 w-12 rounded-xl bg-gradient-to-r ${
-                                        feature.color === 'text-primary' ? 'from-primary/20 to-primary-glow/20' : 'from-accent/20 to-accent-glow/20'
+                                        feature.color === 'text-primary' ? 'from-primary/40 to-primary-glow/40' : 'from-blue-500/40 to-indigo-500/40'
                                     } mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}
                                 >
                                     <feature.icon className={`h-6 w-6 ${feature.color}`} />

@@ -8,8 +8,10 @@ import financeHeroImage from '../../../public/assets/images/finance-hero.jpg';
 const FinanceHero = () => {
     const { auth } = usePage<SharedData>().props;
     return (
-        <section className="relative flex min-h-screen items-center justify-center overflow-hidden p-20">
+        <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[url(/assets/images/welcome-hero.jpg)] bg-cover p-20">
             {/* Background gradient */}
+            <div className="absolute inset-0 bg-white/90"></div>
+
             <div
                 className="from-primary/10 via-background to-accent/5 absolute inset-0 bg-gradient-to-br"
                 style={{ backgroundImage: 'var(--finance-hero-bg)' }}
@@ -23,9 +25,9 @@ const FinanceHero = () => {
                 <div className="grid items-center gap-12 lg:grid-cols-2">
                     {/* Left Content */}
                     <div className="text-center lg:text-left">
-                        <div className="bg-primary/10 border-primary/20 mb-6 inline-flex items-center rounded-full border px-4 py-2">
+                        <div className="bg-primary/15 border-primary/20 mb-6 inline-flex items-center rounded-full border px-4 py-2">
                             <Shield className="text-primary mr-2 h-4 w-4" />
-                            <span className="text-primary text-sm font-medium">Aman & Terpercaya</span>
+                            <span className="text-sm font-medium">Aman & Terpercaya</span>
                         </div>
 
                         <h1 className="text-foreground mb-6 text-4xl leading-tight font-bold md:text-6xl">

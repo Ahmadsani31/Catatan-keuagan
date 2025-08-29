@@ -38,9 +38,9 @@ export default function Index({ transactions, page_info, page_data }: any) {
                 </div>
                 <Card className="py-1 [&_td]:px-3 [&_th]:px-3">
                     <CardContent className="[&-td]:whitespace-nowrap">
-                        <div className="my-5 grid auto-rows-min gap-4 sm:grid-cols-2">
+                        <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card my-5 grid auto-rows-min gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:grid-cols-2">
                             <SectionCards name="Income" icon={CircleDollarSign} value={formatter.format(page_data.income)} className="bg-green-200" />
-                            <SectionCards name="Expense" icon={HandCoinsIcon} value={formatter.format(page_data.expense)} className="bg-amber-200" />
+                            <SectionCards name="Expense" icon={HandCoinsIcon} value={formatter.format(page_data.expense)} className="bg-red-200" />
                         </div>
                         <Button variant={'custom'} className="w-full bg-emerald-500" size={'lg'} asChild>
                             <Link href={route('transactions.create')}>
