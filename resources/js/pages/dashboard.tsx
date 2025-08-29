@@ -4,7 +4,6 @@ import { Head, router, usePage } from '@inertiajs/react';
 
 import { SectionCardDashboard } from '@/components/section-card-dashboard';
 
-import ChartArea from '@/components/chart-area';
 import { MonthList } from '@/components/month-list';
 import { useState } from 'react';
 
@@ -52,7 +51,7 @@ export default function Dashboard({ page_data }: { page_data: { income: number; 
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="flex flex-row items-center justify-between rounded-md border bg-gradient-to-t from-teal-50 to-green-50 p-4">
+                <div className="flex flex-row items-center justify-between rounded-md border bg-amber-100 p-4">
                     <div>
                         <span className="text-secondary-foreground text-sm">Nama Organisasi / Company</span>
                         <h3 className="text-3xl font-bold">{page?.name}</h3>
@@ -63,7 +62,7 @@ export default function Dashboard({ page_data }: { page_data: { income: number; 
                 </div>
                 <MonthList onChange={(i) => handleSubmit(i)} />
                 <SectionCardDashboard items={page_data} loading={loading} />
-                <ChartArea />
+                {/* <ChartArea /> */}
             </div>
         </AppLayout>
     );

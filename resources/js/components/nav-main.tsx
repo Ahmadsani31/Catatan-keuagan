@@ -17,7 +17,7 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
     const userRoles = roles;
     const userPermissions = permissions;
 
-    // console.log('roles', userRoles);
+    console.log('page', page);
     // console.log('permission', userPermissions);
 
     return (
@@ -41,7 +41,8 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
                                     <SidebarMenuItem key={idx}>
                                         <SidebarMenuButton
                                             asChild
-                                            isActive={page.url.startsWith(menuItem.href)}
+                                            // isActive={page.url.startsWith(menuItem.href)}
+                                            isActive={menuItem.href === page.url}
                                             tooltip={{ children: menuItem.title }}
                                         >
                                             <Link href={menuItem.href} prefetch>

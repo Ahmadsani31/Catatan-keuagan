@@ -84,8 +84,8 @@ export default function Laporan({ transactions, page_info }: LaporanProps) {
                             placeholder="Pilih tanggal"
                             modal={true}
                         />
-                        <Button type="submit" className="w-full" variant={'default'} size={'lg'} onClick={handleSubmit}>
-                            Find Data
+                        <Button type="submit" variant={'custom'} className="bg-indigo-500" size={'lg'} onClick={handleSubmit}>
+                            Cari Data
                         </Button>
                     </CardContent>
                 </Card>

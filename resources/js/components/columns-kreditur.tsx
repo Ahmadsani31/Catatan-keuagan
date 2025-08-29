@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { InfoIcon, PencilIcon } from 'lucide-react';
+import { NotepadTextIcon, PencilIcon } from 'lucide-react';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 import KrediturStatusBadge from './kreditur-status-badge';
 
@@ -12,7 +12,7 @@ type columnsItems = {
     cash_pay: string;
     status: string;
     note: string;
-}
+};
 
 export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
     {
@@ -23,7 +23,7 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
         accessorKey: 'name',
         header: 'Nama',
         cell: ({ row }: any) => (
-            <div className='items-center'>
+            <div className="items-center">
                 <p>{row.original.name}</p>
                 <KrediturStatusBadge status={row.original.status} />
             </div>
@@ -41,7 +41,7 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
             return (
                 <div>
                     {currencyFormatter.format(row.original.cash.amount)}
-                    <p className='text-xs text-teal-400'>sisa : {currencyFormatter.format(row.original.cash.available)}</p>
+                    <p className="text-xs text-teal-400">sisa : {currencyFormatter.format(row.original.cash.available)}</p>
                 </div>
             );
         },
@@ -68,10 +68,10 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
         header: () => <span className="flex justify-center">Aksi</span>,
         cell: ({ row }: any) => {
             return (
-                <div className="flex justify-center items-center gap-x-1">
-                    <Button variant={'secondary'} size={'sm'} asChild>
+                <div className="flex items-center justify-center gap-x-1">
+                    <Button variant={'custom'} className="bg-indigo-500" size={'sm'} asChild>
                         <Link href={route('krediturs.payment.index', [row.original])}>
-                            <InfoIcon />
+                            <NotepadTextIcon />
                         </Link>
                     </Button>
                     <Button variant={'default'} size={'sm'} asChild>

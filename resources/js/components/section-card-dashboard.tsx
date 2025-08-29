@@ -18,7 +18,7 @@ export function SectionCardDashboard({ items, loading }: { items?: { income: num
                     <Skeleton className="h-8 w-full" />
                 </div>
             ) : (
-                <Card className="@container/card">
+                <Card className="@container/card bg-blue-200">
                     <CardHeader>
                         <CardDescription>Income</CardDescription>
                         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -40,7 +40,7 @@ export function SectionCardDashboard({ items, loading }: { items?: { income: num
                     <Skeleton className="h-8 w-full" />
                 </div>
             ) : (
-                <Card className="@container/card">
+                <Card className="@container/card bg-red-200">
                     <CardHeader>
                         <CardDescription>Expense</CardDescription>
                         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -62,7 +62,7 @@ export function SectionCardDashboard({ items, loading }: { items?: { income: num
                     <Skeleton className="h-8 w-full" />
                 </div>
             ) : (
-                <Card className="@container/card">
+                <Card className="@container/card bg-green-200">
                     <CardHeader>
                         <CardDescription>Profit</CardDescription>
                         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
