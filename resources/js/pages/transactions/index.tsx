@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { AlignCenterHorizontalIcon, CircleDollarSign, DollarSign, HandCoinsIcon, PlusCircle } from 'lucide-react';
+import { AlignCenterHorizontalIcon, CircleDollarSign, HandCoinsIcon, PlusCircle } from 'lucide-react';
 
 import { DataTable } from '@/components/data-table';
 import HeaderTitle from '@/components/header-title';
@@ -35,11 +35,6 @@ export default function Index({ transactions, page_info, page_data }: any) {
             <div className="flex h-full flex-col gap-4 p-4">
                 <div className="flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center">
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
-                    <Button variant={'default'} size={'lg'} asChild>
-                        <Link href={route('transactions.create')}>
-                            <PlusCircle /> Tambah
-                        </Link>
-                    </Button>
                 </div>
                 <Card className="py-1 [&_td]:px-3 [&_th]:px-3">
                     <CardContent className="[&-td]:whitespace-nowrap">
@@ -47,6 +42,11 @@ export default function Index({ transactions, page_info, page_data }: any) {
                             <SectionCards name="Income" icon={CircleDollarSign} value={formatter.format(page_data.income)} className="bg-green-200" />
                             <SectionCards name="Expense" icon={HandCoinsIcon} value={formatter.format(page_data.expense)} className="bg-amber-200" />
                         </div>
+                        <Button variant={'custom'} className="w-full bg-emerald-500" size={'lg'} asChild>
+                            <Link href={route('transactions.create')}>
+                                <PlusCircle /> Tambah
+                            </Link>
+                        </Button>
                         <DataTable
                             columns={ColumnsTransaction}
                             sortableColumns={['description', 'category_name', 'created_at']}

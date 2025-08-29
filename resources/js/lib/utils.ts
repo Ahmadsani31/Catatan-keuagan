@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
