@@ -2,7 +2,8 @@ import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
 import { type BreadcrumbItem } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { useEffect, type ReactNode } from 'react';
-import { Bounce, toast, ToastContainer } from 'react-toastify';
+// import { Bounce, toast, ToastContainer } from 'react-toastify';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface AppLayoutProps {
     children: ReactNode;
@@ -21,7 +22,8 @@ export default function ({ children, breadcrumbs, ...props }: AppLayoutProps) {
     return (
         <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
             {children}
-            <ToastContainer
+            <Toaster position="top-right" />
+            {/* <ToastContainer
                 position="top-right"
                 autoClose={5000}
                 hideProgressBar={false}
@@ -33,7 +35,7 @@ export default function ({ children, breadcrumbs, ...props }: AppLayoutProps) {
                 pauseOnHover
                 stacked
                 transition={Bounce}
-            />
+            /> */}
         </AppLayoutTemplate>
     );
 }

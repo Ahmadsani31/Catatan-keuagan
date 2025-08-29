@@ -110,6 +110,15 @@
     --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
     --sidebar-border: oklch(0.92 0.004 286.32);
     --sidebar-ring: oklch(0.723 0.219 149.579);
+
+    /* Finance-specific design tokens */
+    --finance-hero-bg: linear-gradient(135deg, hsl(212 100% 47% / 0.1), hsl(142 76% 36% / 0.1));
+    --finance-card-bg: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 40% 98%));
+    --finance-gradient-primary: linear-gradient(135deg, hsl(212 100% 47%), hsl(212 100% 60%));
+    --finance-gradient-accent: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 50%));
+    --finance-shadow-primary: 0 10px 40px -10px hsl(212 100% 47% / 0.3);
+    --finance-shadow-accent: 0 10px 40px -10px hsl(142 76% 36% / 0.3);
+    --finance-border-gradient: linear-gradient(135deg, hsl(212 100% 47% / 0.2), hsl(142 76% 36% / 0.2));
 }
 
 .dark {

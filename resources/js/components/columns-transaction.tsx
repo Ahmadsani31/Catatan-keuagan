@@ -3,7 +3,6 @@ import { columnsItems } from '@/types/page-roles';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { PencilIcon } from 'lucide-react';
-import { useState } from 'react';
 import CategoryStatusBadge from './category-status-badge';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 import DialogPreviewImage from './dialog-preview-image';
@@ -43,7 +42,12 @@ export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
         header: () => <span className="flex justify-center">Screnshoot</span>,
         cell: ({ row }: any) => (
             <div className="flex items-center justify-center">
-                <DialogPreviewImage url_image={row.original.file_image} size="size-10" title="Bukti transaksi" description="screenshot atau foto bukti transaksi" />
+                <DialogPreviewImage
+                    url_image={row.original.file_image}
+                    size="size-10"
+                    title="Bukti transaksi"
+                    description="screenshot atau foto bukti transaksi"
+                />
             </div>
         ),
     },
@@ -51,7 +55,6 @@ export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
         id: 'actions',
         header: () => <span className="flex justify-center">Aksi</span>,
         cell: ({ row }) => {
-            const [dialogOpen, setDialogOpen] = useState<boolean>(false);
             return (
                 <div className="flex justify-center gap-x-1">
                     <Button variant={'default'} size={'sm'} asChild>

@@ -1,11 +1,11 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 
 import { SectionCardDashboard } from '@/components/section-card-dashboard';
 
-import ChartArea from '@/components/chart-area';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MonthList } from '@/components/month-list';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,36 +28,46 @@ interface PageProps {
     [key: string]: unknown;
 }
 
-export default function Dashboard() {
+export default function Dashboard({ page_data }: { page_data: { income: number; expense: number; profit: number } }) {
     const { auth } = usePage<PageProps>().props;
+
     const page = auth?.organization;
-    console.log(page);
+    console.log(page_data);
+    const [loading, setLoading] = useState(false);
+    const handleSubmit = (e: number) => {
+        console.log(e);
+        setLoading(true);
+        // Aksi yang ingin dilakukan saat form disubmit
+        router.reload({
+            only: ['page_data'],
+            data: {
+                bulan: e,
+            },
+            onFinish: () => setLoading(false),
+        });
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="flex flex-row items-center justify-between rounded-md border bg-gradient-to-t from-teal-50 to-green-50 p-4">
-                    <div>
-                        <span className="text-secondary-foreground text-sm">Nama Organisasi / Company</span>
+                <div className="relative flex flex-row items-center justify-between rounded-md border p-4">
+                    <div className="z-10 text-white">
+                        <span className="text-sm">My Organisasi / Company</span>
                         <h3 className="text-3xl font-bold">{page?.name}</h3>
                         <p>{page?.address}</p>
                         {/* <p className='text-muted-foreground italic'>"{page.keterangan}"</p> */}
                     </div>
-                    <img className="size-[100px]" src="/assets/icon/profit-growth.png" alt="icon-dashboard" />
+                    <img
+                        className="absolute inset-0 h-full w-full rounded-l-md rounded-r-md object-cover"
+                        src="/assets/images/dashboard.jpg"
+                        alt="icon-dashboard"
+                    />
+                    <div className="absolute inset-0 rounded-l-md rounded-r-md bg-gradient-to-r from-black/90 to-transparent"></div>
                 </div>
-                <Tabs defaultValue="1" className="w-[400px]">
-                    <TabsList>
-                        <TabsTrigger value="1" onClick={() => alert('a')}>
-                            1 Mouth
-                        </TabsTrigger>
-                        <TabsTrigger value="2">3 Mouth</TabsTrigger>
-                        <TabsTrigger value="3">6 Mouth</TabsTrigger>
-                        <TabsTrigger value="4">12 Mouth</TabsTrigger>
-                    </TabsList>
-                </Tabs>
-                <SectionCardDashboard />
-                <ChartArea />
+                <MonthList onChange={(i) => handleSubmit(i)} />
+                <SectionCardDashboard items={page_data} loading={loading} />
+                {/* <ChartArea /> */}
             </div>
         </AppLayout>
     );

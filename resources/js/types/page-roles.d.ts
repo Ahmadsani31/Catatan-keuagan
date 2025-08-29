@@ -44,6 +44,7 @@ export interface columnsItems {
     id: number;
     name: string;
     email: string;
+    encrypted_id: string;
     created_at: string;
 }
 

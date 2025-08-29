@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KrediturController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\PaymentKrediturController;
@@ -9,7 +10,9 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Mail\SendEmail;
 use App\Models\Category;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -17,10 +20,23 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+Route::get('/email-test', function () {
+
+    $data = [
+        'name' => 'John Doe',
+        'message' => 'This is a test email from Laravel 12.'
+    ];
+
+    Mail::to('ahmaddarma0@gmail.com')->send(new SendEmail($data));
+
+    return response()->json(['success' => 'Email sent successfully.']);
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('dashboard', 'index')->name('dashboard');
+    });
 
     Route::prefix('master')->group(function () {
 
@@ -32,6 +48,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('users/update/{user}', 'update')->name('master.users.update');
             Route::put('users/update-password/{user}', 'update_password')->name('master.users.update-password');
             Route::delete('users/destroy/{user}', 'destroy')->name('master.users.destroy');
+
+            Route::get('users/assign-role', 'assignRole')->name('master.users.assign-role');
+            Route::post('users/store/assign-role', 'storeAssignRole')->name('master.users.store-assign-role');
         });
 
 
@@ -42,6 +61,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/roles/store', 'store')->name('roles.store');
             Route::put('/roles/update', 'update')->name('roles.update');
             Route::delete('/roles/delete/{id}', 'destroy')->name('roles.delete');
+
+            Route::get('/roles/all', 'allRoles')->name('roles.all');
+            Route::post('/roles/assign-permissions', 'assign')->name('roles.assign-permissions');
         });
 
         Route::apiResource('permission', PermissionController::class);
@@ -69,6 +91,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/transactions/destroy/{transaction}', 'destroy')->name('transactions.destroy');
 
         Route::get('/transactions/type/{type}', 'type_json')->name('transactions.type');
+
+        Route::get('/transactions/laporan', 'laporan')->name('transactions.laporan');
     });
 
 

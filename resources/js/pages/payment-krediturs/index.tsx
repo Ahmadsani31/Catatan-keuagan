@@ -1,12 +1,12 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { AlignCenterHorizontalIcon, ArrowBigLeft, CircleDollarSign, DollarSign, HandCoins, LucideDollarSign, PlusCircle, Wallet } from 'lucide-react';
+import { AlignCenterHorizontalIcon, ArrowBigLeft, CircleDollarSign, CircleDollarSignIcon, HandCoins, Wallet } from 'lucide-react';
 
 import { DataTable } from '@/components/data-table';
 import HeaderTitle from '@/components/header-title';
 import { Button } from '@/components/ui/button';
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader } from '@/components/ui/card';
 
 import { ColumnsPaymnetKrediturTransaction } from '@/components/columns-payment-kreditur-transaction';
 import ModalKrediturTransaction from '@/components/modal/modal-kreditur-transaction';
@@ -47,49 +47,53 @@ export default function Index({ kreditur, paymentKreditur, page_info }: any) {
                                 <ArrowBigLeft /> Back
                             </Link>
                         </Button>
-
-
                     </div>
                 </div>
                 <Card className="@container/card">
-                    <div className='px-5'>
+                    <div className="px-5">
                         <h1 className="text-2xl font-semibold">{kreditur.name}</h1>
-                        <p className='text-muted-foreground text-sm'>{kreditur.note}</p>
+                        <p className="text-muted-foreground text-sm">{kreditur.note}</p>
                     </div>
                 </Card>
                 <div className="my-5 grid auto-rows-min gap-4 lg:grid-cols-3">
                     <Card className="gap-2">
                         <CardHeader>
                             <CardDescription>Nominal</CardDescription>
-                            <CardAction><CircleDollarSign /></CardAction>
+                            <CardAction>
+                                <CircleDollarSign />
+                            </CardAction>
                         </CardHeader>
-                        <CardFooter className="text-2xl text-green-500 font-semibold tabular-nums @[250px]/card:text-3xl">
+                        <CardFooter className="text-2xl font-semibold text-green-500 tabular-nums @[250px]/card:text-3xl">
                             {formatter.format(kreditur.cash.amount)}
                         </CardFooter>
                     </Card>
                     <Card className="gap-2">
                         <CardHeader>
                             <CardDescription>sisa</CardDescription>
-                            <CardAction><HandCoins /></CardAction>
+                            <CardAction>
+                                <HandCoins />
+                            </CardAction>
                         </CardHeader>
-                        <CardFooter className="text-2xl text-red-500 font-semibold tabular-nums @[250px]/card:text-3xl">
+                        <CardFooter className="text-2xl font-semibold text-red-500 tabular-nums @[250px]/card:text-3xl">
                             {formatter.format(kreditur.cash.available)}
                         </CardFooter>
                     </Card>
                     <Card className="gap-2">
                         <CardHeader>
                             <CardDescription>Terbayarkan</CardDescription>
-                            <CardAction><Wallet /></CardAction>
+                            <CardAction>
+                                <Wallet />
+                            </CardAction>
                         </CardHeader>
-                        <CardFooter className="text-2xl text-amber-500 font-semibold tabular-nums @[250px]/card:text-3xl">
+                        <CardFooter className="text-2xl font-semibold text-amber-500 tabular-nums @[250px]/card:text-3xl">
                             {formatter.format(kreditur.cash.pay)}
                         </CardFooter>
                     </Card>
                 </div>
-                <div className='flex items-center justify-between'>
-                    <h2 className='text-xl font-bold'>Log Pembayaran</h2>
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold">Log Pembayaran</h2>
                     <Button variant={'default'} size={'lg'} onClick={() => setOpen(true)}>
-                        <PlusCircle /> Tambah
+                        <CircleDollarSignIcon /> Tambah Pembayaran
                     </Button>
                 </div>
                 <Card className="py-1 [&_td]:px-3 [&_th]:px-3">

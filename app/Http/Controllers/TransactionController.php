@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Transactions;
 use App\Traits\HasFile;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,33 @@ class TransactionController extends Controller
         ]);
     }
 
+    public function laporan(Request $request): Response
+    {
+        $query = Transactions::query();
+        $query->where('organization_id', getOrganizationiId());
+        $query->whereDate('created_at', '>=', $request->input('dateStart') ?? date('Y-m-d'));
+        $query->whereDate('created_at', '<=', $request->input('dateEnd') ?? date('Y-m-d'));
+
+
+        // $query->when($request->input('dateStart'), function ($q, string $dateStart) {
+        //     return $q->whereDate('created_at', '>=', $dateStart);
+        // });
+
+        // $query->when($request->input('dateEnd'), function ($q, string $dateEnd) {
+        //     return $q->whereDate('created_at', '<=', $dateEnd);
+        // });
+
+        $transactions = $query->get();
+
+        return Inertia::render('transactions/laporan', [
+            'transactions' => TransactionResource::collection($transactions),
+            'page_info' => [
+                'title' => 'Cetak Laporan Transaksi',
+                'subtitle' => 'Menampilkan semua data transaksi yang ada di platform ini, untuk di kelola',
+            ]
+        ]);
+    }
+
     public function create(): Response
     {
         return Inertia::render('transactions/create', [
@@ -69,6 +97,35 @@ class TransactionController extends Controller
             ],
         ]);
     }
+
+    public function store(TransactionRequest $request): RedirectResponse
+    {
+        // dd($request->validated());
+        try {
+            //code...
+            Transactions::create([
+                'user_id' => Auth::user()->id,
+                'organization_id' => getOrganizationiId(),
+                'category_id' => $request->category_id,
+                'type' => $request->type,
+                'amount' => $request->amount,
+                'date' => $request->date,
+                'description' => $request->description,
+                'file_image' => $this->upload_file($request, 'file_image', 'transactions'),
+            ]);
+
+            return to_route('transactions.index')->with([
+                'type' => 'success',
+                'message' => 'Transaksi Successfully'
+            ]);
+        } catch (\Throwable $err) {
+            return back()->with([
+                'type' => 'error',
+                'message' => $err->getMessage()
+            ]);
+        }
+    }
+
 
     public function edit(Transactions $transaction): Response
     {
@@ -94,33 +151,6 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function store(TransactionRequest $request): RedirectResponse
-    {
-        // dd($request->validated());
-        try {
-            //code...
-            Transactions::create([
-                'user_id' => auth()->user()->id,
-                'organization_id' => getOrganizationiId(),
-                'category_id' => $request->category_id,
-                'type' => $request->type,
-                'amount' => $request->amount,
-                'date' => $request->date,
-                'description' => $request->description,
-                'file_image' => $this->upload_file($request, 'file_image', 'transactions'),
-            ]);
-
-            return to_route('transactions.index')->with([
-                'type' => 'success',
-                'message' => 'Transaksi Successfully'
-            ]);
-        } catch (\Throwable $err) {
-            return back()->with([
-                'type' => 'error',
-                'message' => $err->getMessage()
-            ]);
-        }
-    }
 
     public function update(Transactions $transaction, TransactionRequest $request)
     {

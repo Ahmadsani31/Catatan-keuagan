@@ -62,9 +62,7 @@ export default function Create({ page_info }: pageCreate) {
         note: '',
         _method: page_info.method,
     });
-    console.log('====================================');
-    console.log(errors);
-    console.log('====================================');
+
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
         console.log(data);

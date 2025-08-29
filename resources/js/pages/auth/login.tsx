@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { EyeIcon, EyeOffIcon, LoaderCircle } from 'lucide-react';
+import { FormEventHandler, useState } from 'react';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -28,6 +28,8 @@ export default function Login({ status, canResetPassword }: LoginProps) {
         password: '',
         remember: false,
     });
+
+    const [passVisible, setPassVisible] = useState(false);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -63,22 +65,38 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             <div className="grid gap-2">
                                 <div className="flex items-center">
                                     <Label htmlFor="password">Password</Label>
-                                    {canResetPassword && (
+                                    {/* {canResetPassword && (
                                         <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
                                             Forgot password?
                                         </TextLink>
-                                    )}
+                                    )} */}
                                 </div>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="current-password"
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    placeholder="Password"
-                                />
+                                <div className='flex relative items-center'>
+
+                                    <Input
+                                        id="password"
+                                        type={passVisible ? 'text' : 'password'}
+                                        required
+                                        tabIndex={2}
+                                        autoComplete="current-password"
+                                        value={data.password}
+                                        onChange={(e) => setData('password', e.target.value)}
+                                        placeholder="Password"
+                                    />
+                                    <span
+                                        className="absolute right-2 cursor-pointer text-gray-400"
+                                        onClick={() => setPassVisible(!passVisible)}
+                                    >
+                                        {passVisible ? (
+                                            <EyeIcon />
+
+                                        ) : (
+                                            <EyeOffIcon />
+
+                                        )}
+                                    </span>
+                                </div>
+
                                 <InputError message={errors.password} />
                             </div>
 

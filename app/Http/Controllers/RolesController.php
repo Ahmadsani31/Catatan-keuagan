@@ -64,14 +64,37 @@ class RolesController extends Controller
         $role = Role::findById($request->id);
         $role->name = $request->name;
         $role->save();
-        $role->syncPermissions($request->permission);
 
         return to_route('roles.index')->with('message', 'Roles berhasil disimpan!');
     }
 
+    public function assign(Request $request)
+    {
+        $permission = Permission::findMany($request->permission)->pluck('name')->toArray();
+        try {
+            $role = Role::findById($request->id);
+            $role->syncPermissions($permission);
+            return to_route('roles.index')->with('message', 'Roles berhasil disimpan!');
+        } catch (\Throwable $err) {
+            return back()->with([
+                'message' => $err->getMessage()
+            ]);
+        }
+
+        // return to_route('roles.index')->with('message', 'Roles berhasil disimpan!');
+    }
+
+    public function allRoles()
+    {
+        $roles =  Role::all();
+        return response()->json([
+            'roles' => $roles,
+        ]);
+    }
+
     public function destroy($id)
     {
-        $param = Role::findById(Crypt::decrypt($id));
+        $param = Role::findById($id);
         $param->delete();
         return to_route('roles.index')->with('message', 'Delete berhasil!');
     }

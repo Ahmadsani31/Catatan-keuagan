@@ -1,135 +1,117 @@
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { NavItemNew, type NavItem } from '@/types';
+import { NavItemNew } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BanknoteIcon, BookMarked, BookOpen, CircleDollarSign, CookieIcon, FileArchive, FileType, Folder, LucideALargeSmall, PiggyBankIcon, User2Icon } from 'lucide-react';
+import { BanknoteIcon, BookMarked, CircleDollarSign, CookieIcon, FileArchive, User2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItemNew[] = [
     {
         header: 'Dashboard',
+        roles: ['admin', 'editor', 'viewer'],
         menu: [
             {
                 title: 'Dashboard',
                 href: '/dashboard',
                 icon: CookieIcon,
-                permissions: ['dashboard_list'],
+                permissions: ['dashboard_access'],
             },
         ],
     },
     {
         header: 'Master',
+        roles: ['admin', 'editor'],
         menu: [
             {
                 title: 'User',
                 href: '/master/users',
                 icon: User2Icon,
-                permissions: ['user_list'],
+                permissions: ['user_access'],
             },
-            {
-                title: 'Roles',
-                href: '/master/roles',
-                icon: CookieIcon,
-                permissions: ['roles_list'],
-            },
-            {
-                title: 'Permission',
-                href: '/master/permission',
-                icon: LucideALargeSmall,
-                permissions: ['permission_list'],
-            },
+            // {
+            //     title: 'Roles',
+            //     href: '/master/roles',
+            //     icon: CookieIcon,
+            //     permissions: ['roles_access'],
+            // },
+            // {
+            //     title: 'Permission',
+            //     href: '/master/permission',
+            //     icon: LucideALargeSmall,
+            //     permissions: ['permission_access'],
+            // },
             {
                 title: 'Kategori',
                 href: '/master/categories',
                 icon: BookMarked,
-                permissions: ['permission_list'],
+                permissions: ['category_access'],
             },
         ],
     },
     {
         header: 'Transaksi',
+        roles: ['admin', 'editor'],
         menu: [
             {
                 title: 'Transaksi',
                 href: '/transactions',
                 icon: CircleDollarSign,
-                permissions: ['organizations_list'],
+                permissions: ['transactions_access'],
             },
         ],
     },
     {
         header: 'Dept',
+        roles: ['admin', 'editor'],
         menu: [
             {
-                title: 'Kreditur',
-                href: '/krediturs/',
+                title: 'Hutang-piutang',
+                href: '/krediturs',
                 icon: BanknoteIcon,
-                permissions: ['organizations_list'],
-            }
+                permissions: ['krediturs_access'],
+            },
         ],
     },
     {
         header: 'Laporan',
+        roles: ['admin', 'editor'],
         menu: [
             {
                 title: 'Transaksi',
-                href: '#',
+                href: '/transactions/laporan',
                 icon: FileArchive,
-                permissions: ['organizations_list'],
+                permissions: ['laporan_transactions_access'],
             },
-            {
-                title: 'Krediturs',
-                href: '#',
-                icon: FileArchive,
-                permissions: ['organizations_list'],
-            },
-            {
-                title: 'User',
-                href: '#',
-                icon: FileArchive,
-                permissions: ['organizations_list'],
-            }
         ],
-    },
-];
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
     },
 ];
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="floating">
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
-                            <Link href="/dashboard" prefetch>
-                                <AppLogo />
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
+        <div className="bg-green-50">
+            <Sidebar collapsible="icon" variant="floating">
+                <SidebarHeader>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton size="lg" asChild>
+                                <Link href="/dashboard" prefetch>
+                                    <AppLogo />
+                                </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarHeader>
 
-            <SidebarContent>
-                <NavMain items={mainNavItems} />
-            </SidebarContent>
+                <SidebarContent>
+                    <NavMain items={mainNavItems} />
+                </SidebarContent>
 
-            <SidebarFooter>
-                {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
-                <NavUser />
-            </SidebarFooter>
-        </Sidebar>
+                <SidebarFooter>
+                    {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
+                    <NavUser />
+                </SidebarFooter>
+            </Sidebar>
+        </div>
     );
 }

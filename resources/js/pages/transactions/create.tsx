@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { AlignCenterHorizontalIcon, ArrowBigLeft, LoaderCircle, PencilIcon, PlusCircle } from 'lucide-react';
+import { AlignCenterHorizontalIcon, ArrowBigLeft, LoaderCircle, PencilIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { FormEventHandler, useEffect, useRef, useState } from 'react';
@@ -10,6 +10,8 @@ import FormDatePicker from '@/components/form-date-picker';
 import FormInputFile from '@/components/form-input-file';
 import FormTextarea from '@/components/form-textarea';
 import HeaderTitle from '@/components/header-title';
+import ModalCategoriesCreateIn from '@/components/modal/modal-categories-create-in';
+import ModalCategoriesCreateOut from '@/components/modal/modal-categories-create-out';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,9 +20,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { NumericFormat } from 'react-number-format';
-import ModalCategoriesCreate from '@/components/modal/modal-categories-create';
-import ModalCategoriesCreateIn from '@/components/modal/modal-categories-create-in';
-import ModalCategoriesCreateOut from '@/components/modal/modal-categories-create-out';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -75,7 +74,6 @@ type propsForm = {
 };
 
 export default function Create({ page_info, page_data }: pageCreate) {
-
     const [openIn, setOpenIn] = useState<boolean>(false);
     const [openOut, setOpenOut] = useState<boolean>(false);
 
@@ -121,12 +119,6 @@ export default function Create({ page_info, page_data }: pageCreate) {
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center">
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
-
-                    <Button variant={'destructive'} size={'lg'} asChild>
-                        <Link href={route('transactions.index')}>
-                            <ArrowBigLeft /> Back
-                        </Link>
-                    </Button>
                 </div>
                 <Card>
                     <CardContent>
@@ -153,7 +145,7 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                     <div className="grid w-full items-center">
                                         <div className="mb-2 flex flex-row items-center gap-2">
                                             <Label>Katagori</Label>
-                                            <button type='button' className='rounded bg-gray-100 p-1 cursor-pointer' onClick={() => setOpenIn(true)}>
+                                            <button type="button" className="cursor-pointer rounded bg-gray-100 p-1" onClick={() => setOpenIn(true)}>
                                                 <PencilIcon size={15} />
                                             </button>
                                         </div>
@@ -184,7 +176,7 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                     <div className="grid w-full items-center">
                                         <div className="mb-2 flex flex-row items-center gap-2">
                                             <Label>Katagori</Label>
-                                            <button type='button' className='rounded bg-gray-100 p-1 cursor-pointer' onClick={() => setOpenOut(true)}>
+                                            <button type="button" className="cursor-pointer rounded bg-gray-100 p-1" onClick={() => setOpenOut(true)}>
                                                 <PencilIcon size={15} />
                                             </button>
                                         </div>
@@ -246,8 +238,10 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                 errors={errors.description}
                             />
                             <div className="flex justify-end gap-x-2">
-                                <Button type="button" variant={'outline'} size={'lg'} onClick={() => reset()}>
-                                    Reset
+                                <Button variant={'destructive'} size={'lg'} asChild>
+                                    <Link href={route('transactions.index')}>
+                                        <ArrowBigLeft /> Back
+                                    </Link>
                                 </Button>
                                 <Button type="submit" variant={'default'} size={'lg'} disabled={processing}>
                                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

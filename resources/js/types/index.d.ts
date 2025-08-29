@@ -3,6 +3,8 @@ import type { Config } from 'ziggy-js';
 
 export interface Auth {
     user: User;
+    roles: string[];
+    permissions: string[];
 }
 
 export interface BreadcrumbItem {
@@ -17,6 +19,7 @@ export interface NavGroup {
 
 export interface NavItemNew {
     header: string;
+    roles?: string[] | undefined;
     menu: {
         title: string;
         href: string;
@@ -54,6 +57,7 @@ export interface User {
     id: number;
     name: string;
     email: string;
+    roles: string[];
     avatar?: string;
     email_verified_at: string | null;
     created_at: string;

@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import getPaginationRange from '@/lib/pagination';
 import {
     ColumnDef,
     FilterFn,
@@ -10,14 +11,11 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     PaginationState,
-    Row,
     SortingState,
     useReactTable,
 } from '@tanstack/react-table';
-
-import getPaginationRange from '@/lib/pagination';
 import { ArrowUpDown, CircleXIcon } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     Pagination,
     PaginationContent,
@@ -30,7 +28,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface DataTableProps<TData> {
-    columns: ColumnDef<TData>[];
+    columns: ColumnDef<TData, any>[];
     data: TData[];
     sortableColumns?: string[];
     defaultSort?: SortingState;
@@ -39,7 +37,7 @@ interface DataTableProps<TData> {
     pageLengthOptions?: (number | 'all')[];
     defaultPageLength?: number | 'all';
     showIndex?: boolean;
-    dynamicIndex?: boolean;
+    dynamicIndex?: boolean; // true => 1..n per halaman; false => pakai offset halaman
 }
 
 export function DataTable<TData>({
@@ -54,116 +52,132 @@ export function DataTable<TData>({
     showIndex = true,
     dynamicIndex = true,
 }: DataTableProps<TData>) {
+    // sorting, filter, pagination states
     const [sorting, setSorting] = useState<SortingState>(defaultSort);
+
+    // input yang user ketik (didebounce)
+    const [searchInput, setSearchInput] = useState(defaultSearch);
+
+    // nilai globalFilter yang benar2 dipakai table (hasil debounce)
     const [globalFilter, setGlobalFilter] = useState(defaultSearch);
+
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
-        pageSize: defaultPageLength === 'all' ? data.length : defaultPageLength,
+        pageSize: defaultPageLength === 'all' ? data.length : Number(defaultPageLength || 5),
     });
 
-    const [displayedRowIndices, setDisplayedRowIndices] = useState<Record<string, number>>({});
+    // Debounce 500ms: update globalFilter + reset ke halaman pertama
+    useEffect(() => {
+        const id = setTimeout(() => {
+            setGlobalFilter(searchInput);
+            // reset ke page 1 setiap kali filter berubah
+            setPagination((p) => ({ ...p, pageIndex: 0 }));
+        }, 500);
+        return () => clearTimeout(id);
+    }, [searchInput]);
 
+    // Jika defaultPageLength = 'all' dan data berubah, pastikan ukuran halaman ikut.
+    useEffect(() => {
+        if (defaultPageLength === 'all') {
+            setPagination((p) => ({ ...p, pageSize: data.length, pageIndex: 0 }));
+        }
+    }, [data.length, defaultPageLength]);
+
+    // Kolom index (opsional)
     const tableColumns = useMemo(() => {
-        const indexColumn: ColumnDef<TData> = {
+        if (!showIndex) return columns;
+
+        const indexColumn: ColumnDef<TData, any> = {
             id: 'index',
             header: () => <span className="flex justify-center">No</span>,
-            cell: ({ row }) => {
-                if (dynamicIndex) {
-                    return (
-                        <div className="flex justify-center">
-                            <span>{displayedRowIndices[row.id] || row.index + 1}</span>
-                        </div>
-                    );
-                } else {
-                    const currentPage = pagination.pageIndex;
-                    const pageSize = pagination.pageSize;
-                    return currentPage * pageSize + row.index + 1;
-                }
+            cell: ({ row, table }) => {
+                const { pageIndex, pageSize } = table.getState().pagination;
+                const number = dynamicIndex ? row.index + 1 : pageIndex * pageSize + row.index + 1;
+                return (
+                    <div className="flex justify-center">
+                        <span>{number}</span>
+                    </div>
+                );
             },
+            enableSorting: false,
         };
 
-        return showIndex ? [indexColumn, ...columns] : columns;
-    }, [columns, showIndex, pagination, dynamicIndex, displayedRowIndices]);
+        return [indexColumn, ...columns];
+    }, [columns, showIndex, dynamicIndex]);
 
-    const globalSearchFilter: FilterFn<TData> = (row, _, filterValue) => {
-        return searchableColumns.some((key) => {
-            const value = row.getValue(key);
-            return String(value ?? '')
-                .toLowerCase()
-                .includes(String(filterValue).toLowerCase());
-        });
-    };
+    // Global search filter (hanya cek kolom yg diizinkan)
+    const globalSearchFilter: FilterFn<TData> = useCallback(
+        (row, _columnId, filterValue) => {
+            if (!filterValue) return true;
+            if (!searchableColumns?.length) return true;
+            const needle = String(filterValue).toLowerCase();
+            return searchableColumns.some((key) => {
+                const val = row.getValue<any>(key);
+                return String(val ?? '')
+                    .toLowerCase()
+                    .includes(needle);
+            });
+        },
+        [searchableColumns],
+    );
 
     const table = useReactTable({
         data,
         columns: tableColumns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        onPaginationChange: setPagination,
-        getSortedRowModel: getSortedRowModel(),
-        onSortingChange: setSorting,
-        getFilteredRowModel: getFilteredRowModel(),
-        onGlobalFilterChange: setGlobalFilter,
-        globalFilterFn: globalSearchFilter, // pass the filter function directly
-        filterFns: {
-            globalSearch: globalSearchFilter, // register the filter function
-        } as any,
         state: {
             sorting,
             globalFilter,
             pagination,
         },
+        onSortingChange: setSorting,
+        onPaginationChange: setPagination,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        // pakai filter function kustom untuk global filter
+        globalFilterFn: globalSearchFilter,
+        // Jangan auto reset halaman ketika aksi lain (biar kita yang kontrol)
+        autoResetPageIndex: false,
     });
 
-    useEffect(() => {
-        if (dynamicIndex) {
-            const newIndices: Record<string, number> = {};
-            table.getRowModel().rows.forEach((row: Row<TData>, index: number) => {
-                newIndices[row.id] = index + 1;
-            });
-            setDisplayedRowIndices(newIndices);
-        }
-    }, [table.getRowModel().rows, dynamicIndex]);
-
     const handlePageSizeChange = (size: number | 'all') => {
-        console.log(size);
-
         if (size === 'all') {
             table.setPageSize(data.length);
         } else {
             table.setPageSize(size);
         }
+        table.setPageIndex(0);
     };
 
     const handleClearFilters = () => {
-        setGlobalFilter('');
+        setSearchInput('');
         setSorting([]);
-        table.setPageSize(5);
+        handlePageSizeChange(typeof defaultPageLength === 'number' ? defaultPageLength : 5);
     };
 
-    const currentPageSize = table.getState().pagination.pageSize;
-    const isAllSelected = currentPageSize === data.length;
-
-    const pageIndex = table.getState().pagination.pageIndex;
-    const pageSize = table.getState().pagination.pageSize;
-
+    const { pageIndex, pageSize } = table.getState().pagination;
     const totalEntries = table.getFilteredRowModel().rows.length;
 
-    const from = pageIndex * pageSize + 1;
-    const to = Math.min(from + pageSize - 1, totalEntries);
+    const from = totalEntries === 0 ? 0 : pageIndex * pageSize + 1;
+    const to = totalEntries === 0 ? 0 : Math.min(from + pageSize - 1, totalEntries);
 
     const pageCount = table.getPageCount();
-    const currentPage = table.getState().pagination.pageIndex + 1;
+    const currentPage = pageIndex + 1;
+
+    const currentPageSize = pageSize;
+    const isAllSelected = currentPageSize === data.length;
 
     return (
         <div className="space-y-4">
+            {/* Top bar: search + page size */}
             <div className="mt-4 flex items-center justify-between">
                 <div className="flex w-80 items-center space-x-2">
-                    <Input placeholder={`Search...`} value={globalFilter ?? ''} onChange={(event) => setGlobalFilter(event.target.value)} />
-                    {globalFilter && (
-                        <Button variant="destructive" size={'lg'} onClick={handleClearFilters}>
+                    <Input placeholder="Search..." value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+                    {searchInput && (
+                        <Button variant="destructive" size="lg" onClick={handleClearFilters}>
                             Clear
-                            <CircleXIcon />
+                            <CircleXIcon className="ml-1 h-4 w-4" />
                         </Button>
                     )}
                 </div>
@@ -172,8 +186,11 @@ export function DataTable<TData>({
                     <label htmlFor="pageLength" className="text-muted-foreground text-sm">
                         Show
                     </label>
-                    <Select onValueChange={(option) => handlePageSizeChange(option === 'all' ? 'all' : Number(option))}>
-                        <SelectTrigger className="w-[70px]">
+                    <Select
+                        value={isAllSelected ? 'all' : String(currentPageSize)}
+                        onValueChange={(option) => handlePageSizeChange(option === 'all' ? 'all' : Number(option))}
+                    >
+                        <SelectTrigger className="w-[90px]">
                             <SelectValue placeholder={isAllSelected ? 'All' : currentPageSize} />
                         </SelectTrigger>
                         <SelectContent>
@@ -188,25 +205,36 @@ export function DataTable<TData>({
                 </div>
             </div>
 
+            {/* Table */}
             <div className="rounded border">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
-                                    const isSortable = sortableColumns.includes(header.id);
-                                    const isIndexColumn = header.id === 'index';
+                                    const isIndexColumn = header.column.id === 'index';
+                                    const isSortable = sortableColumns.includes(header.column.id as string);
+                                    const canSort = isSortable && !isIndexColumn;
+
                                     return (
                                         <TableHead key={header.id}>
                                             {header.isPlaceholder ? null : (
                                                 <div
-                                                    className={
-                                                        isSortable && !isIndexColumn ? 'hover:text-primary flex cursor-pointer items-center' : ''
+                                                    className={canSort ? 'hover:text-primary flex cursor-pointer items-center' : ''}
+                                                    onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                                                    role={canSort ? 'button' : undefined}
+                                                    aria-sort={
+                                                        canSort
+                                                            ? header.column.getIsSorted() === 'asc'
+                                                                ? 'ascending'
+                                                                : header.column.getIsSorted() === 'desc'
+                                                                  ? 'descending'
+                                                                  : 'none'
+                                                            : undefined
                                                     }
-                                                    onClick={isSortable && !isIndexColumn ? header.column.getToggleSortingHandler() : undefined}
                                                 >
                                                     {flexRender(header.column.columnDef.header, header.getContext())}
-                                                    {isSortable && !isIndexColumn && <ArrowUpDown className="ml-2 h-4 w-4" />}
+                                                    {canSort && <ArrowUpDown className="ml-2 h-4 w-4" />}
                                                 </div>
                                             )}
                                         </TableHead>
@@ -215,8 +243,9 @@ export function DataTable<TData>({
                             </TableRow>
                         ))}
                     </TableHeader>
+
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
+                        {table.getRowModel().rows.length ? (
                             table.getRowModel().rows.map((row) => (
                                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                                     {row.getVisibleCells().map((cell) => (
@@ -235,12 +264,14 @@ export function DataTable<TData>({
                 </Table>
             </div>
 
+            {/* Footer: showing range + pagination */}
             <div className="mb-4 flex w-full flex-col items-center justify-between gap-3 lg:flex-row">
                 <div className="text-muted-foreground flex-1 text-sm">
                     <p className="text-muted-foreground text-sm">
                         Showing {from} to {to} of {totalEntries} entries
                     </p>
                 </div>
+
                 {!isAllSelected && (
                     <div className="space-x-2">
                         <Pagination>
