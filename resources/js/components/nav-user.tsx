@@ -12,7 +12,7 @@ export function NavUser() {
     const { state } = useSidebar();
     const isMobile = useIsMobile();
     return (
-        <SidebarMenu className="mt-auto border-t pt-2">
+        <SidebarMenu className='bg-white rounded-xl'>
             <SidebarMenuItem>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
