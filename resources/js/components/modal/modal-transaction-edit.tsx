@@ -11,7 +11,6 @@ import { format } from 'date-fns';
 import { Loader2, PencilIcon } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
-import { toast } from 'react-toastify';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import axios from 'axios';
@@ -63,9 +62,7 @@ export default function ModalTransactionEdit({ open, setOpen, transactions }: an
         put(route('transaction.update', [transactions]), {
             onSuccess: (page) => {
                 console.log(page);
-                const flash = flashMessage(page);
-                if (flash.type == 'success') toast.success(flash.message);
-                if (flash.type == 'error') toast.error(flash.message);
+
                 setOpen(false);
             },
         });

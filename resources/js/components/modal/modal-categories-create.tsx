@@ -7,7 +7,6 @@ import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 type propsModal = {
     open: boolean;
@@ -34,9 +33,7 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
             onSuccess: (page) => {
                 reset();
                 onOpenChange(false);
-                const flash = flashMessage(page);
-                if (flash.type == 'success') toast.success(flash.message);
-                if (flash.type == 'error') toast.error(flash.message);
+        
             },
         });
     };

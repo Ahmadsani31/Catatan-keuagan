@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { Loader2, PencilIcon } from 'lucide-react';
 import { FormEventHandler } from 'react';
 import { NumericFormat } from 'react-number-format';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import FormDatePicker from './form-date-picker';
 import FormTextarea from './form-textarea';
 import { Button } from './ui/button';
@@ -30,9 +30,7 @@ export default function TransactionIncome({ categoryIncome }: any) {
         post(route('transaction.store'), {
             onSuccess: (page) => {
                 console.log(page);
-                const flash = flashMessage(page);
-                if (flash.type == 'success') toast.success(flash.message);
-                if (flash.type == 'error') toast.error(flash.message);
+         
             },
         });
     };

@@ -10,7 +10,7 @@ import { pageUserEdit, PropsFormUserEdit } from '@/types/page-user';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, CassetteTape, LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -49,8 +49,8 @@ export default function Edit({ users, page_info, page_data }: pageUserEdit) {
             onSuccess: (success) => {
                 const flash = flashMessage(success);
 
-                if (flash.type == 'success') toast.success(flash.message);
-                if (flash.type == 'error') toast.error(flash.message);
+                // if (flash.type == 'success') toast.success(flash.message);
+                // if (flash.type == 'error') toast.error(flash.message);
             },
         });
     };

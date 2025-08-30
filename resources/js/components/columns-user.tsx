@@ -14,7 +14,7 @@ import { Link, useForm } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { LoaderCircle, LockKeyhole, PencilIcon } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 
 export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
@@ -35,7 +35,6 @@ export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
         header: () => <span className="flex justify-center"> Aksi </span>,
         cell: ({ row }) => {
             const [dialogOpen, setDialogOpen] = useState(false);
-            const [open, setOpen] = useState<boolean>(false);
 
             const { data, setData, post, reset, errors, processing } = useForm<
                 Required<{ password: string; password_confirmation: string; _method: string }>
@@ -61,9 +60,9 @@ export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
 
                         if (flash.type == 'success') {
                             setDialogOpen(false);
-                            toast.success(flash.message);
+                            // toast.success(flash.message);
                         }
-                        if (flash.type == 'error') toast.error(flash.message);
+                        // if (flash.type == 'error') toast.error(flash.message);
                     },
                 });
             };

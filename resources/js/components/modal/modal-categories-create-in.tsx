@@ -7,7 +7,6 @@ import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { FormEventHandler, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 type propsModal = {
     open: boolean;

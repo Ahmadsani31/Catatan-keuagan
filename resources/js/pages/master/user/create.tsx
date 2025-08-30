@@ -9,7 +9,7 @@ import { pageUserIndex, PropsFormUserCreate } from '@/types/page-user';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, CassetteTape, LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -45,10 +45,10 @@ export default function Create({ page_info, page_data }: pageUserIndex) {
             preserveScroll: true,
             preserveState: true,
             onSuccess: (success) => {
-                const { type, message } = success.props.flash_message as { type: string; message: string };
+                // const { type, message } = success.props.flash_message as { type: string; message: string };
 
-                if (type == 'error') toast.error(message);
-                if (type == 'success') toast.error(message);
+                // if (type == 'error') toast.error(message);
+                // if (type == 'success') toast.error(message);
                 console.log(success.props.flash_message);
             },
         });
