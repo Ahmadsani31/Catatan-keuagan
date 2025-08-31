@@ -12,10 +12,12 @@ import { flashMessage } from '@/lib/utils';
 import { columnsItemsUser } from '@/types/page-user';
 import { Link, useForm } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { LoaderCircle, LockKeyhole, PencilIcon } from 'lucide-react';
+import { LoaderCircle, PencilIcon, RotateCcwSquare } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
+import AddTooltip from './add-tooltip';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
+import { Badge } from './ui/badge';
 
 export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
     {
@@ -27,6 +29,17 @@ export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
         header: 'Email',
     },
     {
+        accessorKey: 'role',
+        header: 'Role',
+        cell: ({ row }) => (
+            <div>
+                <Badge variant="secondary" className={row.original.role == 'admin' ? 'bg-blue-500 text-white' : 'bg-green-500 text-white'}>
+                    {row.original.role}
+                </Badge>
+            </div>
+        ),
+    },
+    {
         accessorKey: 'created_at',
         header: 'Joined At',
     },
@@ -35,7 +48,6 @@ export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
         header: () => <span className="flex justify-center"> Aksi </span>,
         cell: ({ row }) => {
             const [dialogOpen, setDialogOpen] = useState(false);
-            const [open, setOpen] = useState<boolean>(false);
 
             const { data, setData, post, reset, errors, processing } = useForm<
                 Required<{ password: string; password_confirmation: string; _method: string }>
@@ -61,9 +73,9 @@ export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
 
                         if (flash.type == 'success') {
                             setDialogOpen(false);
-                            toast.success(flash.message);
+                            // toast.success(flash.message);
                         }
-                        if (flash.type == 'error') toast.error(flash.message);
+                        // if (flash.type == 'error') toast.error(flash.message);
                     },
                 });
             };
@@ -71,11 +83,13 @@ export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
             return (
                 <div className="flex justify-center gap-x-1">
                     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                        <AlertDialogTrigger asChild className="cursor-pointer">
-                            <Button variant={'custom'} className="bg-amber-500" size={'sm'}>
-                                <LockKeyhole />
-                            </Button>
-                        </AlertDialogTrigger>
+                        <AddTooltip text="Update password" side="left">
+                            <AlertDialogTrigger asChild className="cursor-pointer">
+                                <Button variant={'custom'} className="bg-amber-500" size={'sm'}>
+                                    <RotateCcwSquare />
+                                </Button>
+                            </AlertDialogTrigger>
+                        </AddTooltip>
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Update Password User</AlertDialogTitle>
@@ -112,16 +126,20 @@ export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
                             </form>
                         </AlertDialogContent>
                     </AlertDialog>
-                    <Button variant={'default'} size={'sm'} asChild>
-                        <Link href={route('master.users.edit', { user: row.original })}>
-                            <PencilIcon />
-                        </Link>
-                    </Button>
+                    <AddTooltip text="Edit user" side="top">
+                        <Button variant={'default'} size={'sm'} asChild>
+                            <Link href={route('master.users.edit', { user: row.original })}>
+                                <PencilIcon />
+                            </Link>
+                        </Button>
+                    </AddTooltip>
                     {/* <Button variant={'custom'} className="bg-teal-500" size={'sm'} onClick={() => setOpen(true)}>
                         <RotateCcwIcon />
                     </Button>
                     {open && <ModalUserAssignRoles open={open} onOpenChange={setOpen} user={row.original} />} */}
-                    <ColumnsDatatableActionDelete url={route('master.users.destroy', { id: row.original })} />
+                    <AddTooltip text="Delete user" side="top">
+                        <ColumnsDatatableActionDelete url={route('master.users.destroy', { id: row.original })} />
+                    </AddTooltip>
                 </div>
             );
         },

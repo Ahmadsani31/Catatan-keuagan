@@ -17,7 +17,7 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
     const userRoles = roles;
     const userPermissions = permissions;
 
-    console.log('page', page);
+    // console.log('page', page);
     // console.log('permission', userPermissions);
 
     return (

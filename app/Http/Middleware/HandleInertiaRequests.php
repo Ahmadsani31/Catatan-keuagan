@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\UserSingleResource;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -44,7 +45,7 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request->user() ? new UserSingleResource($request->user()) : null,
                 'organization' => $request->user() ? $request->user()->organizations()->first() : [],
                 'permissions' => $request->user() ? $request->user()->getUserPermissions() : [],
                 'roles' => $request->user() ? $request->user()->getRoleNames() : [],

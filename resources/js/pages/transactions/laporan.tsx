@@ -99,7 +99,7 @@ export default function Laporan({ transactions, page_info }: LaporanProps) {
                                 sortableColumns={['name', 'created_at']}
                                 searchableColumns={['description']}
                                 data={transactions.data}
-                                defaultPageLength={100}
+                                defaultPageLength={'all'}
                             />
                         )}
                     </CardContent>

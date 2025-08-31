@@ -71,8 +71,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                         </TextLink>
                                     )} */}
                                 </div>
-                                <div className='flex relative items-center'>
-
+                                <div className="relative flex items-center">
                                     <Input
                                         id="password"
                                         type={passVisible ? 'text' : 'password'}
@@ -83,17 +82,8 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                         onChange={(e) => setData('password', e.target.value)}
                                         placeholder="Password"
                                     />
-                                    <span
-                                        className="absolute right-2 cursor-pointer text-gray-400"
-                                        onClick={() => setPassVisible(!passVisible)}
-                                    >
-                                        {passVisible ? (
-                                            <EyeIcon />
-
-                                        ) : (
-                                            <EyeOffIcon />
-
-                                        )}
+                                    <span className="absolute right-2 cursor-pointer text-gray-400" onClick={() => setPassVisible(!passVisible)}>
+                                        {passVisible ? <EyeIcon /> : <EyeOffIcon />}
                                     </span>
                                 </div>
 

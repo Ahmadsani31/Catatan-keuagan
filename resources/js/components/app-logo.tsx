@@ -1,8 +1,17 @@
 import appLogo from '@asset/icon/app-icon.png';
 import { usePage } from '@inertiajs/react';
 
+type Organization = {
+    name?: string;
+    address?: string;
+};
+
+type AuthProps = {
+    organization?: Organization;
+};
+
 export default function AppLogo() {
-    const page = usePage().props.auth;
+    const page = usePage<{ auth: AuthProps }>().props.auth;
     // console.log(page?.organization?.name);
 
     return (
