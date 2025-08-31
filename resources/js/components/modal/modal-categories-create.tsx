@@ -2,11 +2,9 @@ import FormSelect from '@/components/form-select';
 import TextInput from '@/components/textInput';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { flashMessage } from '@/lib/utils';
 import { useForm } from '@inertiajs/react';
-import axios from 'axios';
 import { Loader2 } from 'lucide-react';
-import { FormEventHandler, useEffect, useState } from 'react';
+import { FormEventHandler } from 'react';
 
 type propsModal = {
     open: boolean;
@@ -19,7 +17,6 @@ type propsForm = {
 };
 
 export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal) {
-
     const { data, setData, post, processing, errors, clearErrors, reset } = useForm<Required<propsForm>>({
         name: '',
         type: '',
@@ -33,7 +30,6 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
             onSuccess: (page) => {
                 reset();
                 onOpenChange(false);
-        
             },
         });
     };

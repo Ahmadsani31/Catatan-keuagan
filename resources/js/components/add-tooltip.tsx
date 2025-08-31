@@ -10,7 +10,7 @@ export default function AddTooltip({ children, text, side = 'top' }: pageProps) 
     return (
         <Tooltip>
             <TooltipTrigger>{children}</TooltipTrigger>
-            <TooltipContent side={side}>
+            <TooltipContent side={side} className="bg-secondary text-black">
                 <p>{text}</p>
             </TooltipContent>
         </Tooltip>

@@ -12,7 +12,7 @@ import { flashMessage } from '@/lib/utils';
 import { columnsItemsUser } from '@/types/page-user';
 import { Link, useForm } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { LoaderCircle, LockKeyhole, PencilIcon } from 'lucide-react';
+import { LoaderCircle, PencilIcon, RotateCcwSquare } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 // import { toast } from 'react-toastify';
 import AddTooltip from './add-tooltip';
@@ -86,7 +86,7 @@ export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
                         <AddTooltip text="Update password" side="left">
                             <AlertDialogTrigger asChild className="cursor-pointer">
                                 <Button variant={'custom'} className="bg-amber-500" size={'sm'}>
-                                    <LockKeyhole />
+                                    <RotateCcwSquare />
                                 </Button>
                             </AlertDialogTrigger>
                         </AddTooltip>

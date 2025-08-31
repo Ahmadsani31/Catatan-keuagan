@@ -1,4 +1,4 @@
-import { cn, flashMessage } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { Loader2, PencilIcon } from 'lucide-react';
@@ -30,7 +30,6 @@ export default function TransactionIncome({ categoryIncome }: any) {
         post(route('transaction.store'), {
             onSuccess: (page) => {
                 console.log(page);
-         
             },
         });
     };

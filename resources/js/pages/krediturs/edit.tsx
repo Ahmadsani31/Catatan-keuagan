@@ -39,7 +39,7 @@ export interface pageCreate {
         subtitle: string;
         method: string;
         action: string;
-    },
+    };
     kreditur: {
         id: number;
         name: string;
@@ -49,9 +49,9 @@ export interface pageCreate {
         note: string;
         amount: string;
         cash: {
-            amount: number
-        }
-    }
+            amount: number;
+        };
+    };
 }
 
 export interface propsForm {

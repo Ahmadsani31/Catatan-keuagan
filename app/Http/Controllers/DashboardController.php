@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TransactionResource;
 use App\Models\PaymentKreditur;
 use App\Models\Transactions;
+use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,44 +17,59 @@ class DashboardController extends Controller
     public function index(Request $request): Response
     {
 
-        // if ($request->bulan) {
+        $month = (int) ($request->input('bulan') ?? now()->month);
+        $orgId = getOrganizationiId(); // tetap pakai helper Anda
 
-        //     $query = Transactions::query();
-        //     $query->select('type', DB::raw('SUM(amount) as total_amount'));
-        //     $query->whereMonth('created_at', $request->input('bulan') ?? date('m'));
-        //     $query->groupBy('type');
-        //     $transactions =  $query->get()->toArray();
+        // Ringkas: total transaksi per tipe (Pemasukan/Pengeluaran) di bulan tsb
+        $perType = Transactions::select('type', DB::raw('SUM(amount) as total_amount'))
+            ->whereHas('organization', fn($q) => $q->whereKey($orgId))
+            ->whereMonth('created_at', $month)
+            ->groupBy('type')
+            ->pluck('total_amount', 'type'); // Collection keyed by type
 
-        //     dd($transactions);
-        // }
-        $query = Transactions::query();
-        $query->select('type', DB::raw('SUM(amount) as total_amount'));
-        $query->whereHas('organization', function (Builder $query) {
-            $query->where('id', getOrganizationiId());
-        });
-        $query->whereMonth('created_at', $request->input('bulan') ?? date('m'));
-        $query->groupBy('type');
-        $transactions =  $query->get()->toArray();
+        // Total pembayaran kreditur (profit?) di bulan tsb
+        $profit = PaymentKreditur::whereHas('kreditur.organization', fn($q) => $q->whereKey($orgId))
+            ->whereMonth('created_at', $month)
+            ->sum('amount');
 
-        foreach ($transactions as $key => $value) {
-            $transa[$value['type']] = (int) $value['total_amount'];
-        }
+        // 5 transaksi terakhir (dibatasi organisasi yang sama biar konsisten)
+        $latestTransaksi = Transactions::whereHas('organization', fn($q) => $q->whereKey($orgId))
+            ->latest()
+            ->limit(5)
+            ->get();
 
-        $query_payment = PaymentKreditur::query();
-        $query_payment->select(DB::raw('SUM(amount) as total_amount'));
-        $query_payment->whereHas('kreditur.organization', function (Builder $query) {
-            $query->where('id', getOrganizationiId());
-        });
-        $query_payment->whereMonth('created_at', $request->input('bulan') ?? date('m'));
-        $payment_krediturs =  $query_payment->get()->toArray();
+        // Opsional: filter tipe transaksi, contoh hanya "Pengeluaran"
+        $type  = $request->input('type', 'Pemasukan'); // "Pemasukan" / "Pengeluaran" / null
+
+        $end   = Carbon::now();                          // hari ini
+        $start = Carbon::now()->subMonths(6)->startOfMonth(); // 6 bulan ke belakang, dari awal bulan
+
+
+        $rows = Transactions::select('category_id', DB::raw('SUM(amount) as amount'))
+            ->with(['category:id,name'])
+            ->when($type, fn($q) => $q->where('type', $type))
+            ->whereBetween('created_at', [$start, $end]) // filter range 6 bulan terakhir
+            ->groupBy('category_id')
+            ->get()
+            ->map(function ($r) {
+                return [
+                    'id' => $r->category->name ?? 'Tanpa Kategori',
+                    'label' => $r->category->name ?? 'Tanpa Kategori',
+                    'value'   => (float) $r->amount,
+                ];
+            })
+            ->values();
 
         // dd($payment_krediturs[0]['total_amount']);
         return Inertia::render('dashboard', [
             'page_data' => [
-                'income' => $transa['Pemasukan'] ?? 0,
-                'expense' => $transa['Pengeluaran'] ?? 0,
-                'profit' => $payment_krediturs[0]['total_amount'] ?? 0,
+                'income'         => (int) ($perType->get('Pemasukan', 0)),
+                'expense'        => (int) ($perType->get('Pengeluaran', 0)),
+                'profit'         => (int) $profit,
+                'last_transaksi' => TransactionResource::collection($latestTransaksi),
+
             ],
+            'pie_transaksi' => $rows
         ]);
     }
 }

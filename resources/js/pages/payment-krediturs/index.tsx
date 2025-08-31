@@ -55,7 +55,7 @@ export default function Index({ kreditur, paymentKreditur, page_info }: any) {
                         <p className="text-muted-foreground text-sm">{kreditur.note}</p>
                     </div>
                 </Card>
-                <div className="my-5 grid auto-rows-min gap-4 lg:grid-cols-3">
+                <div className="grid auto-rows-min gap-4 lg:grid-cols-3">
                     <Card className="gap-2">
                         <CardHeader>
                             <CardDescription>Nominal</CardDescription>
@@ -90,11 +90,16 @@ export default function Index({ kreditur, paymentKreditur, page_info }: any) {
                         </CardFooter>
                     </Card>
                 </div>
+                <Button
+                    variant={'custom'}
+                    size={'lg'}
+                    className="w-full bg-emerald-500 text-white hover:bg-emerald-700"
+                    onClick={() => setOpen(true)}
+                >
+                    <CircleDollarSignIcon /> Tambah Pembayaran
+                </Button>
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold">Log Pembayaran</h2>
-                    <Button variant={'default'} size={'lg'} onClick={() => setOpen(true)}>
-                        <CircleDollarSignIcon /> Tambah Pembayaran
-                    </Button>
                 </div>
                 <Card className="py-1 [&_td]:px-3 [&_th]:px-3">
                     <CardContent className="[&-td]:whitespace-nowrap">

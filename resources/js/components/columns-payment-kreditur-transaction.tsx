@@ -1,6 +1,4 @@
-import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { PencilIcon } from 'lucide-react';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 import DialogPreviewImage from './dialog-preview-image';
 
@@ -9,7 +7,7 @@ type columnsItems = {
     payment_method: string;
     amount: string;
     note: string;
-}
+};
 export const ColumnsPaymnetKrediturTransaction: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'date',
@@ -41,7 +39,12 @@ export const ColumnsPaymnetKrediturTransaction: ColumnDef<columnsItems>[] = [
         header: () => <span className="flex justify-center">Bukti</span>,
         cell: ({ row }: any) => (
             <div className="flex items-center justify-center">
-                <DialogPreviewImage url_image={row.original.file_image} size="size-10" title="Bukti Pembayaran" description="screenshot atau gambar bukti pembayaran transaksi" />
+                <DialogPreviewImage
+                    url_image={row.original.file_image}
+                    size="size-10"
+                    title="Bukti Pembayaran"
+                    description="screenshot atau gambar bukti pembayaran transaksi"
+                />
             </div>
         ),
     },

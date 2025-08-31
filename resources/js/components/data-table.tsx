@@ -38,6 +38,7 @@ interface DataTableProps<TData> {
     defaultPageLength?: number | 'all';
     showIndex?: boolean;
     dynamicIndex?: boolean; // true => 1..n per halaman; false => pakai offset halaman
+    headerTable?: boolean;
 }
 
 export function DataTable<TData>({
@@ -51,6 +52,7 @@ export function DataTable<TData>({
     defaultPageLength = 5,
     showIndex = true,
     dynamicIndex = true,
+    headerTable = true,
 }: DataTableProps<TData>) {
     // sorting, filter, pagination states
     const [sorting, setSorting] = useState<SortingState>(defaultSort);
@@ -171,39 +173,41 @@ export function DataTable<TData>({
     return (
         <div className="space-y-4">
             {/* Top bar: search + page size */}
-            <div className="mt-4 flex items-center justify-between">
-                <div className="flex w-80 items-center space-x-2">
-                    <Input placeholder="Search..." value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
-                    {searchInput && (
-                        <Button variant="destructive" size="lg" onClick={handleClearFilters}>
-                            Clear
-                            <CircleXIcon className="ml-1 h-4 w-4" />
-                        </Button>
-                    )}
-                </div>
+            {headerTable ? (
+                <div className="mt-4 flex items-center justify-between">
+                    <div className="flex w-80 items-center space-x-2">
+                        <Input placeholder="Search..." value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+                        {searchInput && (
+                            <Button variant="destructive" size="lg" onClick={handleClearFilters}>
+                                Clear
+                                <CircleXIcon className="ml-1 h-4 w-4" />
+                            </Button>
+                        )}
+                    </div>
 
-                <div className="flex items-center space-x-2">
-                    <label htmlFor="pageLength" className="text-muted-foreground text-sm">
-                        Show
-                    </label>
-                    <Select
-                        value={isAllSelected ? 'all' : String(currentPageSize)}
-                        onValueChange={(option) => handlePageSizeChange(option === 'all' ? 'all' : Number(option))}
-                    >
-                        <SelectTrigger className="w-[90px]">
-                            <SelectValue placeholder={isAllSelected ? 'All' : currentPageSize} />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {pageLengthOptions.map((option) => (
-                                <SelectItem key={option} value={option.toString()}>
-                                    {option === 'all' ? 'All' : option}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <span className="text-muted-foreground text-sm">entries</span>
+                    <div className="flex items-center space-x-2">
+                        <label htmlFor="pageLength" className="text-muted-foreground text-sm">
+                            Show
+                        </label>
+                        <Select
+                            value={isAllSelected ? 'all' : String(currentPageSize)}
+                            onValueChange={(option) => handlePageSizeChange(option === 'all' ? 'all' : Number(option))}
+                        >
+                            <SelectTrigger className="w-[90px]">
+                                <SelectValue placeholder={isAllSelected ? 'All' : currentPageSize} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {pageLengthOptions.map((option) => (
+                                    <SelectItem key={option} value={option.toString()}>
+                                        {option === 'all' ? 'All' : option}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <span className="text-muted-foreground text-sm">entries</span>
+                    </div>
                 </div>
-            </div>
+            ) : null}
 
             {/* Table */}
             <div className="rounded border">

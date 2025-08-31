@@ -8,10 +8,10 @@ import { Loader2 } from 'lucide-react';
 import { FormEventHandler, useRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import FormDatePicker from '../form-date-picker';
+import FormInputFile from '../form-input-file';
 import FormTextarea from '../form-textarea';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import FormInputFile from '../form-input-file';
 
 type propsModal = {
     open: boolean;

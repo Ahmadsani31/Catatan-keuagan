@@ -2,7 +2,6 @@ import FormSelect from '@/components/form-select';
 import TextInput from '@/components/textInput';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { flashMessage } from '@/lib/utils';
 import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
@@ -59,7 +58,6 @@ export default function ModalCategoriesEdit({ open, onOpenChange, category }: pr
             onSuccess: (page) => {
                 reset();
                 onOpenChange(false);
-   
             },
         });
     };
