@@ -1,11 +1,12 @@
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 
 import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,23 +23,39 @@ const breadcrumbs: BreadcrumbItem[] = [
 type ProfileForm = {
     name: string;
     email: string;
+    avatar: string | File | null;
+    _method: string;
 };
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
     const { auth } = usePage<SharedData>().props;
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
+    const { data, setData, post, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
         email: auth.user.email,
+        avatar: auth.user.avatar ?? null,
+        _method: 'PATCH',
     });
+
+    console.log('====================================');
+    console.log(errors);
+    console.log('====================================');
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
-        patch(route('profile.update'), {
+        console.log('====================================');
+        console.log(data);
+        console.log('====================================');
+        post(route('profile.update'), {
             preserveScroll: true,
         });
     };
+    const [file, setFile] = useState<string | undefined>(undefined);
+    function handleChange(e: any) {
+        console.log(e.target.files);
+        setData('avatar', e.target.files && e.target.files[0] ? e.target.files[0] : null);
+        setFile(URL.createObjectURL(e.target.files[0]));
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -49,37 +66,51 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                     <HeadingSmall title="Profile information" description="Update your name and email address" />
 
                     <form onSubmit={submit} className="space-y-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="name">Name</Label>
+                        <div className="flex w-full grid-cols-2 gap-4">
+                            <div className="grid w-full gap-2">
+                                <Label htmlFor="name">Name</Label>
 
-                            <Input
-                                id="name"
-                                className="mt-1 block w-full"
-                                value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
-                                required
-                                autoComplete="name"
-                                placeholder="Full name"
-                            />
+                                <Input
+                                    id="name"
+                                    className="mt-1 block w-full"
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    required
+                                    autoComplete="name"
+                                    placeholder="Full name"
+                                />
 
-                            <InputError className="mt-2" message={errors.name} />
+                                <InputError message={errors.name} />
+                            </div>
+                            <div className="grid w-full gap-2">
+                                <Label htmlFor="email">Email address</Label>
+
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    className="mt-1 block w-full"
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    required
+                                    autoComplete="username"
+                                    placeholder="Email address"
+                                />
+
+                                <InputError message={errors.email} />
+                            </div>
                         </div>
+                        <div className="flex w-full grid-cols-2 items-center justify-center gap-4">
+                            <Avatar className="size-16">
+                                <AvatarImage src={file} />
+                                <AvatarFallback>{data.name.substring(0, 1)}</AvatarFallback>
+                            </Avatar>
+                            <div className="grid w-full gap-2">
+                                <Label htmlFor="avatar">Avatar</Label>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email address</Label>
+                                <Input id="avatar" type="file" className="mt-1 block w-full" onChange={handleChange} />
 
-                            <Input
-                                id="email"
-                                type="email"
-                                className="mt-1 block w-full"
-                                value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
-                                required
-                                autoComplete="username"
-                                placeholder="Email address"
-                            />
-
-                            <InputError className="mt-2" message={errors.email} />
+                                <InputError message={errors.avatar} />
+                            </div>
                         </div>
 
                         {mustVerifyEmail && auth.user.email_verified_at === null && (

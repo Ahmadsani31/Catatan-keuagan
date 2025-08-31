@@ -12,7 +12,7 @@ export function NavUser() {
     const { state } = useSidebar();
     const isMobile = useIsMobile();
     return (
-        <SidebarMenu className='bg-white rounded-xl'>
+        <SidebarMenu className="rounded-xl bg-gray-100">
             <SidebarMenuItem>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
