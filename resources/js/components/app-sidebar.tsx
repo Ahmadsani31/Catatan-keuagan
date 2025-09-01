@@ -8,7 +8,7 @@ import AppLogo from './app-logo';
 const mainNavItems: NavItemNew[] = [
     {
         header: 'Dashboard',
-        roles: ['admin', 'editor', 'viewer'],
+        roles: ['admin', 'editor'],
         menu: [
             {
                 title: 'Dashboard',
@@ -58,12 +58,6 @@ const mainNavItems: NavItemNew[] = [
                 icon: CircleDollarSign,
                 permissions: ['transactions_access'],
             },
-        ],
-    },
-    {
-        header: 'Dept',
-        roles: ['admin', 'editor'],
-        menu: [
             {
                 title: 'Hutang-piutang',
                 href: '/krediturs',

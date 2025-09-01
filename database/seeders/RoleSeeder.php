@@ -13,7 +13,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = Role::firstOrCreate(['name' => 'Admin']);
+        $admin = Role::firstOrCreate(['name' => 'admin']);
         $admin->syncPermissions([
             'dashboard_access',
             'category_access',
@@ -25,7 +25,7 @@ class RoleSeeder extends Seeder
             'laporan_transactions_access',
         ]);
 
-        $editor = Role::firstOrCreate(['name' => 'Editor']);
+        $editor = Role::firstOrCreate(['name' => 'editor']);
         $editor->syncPermissions([
             'dashboard_access',
             'category_access',
