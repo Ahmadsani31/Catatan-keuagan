@@ -13,7 +13,7 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Permission::create([
+        $permissions = [
             'dashboard_access',
             'category_access',
             'user_access',
@@ -22,6 +22,10 @@ class PermissionSeeder extends Seeder
             'transactions_access',
             'krediturs_access',
             'laporan_transactions_access',
-        ]);
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
     }
 }
