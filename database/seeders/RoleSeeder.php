@@ -13,8 +13,25 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::create(['name' => 'Admin']);
-        Role::create(['name' => 'Editor']);
-        Role::create(['name' => 'Viewer']);
+        $admin = Role::create(['name' => 'Admin']);
+        $admin->syncPermissions([
+            'dashboard_access',
+            'category_access',
+            'user_access',
+            'roles_access',
+            'permission_access',
+            'transactions_access',
+            'krediturs_access',
+            'laporan_transactions_access',
+        ]);
+
+        $editor = Role::create(['name' => 'Editor']);
+        $editor->syncPermissions([
+            'dashboard_access',
+            'category_access',
+            'transactions_access',
+            'krediturs_access',
+            'laporan_transactions_access',
+        ]);
     }
 }
