@@ -48,6 +48,7 @@ class DashboardController extends Controller
         $rows = Transactions::select('category_id', DB::raw('SUM(amount) as amount'))
             ->with(['category:id,name'])
             ->when($type, fn($q) => $q->where('type', $type))
+            ->whereHas('organization', fn($q) => $q->whereKey($orgId))
             ->whereBetween('created_at', [$start, $end]) // filter range 6 bulan terakhir
             ->groupBy('category_id')
             ->get()

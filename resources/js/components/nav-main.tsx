@@ -1,7 +1,15 @@
 import { NavItemNew, SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
+import {
+    SidebarGroup,
+    SidebarGroupLabel,
+    SidebarMenu,
+    SidebarMenuBadge,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    useSidebar,
+} from '@/components/ui/sidebar';
 
 type AuthProps = {
     auth?: {
@@ -26,10 +34,12 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
                 .filter((item) => (item.roles ? item.roles.some((role) => userRoles.includes(role)) : false))
                 .map((item, index) => (
                     <div key={index}>
-                        {state == 'expanded' ? (
-                            <SidebarGroupLabel>
-                                <h3 className="font-light">{item.header}</h3>
-                            </SidebarGroupLabel>
+                        {item.header ? (
+                            state == 'expanded' ? (
+                                <SidebarGroupLabel>
+                                    <h3 className="font-light">{item.header}</h3>
+                                </SidebarGroupLabel>
+                            ) : null
                         ) : null}
 
                         <SidebarMenu>
@@ -41,8 +51,8 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
                                     <SidebarMenuItem key={idx}>
                                         <SidebarMenuButton
                                             asChild
-                                            // isActive={page.url.startsWith(menuItem.href)}
-                                            isActive={menuItem.href === page.url}
+                                            isActive={page.url.startsWith(menuItem.href)}
+                                            // isActive={menuItem.href === page.url}
                                             tooltip={{ children: menuItem.title }}
                                         >
                                             <Link href={menuItem.href} prefetch>
@@ -50,6 +60,7 @@ export function NavMain({ items = [] }: { items: NavItemNew[] }) {
                                                 <span>{menuItem.title}</span>
                                             </Link>
                                         </SidebarMenuButton>
+                                        {menuItem.badge ? <SidebarMenuBadge className="bg-amber-200 p-1">{menuItem.badge}</SidebarMenuBadge> : null}
                                     </SidebarMenuItem>
                                 ))}
                         </SidebarMenu>

@@ -83,13 +83,11 @@ export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
             return (
                 <div className="flex justify-center gap-x-1">
                     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                        <AddTooltip text="Update password" side="left">
-                            <AlertDialogTrigger asChild className="cursor-pointer">
-                                <Button variant={'custom'} className="bg-amber-500" size={'sm'}>
-                                    <RotateCcwSquare />
-                                </Button>
-                            </AlertDialogTrigger>
-                        </AddTooltip>
+                        <AlertDialogTrigger asChild className="cursor-pointer">
+                            <Button variant={'custom'} className="bg-amber-500" size={'sm'}>
+                                <RotateCcwSquare />
+                            </Button>
+                        </AlertDialogTrigger>
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Update Password User</AlertDialogTitle>
@@ -137,9 +135,7 @@ export const ColumnsUser: ColumnDef<columnsItemsUser>[] = [
                         <RotateCcwIcon />
                     </Button>
                     {open && <ModalUserAssignRoles open={open} onOpenChange={setOpen} user={row.original} />} */}
-                    <AddTooltip text="Delete user" side="top">
-                        <ColumnsDatatableActionDelete url={route('master.users.destroy', { id: row.original })} />
-                    </AddTooltip>
+                    <ColumnsDatatableActionDelete url={route('master.users.destroy', { id: row.original })} />
                 </div>
             );
         },

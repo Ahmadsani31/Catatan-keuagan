@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { router } from '@inertiajs/react';
 import { LoaderCircle, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
+import AddTooltip from './add-tooltip';
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -29,9 +30,11 @@ export default function ColumnsDatatableActionDelete({ url }: { url: string }) {
     };
     return (
         <>
-            <Button variant={'destructive'} size={'sm'} onClick={() => setDialogOpen(true)}>
-                <TrashIcon />
-            </Button>
+            <AddTooltip text="Delete user" side="top">
+                <Button variant={'destructive'} size={'sm'} onClick={() => setDialogOpen(true)}>
+                    <TrashIcon />
+                </Button>
+            </AddTooltip>
             <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
