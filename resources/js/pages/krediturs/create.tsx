@@ -23,11 +23,11 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Kreditur',
-        href: '/master/categories',
+        title: 'Hutang Piutang',
+        href: '/krediturs',
     },
     {
-        title: 'Tambah Kreditur',
+        title: 'Tambah',
         href: '',
     },
 ];
@@ -80,12 +80,6 @@ export default function Create({ page_info }: pageCreate) {
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center">
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
-
-                    <Button variant={'destructive'} size={'lg'} asChild>
-                        <Link href={route('krediturs.index')}>
-                            <ArrowBigLeft /> Back
-                        </Link>
-                    </Button>
                 </div>
                 <Card>
                     <CardContent>
@@ -156,8 +150,10 @@ export default function Create({ page_info }: pageCreate) {
                             />
 
                             <div className="flex justify-end gap-x-2">
-                                <Button type="button" variant={'outline'} size={'lg'} onClick={() => reset()}>
-                                    Reset
+                                <Button variant={'destructive'} size={'lg'} asChild>
+                                    <Link href={route('krediturs.index')}>
+                                        <ArrowBigLeft /> Back
+                                    </Link>
                                 </Button>
                                 <Button type="submit" variant={'default'} size={'lg'} disabled={processing}>
                                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

@@ -16,7 +16,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Krediturs',
+        title: 'Hutang Piutang',
         href: '',
     },
 ];

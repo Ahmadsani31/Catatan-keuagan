@@ -3,6 +3,7 @@ import { columnsItems } from '@/types/page-roles';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { PencilIcon } from 'lucide-react';
+import AddTooltip from './add-tooltip';
 import CategoryStatusBadge from './category-status-badge';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 import DialogPreviewImage from './dialog-preview-image';
@@ -57,11 +58,13 @@ export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
         cell: ({ row }) => {
             return (
                 <div className="flex justify-center gap-x-1">
-                    <Button variant={'default'} size={'sm'} asChild>
-                        <Link href={route('transactions.edit', [row.original])}>
-                            <PencilIcon />
-                        </Link>
-                    </Button>
+                    <AddTooltip text="Edit" side="left">
+                        <Button variant={'default'} size={'sm'} asChild>
+                            <Link href={route('transactions.edit', [row.original])}>
+                                <PencilIcon />
+                            </Link>
+                        </Button>
+                    </AddTooltip>
                     <ColumnsDatatableActionDelete url={route('transactions.destroy', [row.original])} />
                 </div>
             );

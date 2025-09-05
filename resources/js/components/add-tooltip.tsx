@@ -9,7 +9,7 @@ type pageProps = {
 export default function AddTooltip({ children, text, side = 'top' }: pageProps) {
     return (
         <Tooltip>
-            <TooltipTrigger>{children}</TooltipTrigger>
+            <TooltipTrigger asChild>{children}</TooltipTrigger>
             <TooltipContent side={side} className="bg-secondary text-black">
                 <p>{text}</p>
             </TooltipContent>

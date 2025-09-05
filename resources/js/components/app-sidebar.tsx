@@ -1,13 +1,14 @@
 import { NavMain } from '@/components/nav-main';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { NavItemNew } from '@/types';
+import { NavItem, NavItemNew } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BanknoteIcon, BookMarked, CircleDollarSign, CookieIcon, FileArchive, User2Icon } from 'lucide-react';
+import { BanknoteIcon, BookMarked, CircleDollarSign, CookieIcon, CreditCardIcon, FileArchive, GiftIcon, HomeIcon, User2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
+import { NavFooter } from './nav-footer';
 
 const mainNavItems: NavItemNew[] = [
     {
-        header: 'Dashboard',
+        header: '',
         roles: ['admin', 'editor'],
         menu: [
             {
@@ -46,6 +47,13 @@ const mainNavItems: NavItemNew[] = [
                 icon: BookMarked,
                 permissions: ['category_access'],
             },
+            {
+                title: 'Bank',
+                href: '#',
+                icon: CreditCardIcon,
+                permissions: ['category_access'],
+                badge: 'Ongoing',
+            },
         ],
     },
     {
@@ -64,6 +72,13 @@ const mainNavItems: NavItemNew[] = [
                 icon: BanknoteIcon,
                 permissions: ['krediturs_access'],
             },
+            {
+                title: 'Budgeting',
+                href: '#',
+                icon: GiftIcon,
+                permissions: ['krediturs_access'],
+                badge: 'Ongoing',
+            },
         ],
     },
     {
@@ -72,11 +87,19 @@ const mainNavItems: NavItemNew[] = [
         menu: [
             {
                 title: 'Transaksi',
-                href: '/transactions/laporan',
+                href: '/laporan/transactions',
                 icon: FileArchive,
                 permissions: ['laporan_transactions_access'],
             },
         ],
+    },
+];
+
+const footerNavItems: NavItem[] = [
+    {
+        title: 'Home',
+        href: '/',
+        icon: HomeIcon,
     },
 ];
 
@@ -101,7 +124,7 @@ export function AppSidebar() {
                 </SidebarContent>
 
                 <SidebarFooter>
-                    {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
+                    <NavFooter items={footerNavItems} className="mt-auto" />
                     {/* <NavUser /> */}
                 </SidebarFooter>
             </Sidebar>

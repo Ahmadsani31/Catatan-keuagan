@@ -80,7 +80,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/transactions/type/{type}', 'type_json')->name('transactions.type');
 
-        Route::get('/transactions/laporan', 'laporan')->name('transactions.laporan');
+        Route::get('/laporan/transactions', 'laporan')->name('transactions.laporan');
     });
 
 

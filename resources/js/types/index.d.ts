@@ -26,6 +26,7 @@ export interface NavItemNew {
         permissions?: string[] | undefined;
         icon?: LucideIcon | null;
         isActive?: boolean;
+        badge?: string;
     }[];
 }
 

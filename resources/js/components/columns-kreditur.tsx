@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { NotepadTextIcon, PencilIcon } from 'lucide-react';
+import AddTooltip from './add-tooltip';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 import KrediturStatusBadge from './kreditur-status-badge';
 
@@ -69,17 +70,20 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
         cell: ({ row }: any) => {
             return (
                 <div className="flex items-center justify-center gap-x-1">
-                    <Button variant={'custom'} className="bg-indigo-500" size={'sm'} asChild>
-                        <Link href={route('krediturs.payment.index', [row.original])}>
-                            <NotepadTextIcon />
-                        </Link>
-                    </Button>
-                    <Button variant={'default'} size={'sm'} asChild>
-                        <Link href={route('krediturs.edit', [row.original])}>
-                            <PencilIcon />
-                        </Link>
-                    </Button>
-
+                    <AddTooltip text="Detail" side="left">
+                        <Button variant={'custom'} className="bg-indigo-500" size={'sm'} asChild>
+                            <Link href={route('krediturs.payment.index', [row.original])}>
+                                <NotepadTextIcon />
+                            </Link>
+                        </Button>
+                    </AddTooltip>
+                    <AddTooltip text="Edit" side="top">
+                        <Button variant={'default'} size={'sm'} asChild>
+                            <Link href={route('krediturs.edit', [row.original])}>
+                                <PencilIcon />
+                            </Link>
+                        </Button>
+                    </AddTooltip>
                     <ColumnsDatatableActionDelete url={route('krediturs.destroy', [row.original])} />
                 </div>
             );
