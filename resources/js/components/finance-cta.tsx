@@ -1,12 +1,9 @@
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, CheckCircle, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 const FinanceCTA = () => {
-    const benefits = ['Setup akun dalam 2 menit', 'Gratis untuk 30 hari pertama', 'Support 24/7 dari tim ahli', 'Jaminan keamanan data 100%'];
-
     return (
-        <section className="relative overflow-hidden py-24">
+        <section id="about" className="relative overflow-hidden bg-[url(/assets/images/welcome-hero.jpg)] bg-cover py-24">
             {/* Background */}
             <div className="from-primary via-primary-glow to-accent absolute inset-0 bg-gradient-to-r opacity-5" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary))_0%,transparent_50%)] opacity-10" />
@@ -32,17 +29,17 @@ const FinanceCTA = () => {
                         </p>
 
                         {/* Benefits */}
-                        <div className="mx-auto mb-12 grid max-w-2xl gap-4 sm:grid-cols-2">
+                        {/* <div className="mx-auto mb-12 grid max-w-2xl gap-4 sm:grid-cols-2">
                             {benefits.map((benefit, index) => (
                                 <div key={index} className="flex items-center text-left">
                                     <CheckCircle className="text-accent mr-3 h-5 w-5 flex-shrink-0" />
                                     <span className="text-muted-foreground">{benefit}</span>
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
 
                         {/* CTA Buttons */}
-                        <div className="mb-8 flex flex-col justify-center gap-4 sm:flex-row">
+                        {/* <div className="mb-8 flex flex-col justify-center gap-4 sm:flex-row">
                             <Button variant="hero" size="lg" className="group px-8 py-6 text-lg">
                                 Daftar Gratis Sekarang
                                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -50,17 +47,17 @@ const FinanceCTA = () => {
                             <Button variant="elegant" size="lg" className="px-8 py-6 text-lg">
                                 Konsultasi Gratis
                             </Button>
-                        </div>
+                        </div> */}
 
                         {/* Trust indicators */}
-                        <div className="text-center">
+                        {/* <div className="text-center">
                             <p className="text-muted-foreground mb-4 text-sm">Dipercaya oleh:</p>
                             <div className="flex items-center justify-center space-x-8 opacity-60">
                                 <div className="text-2xl font-bold">Bank ABC</div>
                                 <div className="text-2xl font-bold">FinTech XYZ</div>
                                 <div className="text-2xl font-bold">Asuransi 123</div>
                             </div>
-                        </div>
+                        </div> */}
                     </CardContent>
                 </Card>
             </div>

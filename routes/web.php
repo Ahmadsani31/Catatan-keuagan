@@ -20,18 +20,6 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::get('/email-test', function () {
-
-    $data = [
-        'name' => 'John Doe',
-        'message' => 'This is a test email from Laravel 12.'
-    ];
-
-    Mail::to('ahmaddarma0@gmail.com')->send(new SendEmail($data));
-
-    return response()->json(['success' => 'Email sent successfully.']);
-});
-
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::controller(DashboardController::class)->group(function () {
@@ -112,6 +100,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/krediturs/payment/delete/{kreditur}/{paymentKreditur}', 'destroy')->name('krediturs.payment.destroy');
     });
 });
+
+// Route::get('/email-test', function () {
+
+//     $data = [
+//         'name' => 'John Doe',
+//         'message' => 'This is a test email from Laravel 12.'
+//     ];
+
+//     Mail::to('ahmaddarma0@gmail.com')->send(new SendEmail($data));
+
+//     return response()->json(['success' => 'Email sent successfully.']);
+// });
+
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

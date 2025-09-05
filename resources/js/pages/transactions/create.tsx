@@ -222,13 +222,6 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                 />
                                 {errors.amount && <p className="m-0 text-sm text-red-500">{errors.amount}</p>}
                             </div>
-                            <FormInputFile
-                                id="file_image"
-                                title="Bukti Transaksi (opsional)"
-                                onChange={(e) => setData('file_image', e.target.files && e.target.files[0] ? e.target.files[0] : null)}
-                                ref={fileInputCover}
-                                errors={errors.file_image}
-                            />
                             <FormTextarea
                                 id="keterangan"
                                 title="Keterangan"
@@ -236,6 +229,13 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                 value={data.description}
                                 onChange={(e) => setData('description', e.target.value)}
                                 errors={errors.description}
+                            />
+                            <FormInputFile
+                                id="file_image"
+                                title="Bukti Transaksi (opsional)"
+                                onChange={(e) => setData('file_image', e.target.files && e.target.files[0] ? e.target.files[0] : null)}
+                                ref={fileInputCover}
+                                errors={errors.file_image}
                             />
                             <div className="flex justify-end gap-x-2">
                                 <Button variant={'destructive'} size={'lg'} asChild>

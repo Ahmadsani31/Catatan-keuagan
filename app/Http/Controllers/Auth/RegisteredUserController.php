@@ -51,7 +51,7 @@ class RegisteredUserController extends Controller
             ]);
 
             $organization->users()->attach($user->id);
-            $user->assignRole('Admin');
+            $user->assignRole('admin');
             DB::commit();
 
             event(new Registered($user));

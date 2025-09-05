@@ -33,8 +33,8 @@ class TransactionController extends Controller
         return Inertia::render('transactions/index', [
             'transactions' => TransactionResource::collection(Transactions::where('organization_id', getOrganizationiId())->whereMonth('date', date('m'))->latest()->get()),
             'page_info' => [
-                'title' => 'Transaksi',
-                'subtitle' => 'Menampilkan semua data transaksi yang ada di platform ini, untuk di kelola',
+                'title' => 'Transaksi Bulan ' . Carbon::now()->format('F'),
+                'subtitle' => 'Menampilkan semua data transaksi pada bulan ' . Carbon::now()->format('F') . ' yang ada di platform ini, untuk di kelola',
             ],
             'page_data' => [
                 'income' => Transactions::where([

@@ -45,7 +45,8 @@ const FinanceFeatures = () => {
     ];
 
     return (
-        <section className="from-background to-muted/30 bg-gradient-to-b py-24">
+        <section id="features" className="bg-card relative w-full overflow-hidden px-6 py-20 md:px-12">
+            <div className="cosmic-grid absolute inset-0 opacity-30"></div>
             <div className="container mx-auto px-4">
                 {/* Header */}
                 <div className="mb-16 text-center">
