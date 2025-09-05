@@ -125,7 +125,6 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             onClick={handleLoginViaGoogle}
                             disabled={processing}
                         >
-                            {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             <BiLogoGoogle />
                             Google
                         </Button>
