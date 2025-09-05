@@ -1,115 +1,72 @@
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { ArrowRight, DollarSign, Shield, TrendingUp } from 'lucide-react';
-import financeHeroImage from '../../../public/assets/images/finance-hero.jpg';
-
+import { ArrowRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
 const FinanceHero = () => {
     const { auth } = usePage<SharedData>().props;
+
+    const [isVisible, setIsVisible] = useState(false);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsVisible(true);
+        }, 300);
+        return () => clearTimeout(timer);
+    }, []);
     return (
-        <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[url(/assets/images/welcome-hero.jpg)] bg-cover p-20">
-            {/* Background gradient */}
-            <div className="absolute inset-0 bg-white/90"></div>
+        <section
+            id="home"
+            className="bg-background relative flex w-full flex-col items-center justify-center overflow-hidden px-6 py-28 md:px-12 md:py-36"
+        >
+            {/* Cosmic particle effect (background dots) */}
+            <div className="cosmic-grid absolute inset-0 opacity-30"></div>
+
+            {/* Gradient glow effect */}
+            <div className="absolute top-1/2 left-1/4 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full">
+                <div className="bg-primary h-full w-full opacity-10 blur-[120px]"></div>
+            </div>
 
             <div
-                className="from-primary/10 via-background to-accent/5 absolute inset-0 bg-gradient-to-br"
-                style={{ backgroundImage: 'var(--finance-hero-bg)' }}
-            />
+                className={`relative z-10 max-w-4xl transform space-y-6 text-center transition-all duration-700 ${
+                    isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+                }`}
+            >
+                <h1 className="text-foreground text-4xl font-medium tracking-tighter text-balance md:text-6xl lg:text-7xl">
+                    Kelola Keuangan kamu
+                    <span className="text-foreground"> dengan</span> cerdas
+                </h1>
 
-            {/* Floating elements */}
-            <div className="bg-primary/20 absolute top-20 left-10 h-20 w-20 animate-pulse rounded-full blur-xl" />
-            <div className="bg-accent/20 absolute right-10 bottom-20 h-32 w-32 animate-pulse rounded-full blur-xl delay-1000" />
-
-            <div className="relative z-10 container mx-auto px-4">
-                <div className="grid items-center gap-12 lg:grid-cols-2">
-                    {/* Left Content */}
-                    <div className="text-center lg:text-left">
-                        <div className="bg-primary/15 border-primary/20 mb-6 inline-flex items-center rounded-full border px-4 py-2">
-                            <Shield className="text-primary mr-2 h-4 w-4" />
-                            <span className="text-sm font-medium">Aman & Terpercaya</span>
-                        </div>
-
-                        <h1 className="text-foreground mb-6 text-4xl leading-tight font-bold md:text-6xl">
-                            Kelola Keuangan
-                            <span className="from-primary to-accent block bg-gradient-to-r bg-clip-text text-transparent">dengan Cerdas</span>
-                        </h1>
-
-                        <p className="text-muted-foreground mb-8 max-w-lg text-xl">
-                            Mulai perjalanan finansial yang lebih baik. Simpan, lacak, dan kembangkan uang Anda dengan mudah dan aman.
-                        </p>
-
-                        <div className="mb-8 flex flex-col gap-4 sm:flex-row">
-                            {auth.user ? (
-                                <Button variant="hero" size="lg" className="group" asChild>
-                                    <Link href={route('dashboard')}>
-                                        Dashboard
-                                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                    </Link>
-                                </Button>
-                            ) : (
-                                <>
-                                    <Button variant="hero" size="lg" className="group" asChild>
-                                        <Link href={route('login')}>
-                                            Mulai Menabung Sekarang
-                                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                        </Link>
-                                    </Button>
-                                    <Button variant="elegant" size="lg" asChild>
-                                        <Link href={route('register')}>Registrasi Sekarang</Link>
-                                    </Button>
-                                </>
-                            )}
-                        </div>
-
-                        {/* Stats */}
-                        <div className="border-border/50 grid grid-cols-3 gap-6 border-t pt-8">
-                            <div className="text-center">
-                                <div className="text-primary text-2xl font-bold">100K+</div>
-                                <div className="text-muted-foreground text-sm">Pengguna Aktif</div>
-                            </div>
-                            <div className="text-center">
-                                <div className="text-2xl font-bold">₹2.5M+</div>
-                                <div className="text-muted-foreground text-sm">Total Tabungan</div>
-                            </div>
-                            <div className="text-center">
-                                <div className="text-primary text-2xl font-bold">99.9%</div>
-                                <div className="text-muted-foreground text-sm">Uptime</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Right Content - Image */}
-                    <div className="relative">
-                        <div className="relative">
-                            <img
-                                src={financeHeroImage}
-                                alt="Finance Management App Interface"
-                                className="mx-auto w-full max-w-lg rounded-2xl shadow-2xl"
-                            />
-                            {/* Floating cards */}
-                            <Card className="from-primary to-primary-glow absolute -top-6 -left-6 bg-gradient-to-r p-4 shadow-lg">
-                                <div className="flex items-center">
-                                    <DollarSign className="mr-2 h-6 w-6" />
-                                    <div>
-                                        <div className="text-lg font-bold">₹25,000</div>
-                                        <div className="text-xs opacity-90">Tabungan Bulan Ini</div>
-                                    </div>
-                                </div>
-                            </Card>
-
-                            <Card className="from-accent to-accent-glow absolute -right-6 -bottom-6 bg-gradient-to-r p-4 shadow-lg">
-                                <div className="flex items-center">
-                                    <TrendingUp className="mr-2 h-6 w-6" />
-                                    <div>
-                                        <div className="text-lg font-bold">+15%</div>
-                                        <div className="text-xs opacity-90">Pertumbuhan</div>
-                                    </div>
-                                </div>
-                            </Card>
-                        </div>
-                    </div>
+                <p className="text-muted-foreground mx-auto max-w-2xl text-lg text-balance md:text-xl">
+                    Mulai perjalanan finansial yang lebih baik. Simpan, lacak pengeluaran dan pemasukan, dan pahami kebutuhan simpan uang dengan mudah
+                    dan aman.
+                </p>
+                <div className="flex flex-col items-center justify-center gap-4 pt-6 sm:flex-row">
+                    {auth.user ? (
+                        <Button variant="hero" size="lg" className="group" asChild>
+                            <Link href={route('dashboard')}>
+                                Dashboard
+                                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                            </Link>
+                        </Button>
+                    ) : (
+                        <>
+                            <Button variant="hero" size="lg" className="group" asChild>
+                                <Link href={route('login')}>
+                                    Mulai Menabung Sekarang
+                                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                </Link>
+                            </Button>
+                            <Button variant="elegant" size="lg" asChild>
+                                <Link href={route('register')}>Registrasi Sekarang</Link>
+                            </Button>
+                        </>
+                    )}
                 </div>
+                {/* <div className="flex flex-col items-center justify-center gap-4 pt-6 sm:flex-row">
+                    <Button className="bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground h-12 min-h-[48px] px-8 text-base transition-all duration-200">
+                        Kelola sekarang, registrasi..
+                    </Button>
+                </div> */}
             </div>
         </section>
     );

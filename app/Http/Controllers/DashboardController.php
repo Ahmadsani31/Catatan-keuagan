@@ -55,9 +55,14 @@ class DashboardController extends Controller
                 return [
                     'id' => $r->category->name ?? 'Tanpa Kategori',
                     'label' => $r->category->name ?? 'Tanpa Kategori',
-                    'value'   => (float) $r->amount,
+                    'value'   => (float) ($r->amount ?? 0)
                 ];
             })
+            ->whenEmpty(fn($c) => collect([[
+                'id'    => 'Tanpa Kategori',
+                'label' => 'Tanpa Kategori',
+                'value' => 0,
+            ]]))
             ->values();
 
         // dd($payment_krediturs[0]['total_amount']);
