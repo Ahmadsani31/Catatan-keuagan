@@ -34,6 +34,6 @@ if (!function_exists('getOrganizationiId')) {
     function getOrganizationiId()
     {
         $organization = Auth::user()->organizations()->first();
-        return $organization->id;
+        return $organization->id ?? 0;
     }
 }

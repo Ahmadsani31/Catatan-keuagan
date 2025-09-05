@@ -124,12 +124,6 @@ export default function Edit({ transactions, page_info, page_data }: pageCreate)
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="flex flex-col items-start justify-between gap-y-4 sm:flex-row sm:items-center">
                     <HeaderTitle title={page_info.title} subtitle={page_info.subtitle} icon={AlignCenterHorizontalIcon} />
-
-                    <Button variant={'destructive'} size={'lg'} asChild>
-                        <Link href={route('transactions.index')}>
-                            <ArrowBigLeft /> Back
-                        </Link>
-                    </Button>
                 </div>
                 <Card>
                     <CardContent>
@@ -263,7 +257,12 @@ export default function Edit({ transactions, page_info, page_data }: pageCreate)
                                     ref={fileInputCover}
                                     errors={errors.file_image}
                                 />
-                                <DialogPreviewImage url_image={transactions.data.file_image} size="size-14" />
+                                <DialogPreviewImage
+                                    url_image={transactions.data.file_image}
+                                    size="size-16"
+                                    title="Preview Image"
+                                    description="detail dari gambar"
+                                />
                             </div>
                             <FormTextarea
                                 id="keterangan"
@@ -274,8 +273,10 @@ export default function Edit({ transactions, page_info, page_data }: pageCreate)
                                 errors={errors.description}
                             />
                             <div className="flex justify-end gap-x-2">
-                                <Button type="button" variant={'outline'} size={'lg'} onClick={() => reset()}>
-                                    Reset
+                                <Button variant={'destructive'} size={'lg'} asChild>
+                                    <Link href={route('transactions.index')}>
+                                        <ArrowBigLeft /> Back
+                                    </Link>
                                 </Button>
                                 <Button type="submit" variant={'default'} size={'lg'} disabled={processing}>
                                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

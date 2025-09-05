@@ -10,6 +10,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
+import toast from 'react-hot-toast';
+import { BiLogoGoogle } from 'react-icons/bi';
 
 type LoginForm = {
     email: string;
@@ -36,6 +38,10 @@ export default function Login({ status, canResetPassword }: LoginProps) {
         post(route('login'), {
             onFinish: () => reset('password'),
         });
+    };
+
+    const handleLoginViaGoogle = () => {
+        toast.success('fitur ongoin');
     };
 
     return (
@@ -106,6 +112,23 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                 Log in
                             </Button>
                         </div>
+                        <div className="my-5 flex items-center text-sm text-gray-500">
+                            <div className="flex-grow border-t border-gray-300" />
+                            <p className="mx-2 py-4 text-gray-500">or Login via google</p>
+                            <div className="flex-grow border-t border-gray-300" />
+                        </div>
+                        <Button
+                            type="button"
+                            variant={'secondary'}
+                            size={'lg'}
+                            className="w-full"
+                            onClick={handleLoginViaGoogle}
+                            disabled={processing}
+                        >
+                            {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                            <BiLogoGoogle />
+                            Google
+                        </Button>
                     </CardContent>
                 </Card>
 

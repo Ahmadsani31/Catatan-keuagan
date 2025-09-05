@@ -78,7 +78,7 @@ export default function DialogPreviewImage({
                 />
             </DialogTrigger>
 
-            <DialogContent className="max-w-[95vw] sm:max-w-[90vw] lg:max-w-[70vw]">
+            <DialogContent className="max-w-[95vw] sm:max-w-[90vw] lg:max-w-[70vw] [&>button]:hidden">
                 <DialogHeader>
                     <DialogTitle className="flex items-center justify-between text-base sm:text-lg">
                         <span className="truncate">{title || 'Image preview'}</span>
