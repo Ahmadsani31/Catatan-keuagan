@@ -65,7 +65,7 @@ export default function Dashboard({
         });
     }, [inputBulan, inputType]);
 
-    console.log(inputBulan);
+    console.log(pie_transaksi);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -88,7 +88,7 @@ export default function Dashboard({
                 <MonthList onChange={(i) => setInputBulan(i)} />
                 <SectionCardDashboard items={page_data} loading={loading} />
                 <div className="grid grid-cols-12 gap-4">
-                    <div className="col-span-8">
+                    <div className="col-span-12 sm:col-span-12 lg:col-span-8 xl:col-span-12">
                         <Card className="py-1 [&_td]:px-3 [&_th]:px-3">
                             <CardContent className="[&-td]:whitespace-nowrap">
                                 <div className="my-5">
@@ -106,7 +106,7 @@ export default function Dashboard({
                             </CardContent>
                         </Card>
                     </div>
-                    <div className="col-span-4">
+                    <div className="col-span-12 lg:col-span-4 xl:col-span-12">
                         <ChartPie
                             pieData={pie_transaksi}
                             onChangeRadio={(e: string) => setInputType(e as 'Pemasukan' | 'Pengeluaran')}
