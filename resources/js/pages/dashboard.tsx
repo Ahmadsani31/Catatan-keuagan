@@ -9,6 +9,7 @@ import { ColumnsTransactionDashboard } from '@/components/columns-transaction-da
 import { DataTable } from '@/components/data-table';
 import { MonthList } from '@/components/month-list';
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -65,7 +66,7 @@ export default function Dashboard({
         });
     }, [inputBulan, inputType]);
 
-    console.log(pie_transaksi);
+    console.log(page_data);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -94,15 +95,24 @@ export default function Dashboard({
                                 <div className="my-5">
                                     <h4 className="text-lg font-bold">Transaksi Terakhir</h4>
                                 </div>
-
-                                <DataTable
-                                    columns={ColumnsTransactionDashboard}
-                                    sortableColumns={['description', 'category_name', 'created_at']}
-                                    searchableColumns={['description', 'category_name']}
-                                    data={page_data.last_transaksi.data}
-                                    defaultPageLength={'all'}
-                                    headerTable={false}
-                                />
+                                {loading ? (
+                                    <div className="from-primary/5 to-card mb-6 flex flex-col items-center gap-2 rounded-md border bg-gradient-to-t p-4 shadow-xs">
+                                        <Skeleton className="h-8 w-full" />
+                                        <Skeleton className="h-8 w-full" />
+                                        <Skeleton className="h-8 w-full" />
+                                        <Skeleton className="h-8 w-full" />
+                                        <Skeleton className="h-8 w-full" />
+                                    </div>
+                                ) : (
+                                    <DataTable
+                                        columns={ColumnsTransactionDashboard}
+                                        sortableColumns={['description', 'category_name', 'created_at']}
+                                        searchableColumns={['description', 'category_name']}
+                                        data={page_data.last_transaksi.data}
+                                        defaultPageLength={'all'}
+                                        headerTable={false}
+                                    />
+                                )}
                             </CardContent>
                         </Card>
                     </div>

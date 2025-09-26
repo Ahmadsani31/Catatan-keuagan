@@ -34,6 +34,7 @@ class DashboardController extends Controller
 
         // 5 transaksi terakhir (dibatasi organisasi yang sama biar konsisten)
         $latestTransaksi = Transactions::whereHas('organization', fn($q) => $q->whereKey($orgId))
+            ->whereMonth('created_at', $month)
             ->latest()
             ->limit(5)
             ->get();
