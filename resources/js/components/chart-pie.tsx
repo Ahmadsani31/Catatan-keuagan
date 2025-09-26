@@ -1,8 +1,6 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ResponsivePie } from '@nivo/pie';
 
 const data = [
@@ -26,27 +24,25 @@ type ChartPieProps = {
 
 export function ChartPie({ pieData, onChangeRadio, value }: ChartPieProps) {
     return (
-        <Card className="flex flex-col">
-            <CardHeader className="items-center pb-0">
-                <CardTitle>Transaksi terbanyak bedasarkan kategori</CardTitle>
-                <CardDescription className="text-xs">Data bedasarkan transaksi 6 bulan terakhir.</CardDescription>
-                <div className="items-center justify-center">
-                    <RadioGroup
-                        defaultValue="Pemasukan"
-                        name="type"
-                        className="flex"
-                        value={value}
-                        onValueChange={(v: 'Pemasukan' | 'Pengeluaran') => onChangeRadio(v)}
-                    >
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="Pemasukan" id="income" />
-                            <Label htmlFor="income">Pemasukan</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="Pengeluaran" id="expense" />
-                            <Label htmlFor="expense">Pengeluaran</Label>
-                        </div>
-                    </RadioGroup>
+        <Card className="py-0">
+            <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
+                <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-6">
+                    <CardTitle>Transaksi terbanyak bedasarkan kategori</CardTitle>
+                    <CardDescription className="text-xs">Data bedasarkan transaksi 6 bulan terakhir.</CardDescription>
+                </div>
+                <div className="flex">
+                    {['Pemasukan', 'Pengeluaran'].map((key) => {
+                        return (
+                            <button
+                                key={key}
+                                data-active={value === key}
+                                className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 cursor-pointer flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
+                                onClick={() => onChangeRadio(key)}
+                            >
+                                <span className="font-bold">{key}</span>
+                            </button>
+                        );
+                    })}
                 </div>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
