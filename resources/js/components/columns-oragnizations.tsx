@@ -1,8 +1,15 @@
 import { Button } from '@/components/ui/button';
-import { columnsItemsUser } from '@/types/page-user';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { PencilIcon } from 'lucide-react';
+
+interface columnsItemsUser {
+    id: number;
+    name: string;
+    address: string;
+    keterangan: string;
+    created_at: string;
+}
 
 export const ColumnsOrganizations: ColumnDef<columnsItemsUser>[] = [
     {
@@ -28,7 +35,7 @@ export const ColumnsOrganizations: ColumnDef<columnsItemsUser>[] = [
             return (
                 <div className="flex justify-center gap-x-1">
                     <Button variant={'default'} size={'sm'} asChild>
-                        <Link href={route('master.users.edit', { user: row.original })}>
+                        <Link href={route('master.users.edit', [row.original])}>
                             <PencilIcon />
                         </Link>
                     </Button>

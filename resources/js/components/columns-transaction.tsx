@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { columnsItems } from '@/types/page-roles';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { PencilIcon } from 'lucide-react';
@@ -7,6 +6,23 @@ import AddTooltip from './add-tooltip';
 import CategoryStatusBadge from './category-status-badge';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 import DialogPreviewImage from './dialog-preview-image';
+
+interface columnsItems {
+    id: number;
+    date: string;
+    type: string;
+    category: {
+        id: number;
+        name: string;
+    };
+    bank: {
+        id: number;
+        name: string;
+    };
+    description: string;
+    file_image: string;
+    amount: string;
+}
 
 export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
     {
@@ -20,13 +36,18 @@ export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'amount',
         header: 'Harga',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
             const currencyFormatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-            return currencyFormatter.format(row.original.amount);
+            return (
+                <div className="grid">
+                    <span> {currencyFormatter.format(row.original.amount ? parseInt(row.original.amount) : 0)}</span>
+                    <span className="text-muted-foreground text-xs"> {row.original.bank ? row.original.bank.name : ''}</span>
+                </div>
+            );
         },
     },
     {
@@ -36,12 +57,12 @@ export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'type',
         header: 'Jenis',
-        cell: ({ row }: any) => <CategoryStatusBadge status={row.original.type} />,
+        cell: (row) => <CategoryStatusBadge status={row.getValue()} />,
     },
     {
         accessorKey: 'file_image',
         header: () => <span className="flex justify-center">Screnshoot</span>,
-        cell: ({ row }: any) => (
+        cell: ({ row }) => (
             <div className="flex items-center justify-center">
                 <DialogPreviewImage
                     url_image={row.original.file_image}

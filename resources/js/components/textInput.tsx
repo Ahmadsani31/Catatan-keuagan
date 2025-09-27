@@ -8,8 +8,9 @@ type itemsProps = {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     errors?: string;
     required?: boolean;
+    autoFocus?: boolean;
 };
-export default function TextInput({ title, value, errors, placeholder, type, onChange, required }: itemsProps) {
+export default function TextInput({ title, value, errors, placeholder, type, onChange, required, autoFocus = false }: itemsProps) {
     let autoComplete = '';
     switch (type) {
         case 'password':
@@ -36,7 +37,7 @@ export default function TextInput({ title, value, errors, placeholder, type, onC
                 autoComplete={autoComplete}
                 className={cn(errors ? 'border-red-500' : '')}
                 required={required}
-                autoFocus={true}
+                autoFocus={autoFocus}
             />
             {errors && <p className="m-0 text-sm text-red-500">{errors}</p>}
         </div>

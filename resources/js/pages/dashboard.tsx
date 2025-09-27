@@ -66,7 +66,7 @@ export default function Dashboard({
         });
     }, [inputBulan, inputType]);
 
-    console.log(page_data);
+    console.log(pie_transaksi);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -117,11 +117,17 @@ export default function Dashboard({
                         </Card>
                     </div>
                     <div className="col-span-12 lg:col-span-4 xl:col-span-12">
-                        <ChartPie
-                            pieData={pie_transaksi}
-                            onChangeRadio={(e: string) => setInputType(e as 'Pemasukan' | 'Pengeluaran')}
-                            value={inputType}
-                        />
+                        {loading ? (
+                            <div className="from-primary/5 to-card mb-6 flex flex-col items-center gap-2 rounded-md border bg-gradient-to-t p-4 shadow-xs">
+                                <Skeleton className="h-28 w-full" />
+                            </div>
+                        ) : (
+                            <ChartPie
+                                pieData={pie_transaksi}
+                                onChangeRadio={(e: string) => setInputType(e as 'Pemasukan' | 'Pengeluaran')}
+                                value={inputType}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

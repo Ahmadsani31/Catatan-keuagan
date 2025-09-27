@@ -1,14 +1,17 @@
 import FormInput from '@/components/form-input';
 import HeaderTitle from '@/components/header-title';
+import InputError from '@/components/input-error';
 import ReactSelect from '@/components/react-select';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { pageUserIndex, PropsFormUserCreate } from '@/types/page-user';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, CassetteTape, LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { ArrowLeft, CassetteTape, EyeIcon, EyeOffIcon, LoaderCircle } from 'lucide-react';
+import { FormEventHandler, useState } from 'react';
 // import { toast } from 'react-toastify';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -27,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Create({ page_info, page_data }: pageUserIndex) {
-    console.log(page_data.roles);
+    const [passVisible, setPassVisible] = useState(false);
 
     const { data, setData, post, reset, errors, processing } = useForm<Required<PropsFormUserCreate>>({
         name: '',
@@ -95,25 +98,45 @@ export default function Create({ page_info, page_data }: pageUserIndex) {
                                 placeholder="Pilih rules"
                                 errors={errors.roles}
                             />
-                            <div className="grid grid-cols-1 items-start sm:gap-6 lg:grid-cols-2 lg:gap-4">
-                                <FormInput
-                                    id="password"
-                                    title="Password"
-                                    type="password"
-                                    placeholder="Masukan password..."
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    errors={errors.password}
-                                />
-                                <FormInput
-                                    id="password_confirmation"
-                                    title="Konfirmasi password"
-                                    type="password"
-                                    placeholder="Konfirmasi password..."
-                                    value={data.password_confirmation}
-                                    onChange={(e) => setData('password_confirmation', e.target.value)}
-                                    errors={errors.password_confirmation}
-                                />
+                            <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+                                <div className="grid gap-2">
+                                    <div className="flex items-center">
+                                        <Label htmlFor="password">Password</Label>
+                                    </div>
+                                    <div className="relative flex items-center">
+                                        <Input
+                                            id="password"
+                                            type={passVisible ? 'text' : 'password'}
+                                            required
+                                            tabIndex={2}
+                                            autoComplete="current-password"
+                                            value={data.password}
+                                            onChange={(e) => setData('password', e.target.value)}
+                                            placeholder="Password"
+                                        />
+                                        <span className="absolute right-2 cursor-pointer text-gray-400" onClick={() => setPassVisible(!passVisible)}>
+                                            {passVisible ? <EyeIcon /> : <EyeOffIcon />}
+                                        </span>
+                                    </div>
+
+                                    <InputError message={errors.password} />
+                                </div>
+                                <div className="grid gap-2">
+                                    <div className="flex items-center">
+                                        <Label htmlFor="password_confirmation">Konfirmasi password</Label>
+                                    </div>
+                                    <Input
+                                        id="password_confirmation"
+                                        type={passVisible ? 'text' : 'password'}
+                                        required
+                                        tabIndex={2}
+                                        autoComplete="current-password"
+                                        value={data.password_confirmation}
+                                        onChange={(e) => setData('password_confirmation', e.target.value)}
+                                        placeholder="Konfirmasi password..."
+                                    />
+                                    <InputError message={errors.password} />
+                                </div>
                             </div>
                             <div className="flex justify-end gap-x-2">
                                 <Button type="button" variant={'outline'} size={'lg'} onClick={() => reset()}>

@@ -18,6 +18,7 @@ class TransactionRequest extends FormRequest
     {
         return [
             'category_id' => ['required'],
+            'bank_id' => ['required'],
             'type' => ['required', new Enum(CategoryType::class)],
             'date' => ['required', 'date'],
             'amount' => ['required'],
@@ -30,6 +31,7 @@ class TransactionRequest extends FormRequest
     {
         return [
             'category_id' => 'Kategori',
+            'bank_id' => 'Bank',
             'type' => 'Type',
             'date' => 'Tanggal',
             'amount' => 'Harga',

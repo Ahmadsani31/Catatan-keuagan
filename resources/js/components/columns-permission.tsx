@@ -17,19 +17,21 @@ export const ColumnsPermission: ColumnDef<columnsItems>[] = [
     {
         id: 'actions',
         header: () => <span className="flex justify-center">Aksi</span>,
-        cell: ({ row }) => {
-            const [open, setOpen] = useState<boolean>(false);
-
-            return (
-                <div className="flex justify-center gap-x-1">
-                    <Button variant={'default'} size={'sm'} onClick={() => setOpen(true)}>
-                        <PencilIcon />
-                    </Button>
-                    <ModalPermissionUpdate open={open} onOpenChange={setOpen} permissions={row.original} />
-
-                    <ColumnsDatatableActionDelete url={route('master.users.destroy', [row.original])} />
-                </div>
-            );
-        },
+        cell: ({ row }) => <ActionCell row={row.original} />,
     },
 ];
+
+function ActionCell({ row }: { row: columnsItems }) {
+    const [open, setOpen] = useState<boolean>(false);
+
+    return (
+        <div className="flex justify-center gap-x-1">
+            <Button variant={'default'} size={'sm'} onClick={() => setOpen(true)}>
+                <PencilIcon />
+            </Button>
+            <ModalPermissionUpdate open={open} onOpenChange={setOpen} permissions={row} />
+
+            <ColumnsDatatableActionDelete url={route('master.users.destroy', [row])} />
+        </div>
+    );
+}

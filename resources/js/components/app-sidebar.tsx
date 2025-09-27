@@ -49,10 +49,9 @@ const mainNavItems: NavItemNew[] = [
             },
             {
                 title: 'Bank',
-                href: '#',
+                href: '/master/bank',
                 icon: CreditCardIcon,
                 permissions: ['category_access'],
-                badge: 'Ongoing',
             },
         ],
     },

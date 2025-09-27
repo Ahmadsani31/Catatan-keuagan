@@ -39,7 +39,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
     const { data, setData, post, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
         email: auth.user.email,
-        avatar: auth.user.avatar ?? null,
+        avatar: null,
         _method: 'PATCH',
     });
 

@@ -45,6 +45,10 @@ interface pageCreate {
                 id: number;
                 name: string;
             };
+            bank: {
+                id: number;
+                name: string;
+            };
             description: string;
             file_image: string;
             amount: string;
@@ -65,6 +69,10 @@ interface pageCreate {
             value: number;
             label: string;
         }[];
+        banks: {
+            value: number;
+            label: string;
+        }[];
     };
 }
 
@@ -73,6 +81,7 @@ type propsForm = {
     date: string;
     type: string;
     category_id: number | string;
+    bank_id: number | string;
     description: string;
     amount: string;
     file_image: File | null;
@@ -87,6 +96,7 @@ export default function Edit({ transactions, page_info, page_data }: pageCreate)
         date: transactions.data.date,
         type: transactions.data.type,
         category_id: transactions.data.category.id,
+        bank_id: transactions.data.bank.id,
         amount: transactions.data.amount,
         description: transactions.data.description,
         file_image: null,
@@ -231,23 +241,53 @@ export default function Edit({ transactions, page_info, page_data }: pageCreate)
                                     </div>
                                 </TabsContent>
                             </Tabs>
-
-                            <div className="grid w-full items-center">
-                                <Label htmlFor={'harga'} className="mb-3">
-                                    Harga
-                                </Label>
-                                <NumericFormat
-                                    id="harga"
-                                    className={cn(errors.amount ? 'border-red-500' : '')}
-                                    value={data.amount}
-                                    allowLeadingZeros
-                                    onValueChange={(e) => setData('amount', e.value)}
-                                    thousandSeparator=","
-                                    prefix="Rp. "
-                                    placeholder="Harga"
-                                    customInput={Input}
-                                />
-                                {errors.amount && <p className="m-0 text-sm text-red-500">{errors.amount}</p>}
+                            <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
+                                <div className="grid w-full items-center">
+                                    <Label htmlFor={'harga'} className="mb-3">
+                                        Harga
+                                    </Label>
+                                    <NumericFormat
+                                        id="harga"
+                                        className={cn(errors.amount ? 'border-red-500' : '')}
+                                        value={data.amount}
+                                        allowLeadingZeros
+                                        onValueChange={(e) => setData('amount', e.value)}
+                                        thousandSeparator=","
+                                        prefix="Rp. "
+                                        placeholder="Harga"
+                                        customInput={Input}
+                                    />
+                                    {errors.amount && <p className="m-0 text-sm text-red-500">{errors.amount}</p>}
+                                </div>
+                                <div className="grid w-full items-center">
+                                    <Label className="mb-3" htmlFor="bank_id">
+                                        Bank
+                                    </Label>
+                                    <Select
+                                        value={data.bank_id.toString()}
+                                        defaultValue={data.bank_id.toString()}
+                                        onValueChange={(value) => setData('bank_id', value)}
+                                    >
+                                        <SelectTrigger className={`h-10 border ${errors.bank_id ? 'border-red-500' : ''}`}>
+                                            <SelectValue placeholder="Pilih Kategori pengeluaran" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {page_data.banks.length < 1 && (
+                                                <div className="p-3 text-sm text-gray-500">Kategori Pengeluaran belum tersedia</div>
+                                            )}
+                                            {page_data.banks.map((data, index: number) => (
+                                                <SelectItem
+                                                    className="h-10 hover:cursor-pointer hover:bg-green-100"
+                                                    key={index}
+                                                    value={data.value.toString()}
+                                                >
+                                                    {data.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {errors && <p className="m-0 text-sm text-red-500">{errors.bank_id}</p>}
+                                </div>
                             </div>
                             <div className="mb-2 flex flex-row items-center gap-2">
                                 <FormInputFile

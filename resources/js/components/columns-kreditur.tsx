@@ -9,10 +9,14 @@ import KrediturStatusBadge from './kreditur-status-badge';
 type columnsItems = {
     date: string;
     name: string;
-    cash_amount: string;
-    cash_pay: string;
     status: string;
     note: string;
+    encrypted_id: string;
+    cash: {
+        amount: number;
+        pay: number;
+        available: number;
+    };
 };
 
 export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
@@ -23,7 +27,7 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'name',
         header: 'Nama',
-        cell: ({ row }: any) => (
+        cell: ({ row }) => (
             <div className="items-center">
                 <p>{row.original.name}</p>
                 <KrediturStatusBadge status={row.original.status} />
@@ -33,7 +37,7 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'cash.amount',
         header: 'Nominal',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
             const currencyFormatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
@@ -50,24 +54,24 @@ export const ColumnsKreditur: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'cash.pay',
         header: 'Terbayarkan',
-        cell: ({ row }: any) => {
+        cell: (row) => {
             const currencyFormatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-            return currencyFormatter.format(row.original.cash.pay);
+            return currencyFormatter.format(row.getValue() as number);
         },
     },
     {
         accessorKey: 'note',
         header: 'Keterangan',
-        cell: ({ row }: any) => <p className="text-wrap">{row.original.note}</p>,
+        cell: (row) => <p className="text-wrap">{row.getValue() as string}</p>,
     },
     {
         id: 'actions',
         header: () => <span className="flex justify-center">Aksi</span>,
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
             return (
                 <div className="flex items-center justify-center gap-x-1">
                     <AddTooltip text="Detail" side="left">

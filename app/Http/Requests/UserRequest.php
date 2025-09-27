@@ -19,31 +19,41 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => [
-                Rule::when($this->routeIs('master.user.store'), [
+                Rule::when($this->routeIs('master.users.store'), [
                     'required',
                     'email',
                     'unique:users,email'
                 ]),
-                Rule::when($this->routeIs('master.user.update'), [
+                Rule::when($this->routeIs('master.users.update'), [
                     'nullable',
                     'email',
                     'unique:users,email'
                 ]),
             ],
             'password' => [
-                Rule::when($this->routeIs('master.user.store'), [
+                Rule::when($this->routeIs('master.users.store'), [
                     'required',
                     'min:6',
                     'max:255',
                     'confirmed'
                 ]),
-                Rule::when($this->routeIs('master.user.update'), [
+                Rule::when($this->routeIs('master.users.update'), [
                     'nullable',
                     'min:6',
                     'max:255',
                     'confirmed'
                 ]),
             ],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name' => 'Nama',
+            'email' => 'Email',
+            'password' => 'Password',
+            'password_confirmation' => 'Konfirmasi Password',
         ];
     }
 }

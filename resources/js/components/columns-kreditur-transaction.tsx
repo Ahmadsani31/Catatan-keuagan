@@ -1,10 +1,22 @@
 import { Button } from '@/components/ui/button';
-import { columnsItems } from '@/types/page-roles';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { InfoIcon, PencilIcon } from 'lucide-react';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 import KrediturStatusBadge from './kreditur-status-badge';
+
+interface columnsItems {
+    id: number;
+    encrypted_id: string;
+    date: string;
+    name: string;
+    cash: {
+        amount: number;
+        pay: number;
+    };
+    status: string;
+    note: string;
+}
 
 export const ColumnsKrediturTransaction: ColumnDef<columnsItems>[] = [
     {
@@ -18,41 +30,41 @@ export const ColumnsKrediturTransaction: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'cash.amount',
         header: 'Nominal',
-        cell: ({ row }: any) => {
+        cell: (row) => {
             const currencyFormatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-            return currencyFormatter.format(row.original.cash.amount);
+            return currencyFormatter.format(row.getValue() as number);
         },
     },
     {
         accessorKey: 'cash.pay',
         header: 'Terbayarkan',
-        cell: ({ row }: any) => {
+        cell: (row) => {
             const currencyFormatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-            return currencyFormatter.format(row.original.cash.pay);
+            return currencyFormatter.format(row.getValue() as number);
         },
     },
     {
         accessorKey: 'status',
         header: 'Status',
-        cell: ({ row }: any) => <KrediturStatusBadge status={row.original.status} />,
+        cell: (row) => <KrediturStatusBadge status={row.getValue()} />,
     },
     {
         accessorKey: 'note',
         header: 'Keterangan',
-        cell: ({ row }: any) => <p className="text-wrap">{row.original.note}</p>,
+        cell: (row) => <p className="text-wrap">{row.getValue() as string}</p>,
     },
     {
         id: 'actions',
         header: () => <span className="flex justify-center">Aksi</span>,
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
             return (
                 <div className="flex justify-center gap-x-1">
                     <Button variant={'secondary'} size={'sm'} asChild>

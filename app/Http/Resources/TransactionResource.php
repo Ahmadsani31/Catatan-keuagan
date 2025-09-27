@@ -21,6 +21,10 @@ class TransactionResource extends JsonResource
                 'id' => $this->category?->id,
                 'name' => $this->category?->name,
             ]),
+            'bank' => $this->whenLoaded('bank', [
+                'id' => $this->bank?->id,
+                'name' => $this->bank?->name,
+            ]),
             'type'            => $this->type,
             'amount' => $this->amount,
             'date' => $this->date->toFormattedDateString(),

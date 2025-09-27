@@ -1,5 +1,5 @@
 import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
+import { EyeIcon, EyeOffIcon, LoaderCircle } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 
 import InputError from '@/components/input-error';
@@ -22,6 +22,8 @@ type RegisterForm = {
 };
 
 export default function Register() {
+    const [passVisible, setPassVisible] = useState(false);
+
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         organization: '',
         address: '',
@@ -87,7 +89,7 @@ export default function Register() {
                                     required
                                     autoFocus
                                     tabIndex={1}
-                                    autoComplete="name"
+                                    autoComplete="organization"
                                     value={data.organization}
                                     onChange={(e) => setData('organization', e.target.value)}
                                     disabled={processing}
@@ -153,20 +155,27 @@ export default function Register() {
                                 />
                                 <InputError message={errors.email} />
                             </div>
-
                             <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    required
-                                    tabIndex={3}
-                                    autoComplete="new-password"
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    disabled={processing}
-                                    placeholder="Password"
-                                />
+                                <div className="flex items-center">
+                                    <Label htmlFor="password">Password</Label>
+                                </div>
+                                <div className="relative flex items-center">
+                                    <Input
+                                        id="password"
+                                        type={passVisible ? 'text' : 'password'}
+                                        required
+                                        tabIndex={2}
+                                        autoComplete="current-password"
+                                        value={data.password}
+                                        onChange={(e) => setData('password', e.target.value)}
+                                        placeholder="Password"
+                                        disabled={processing}
+                                    />
+                                    <span className="absolute right-2 cursor-pointer text-gray-400" onClick={() => setPassVisible(!passVisible)}>
+                                        {passVisible ? <EyeIcon /> : <EyeOffIcon />}
+                                    </span>
+                                </div>
+
                                 <InputError message={errors.password} />
                             </div>
 
@@ -174,7 +183,7 @@ export default function Register() {
                                 <Label htmlFor="password_confirmation">Confirm password</Label>
                                 <Input
                                     id="password_confirmation"
-                                    type="password"
+                                    type={passVisible ? 'text' : 'password'}
                                     required
                                     tabIndex={4}
                                     autoComplete="new-password"
