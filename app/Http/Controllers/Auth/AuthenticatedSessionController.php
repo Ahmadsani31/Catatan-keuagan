@@ -44,7 +44,10 @@ class AuthenticatedSessionController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return redirect()->back()->withErrors(['email' => 'No user found with this email.']);
+            return back()->withInput()->withErrors([
+                'type' => 'error',
+                'message' => 'Email tidak terdaftar, silahkan register terlebih dahulu dan buat management keuangan mu sendiri.',
+            ]);
         }
         $user->gauth_id = $request->id;
         $user->gauth_type = 'google';

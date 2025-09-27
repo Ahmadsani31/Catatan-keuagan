@@ -10,8 +10,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, googleLogout } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import toast from 'react-hot-toast';
 type LoginForm = {
     email: string;
     password: string;
@@ -133,7 +134,6 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                         </div>
                         <div className="flex justify-center">
                             <GoogleLogin
-                                size="large"
                                 onSuccess={(credentialResponse) => {
                                     // console.log(credentialResponse);
                                     if (credentialResponse.credential) {
@@ -149,13 +149,18 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                             onStart: () => setLoadingGoogle(true),
                                             onFinish: () => setLoadingGoogle(false),
                                             onSuccess: () => console.log('login via google success'),
+                                            onError: (err) => {
+                                                console.log(err);
+                                                googleLogout();
+                                                toast.error(err.message || 'Login via Google Failed');
+                                            },
                                         });
                                     } else {
-                                        console.log('No credential received');
+                                        toast.error('No credential received');
                                     }
                                 }}
                                 onError={() => {
-                                    console.log('Login Failed');
+                                    toast.error('Login via Google Failed');
                                 }}
                             />
                         </div>

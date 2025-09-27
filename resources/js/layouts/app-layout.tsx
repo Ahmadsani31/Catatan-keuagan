@@ -1,7 +1,7 @@
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
 import { type BreadcrumbItem } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 // import { Bounce, toast, ToastContainer } from 'react-toastify';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -18,24 +18,25 @@ export default function ({ children, breadcrumbs, ...props }: AppLayoutProps) {
             if (flash.type === 'error') toast.error(flash.message);
         }
     }, [flash]);
-
+    const isMobile = useIsMobile();
     return (
         <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
             {children}
-            <Toaster position="top-right" />
-            {/* <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                stacked
-                transition={Bounce}
-            /> */}
+            <Toaster position={isMobile ? 'top-center' : 'top-right'} />
         </AppLayoutTemplate>
     );
+}
+
+function useIsMobile() {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768); // <768px dianggap mobile
+        checkMobile();
+
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    return isMobile;
 }
