@@ -22,7 +22,36 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index({ transactions, page_info, page_data }: any) {
+interface propsPage {
+    transactions: {
+        data: {
+            id: number;
+            date: string;
+            type: string;
+            category: {
+                id: number;
+                name: string;
+            };
+            bank: {
+                id: number;
+                name: string;
+            };
+            description: string;
+            file_image: string;
+            amount: string;
+        }[];
+    };
+    page_info: {
+        title: string;
+        subtitle: string;
+    };
+    page_data: {
+        expense: number;
+        income: number;
+    };
+}
+
+export default function Index({ transactions, page_info, page_data }: propsPage) {
     const formatter = new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
@@ -39,8 +68,18 @@ export default function Index({ transactions, page_info, page_data }: any) {
                 <Card className="py-1 [&_td]:px-3 [&_th]:px-3">
                     <CardContent className="[&-td]:whitespace-nowrap">
                         <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card my-5 grid auto-rows-min gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:grid-cols-2">
-                            <SectionCards name="Income" icon={CircleDollarSign} value={formatter.format(page_data.income)} className="bg-green-200" />
-                            <SectionCards name="Expense" icon={HandCoinsIcon} value={formatter.format(page_data.expense)} className="bg-red-200" />
+                            <SectionCards
+                                name="Income"
+                                icon={CircleDollarSign}
+                                value={formatter.format(page_data.income)}
+                                className="bg-green-200 font-mono"
+                            />
+                            <SectionCards
+                                name="Expense"
+                                icon={HandCoinsIcon}
+                                value={formatter.format(page_data.expense)}
+                                className="bg-red-200 font-mono"
+                            />
                         </div>
                         <Button variant={'custom'} className="w-full bg-emerald-500" size={'lg'} asChild>
                             <Link href={route('transactions.create')}>

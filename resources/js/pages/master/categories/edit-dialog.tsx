@@ -7,26 +7,35 @@ import { Loader2 } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
 type propsModal = {
+    category?: {
+        id: number;
+        name: string;
+        type: string;
+    };
     open: boolean;
     onOpenChange: (e: boolean) => void;
 };
 
 type propsForm = {
+    id: number;
     name: string;
     type: string;
+    _method?: string;
 };
 
-export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal) {
-    const { data, setData, post, processing, errors, clearErrors, reset } = useForm<Required<propsForm>>({
-        name: '',
-        type: '',
+export default function EditDialog({ open, onOpenChange, category }: propsModal) {
+    const { data, setData, put, processing, errors, clearErrors, reset } = useForm<Required<propsForm>>({
+        id: Number(category),
+        name: category?.name ?? '',
+        type: category?.type ?? '',
+        _method: 'PUT',
     });
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
         console.log(data);
         // return
-        post(route('master.categories.store'), {
+        put(route('master.categories.update', [category]), {
             onSuccess: (page) => {
                 reset();
                 onOpenChange(false);
@@ -48,12 +57,12 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[625px]">
+                <DialogHeader>
+                    <DialogTitle>Edit Kategori</DialogTitle>
+                    <DialogDescription>Edit data kategori disini, klik update setelah selesai.</DialogDescription>
+                </DialogHeader>
                 <form onSubmit={handleSubmit}>
-                    <DialogHeader>
-                        <DialogTitle>Tambah Kategori</DialogTitle>
-                        <DialogDescription>Buat data kategori baru disini, klik simpan setelah selesai.</DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-2 py-4">
+                    <div className="mb-4 grid gap-4">
                         <FormSelect
                             id="type"
                             title="Type"
@@ -70,6 +79,7 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
                             errors={errors.name}
+                            autoFocus={true}
                         />
                     </div>
                     <DialogFooter>
@@ -78,7 +88,7 @@ export default function ModalCategoriesCreate({ open, onOpenChange }: propsModal
                         </Button>
                         <Button type="submit" size={'lg'} disabled={processing}>
                             {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Simpan
+                            Update
                         </Button>
                     </DialogFooter>
                 </form>

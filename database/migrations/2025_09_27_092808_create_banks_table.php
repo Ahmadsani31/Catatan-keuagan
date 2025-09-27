@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('alias');
             $table->string('account_number')->nullable();
+            $table->decimal('amount', 20, 2)->default(0); // saldo saat ini
             $table->string('status')->default(BankStatus::ACTIVE->value);
             $table->timestamps();
         });

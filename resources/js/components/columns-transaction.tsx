@@ -9,15 +9,19 @@ import DialogPreviewImage from './dialog-preview-image';
 
 interface columnsItems {
     id: number;
-    encrypted_id: string;
     date: string;
-    description: string;
-    amount: number;
+    type: string;
     category: {
+        id: number;
         name: string;
     };
-    type: string;
+    bank: {
+        id: number;
+        name: string;
+    };
+    description: string;
     file_image: string;
+    amount: string;
 }
 
 export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
@@ -32,13 +36,18 @@ export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'amount',
         header: 'Harga',
-        cell: (row) => {
+        cell: ({ row }) => {
             const currencyFormatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-            return currencyFormatter.format(row.getValue() as number);
+            return (
+                <div className="grid">
+                    <span> {currencyFormatter.format(row.original.amount ? parseInt(row.original.amount) : 0)}</span>
+                    <span className="text-muted-foreground text-xs"> {row.original.bank ? row.original.bank.name : ''}</span>
+                </div>
+            );
         },
     },
     {

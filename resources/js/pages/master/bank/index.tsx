@@ -3,12 +3,11 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { AlignCenterHorizontalIcon, PlusCircle } from 'lucide-react';
 
-import { DataTable } from '@/components/data-table';
 import HeaderTitle from '@/components/header-title';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 
-import { ColumnsCategory } from '@/components/columns-category';
+import AccountCard from '@/components/account-card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useState } from 'react';
 import CreateDialog from './create-dialog';
 
@@ -18,18 +17,20 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Kategori',
+        title: 'Bank',
         href: '',
     },
 ];
 
 interface propsPage {
-    categories: {
+    banks: {
         data: {
             id: number;
-            encrypted_id: string;
             name: string;
-            type: string;
+            alias: string;
+            amount: number;
+            account_number: string;
+            status: string;
             created_at: string;
         }[];
     };
@@ -39,10 +40,8 @@ interface propsPage {
     };
 }
 
-export default function RolesIndex({ categories, page_info }: propsPage) {
+export default function RolesIndex({ banks, page_info }: propsPage) {
     const [open, setOpen] = useState<boolean>(false);
-
-    console.log(categories);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -55,15 +54,9 @@ export default function RolesIndex({ categories, page_info }: propsPage) {
                         <PlusCircle /> Tambah
                     </Button>
                 </div>
-                <Card className="py-1 [&_td]:px-3 [&_th]:px-3">
-                    <CardContent className="[&-td]:whitespace-nowrap">
-                        <DataTable
-                            columns={ColumnsCategory}
-                            sortableColumns={['name', 'created_at']}
-                            searchableColumns={['name']}
-                            data={categories.data}
-                            defaultPageLength={10}
-                        />
+                <Card>
+                    <CardContent>
+                        <AccountCard items={banks.data} />
                     </CardContent>
                 </Card>
             </div>

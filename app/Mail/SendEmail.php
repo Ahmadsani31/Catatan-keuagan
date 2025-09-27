@@ -27,7 +27,7 @@ class SendEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'no-reply from Keuangan website',
+            subject: '[NO-REPLY] Undangan Bergabung - ' . config('app.name'),
         );
     }
 
@@ -38,6 +38,9 @@ class SendEmail extends Mailable
     {
         return new Content(
             view: 'emails.send-email',
+            with: [
+                'data' => $this->data,
+            ]
         );
     }
 

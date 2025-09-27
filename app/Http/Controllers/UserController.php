@@ -6,10 +6,12 @@ use App\Enums\OrganizationsStatus;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserUpdatePasswordRequest;
 use App\Http\Resources\UserResource;
+use App\Mail\SendEmail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
@@ -108,6 +110,18 @@ class UserController extends Controller
             $organization->users()->attach($user->id);
             $user->assignRole($request->roles);
             DB::commit();
+
+            $data = [
+                'title' => 'Undangan Bergabung di Aplikasi KeuanganKu',
+                'name' => $user->name,
+                'message' => 'Kamu di undang untuk bergabung di aplikasi ' . env('APP_NAME', 'KeuanganKu') . ' dengan organisasi ' . $organization->name . ', silahkan login menggunakan email dan password yang sudah di buat. dan aktifkan segera akun kamu.',
+                'email' => $user->email,
+                'password' => $request->password,
+                'url' => env('APP_URL') . '/login',
+                'appName' => env('APP_NAME', 'KeuanganKu'),
+            ];
+
+            Mail::to($user->email)->send(new SendEmail($data));
 
             return to_route('master.users.index')->with([
                 'type' => 'success',

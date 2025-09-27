@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
+import EditDialog from '@/pages/master/categories/edit-dialog';
 import { ColumnDef } from '@tanstack/react-table';
 import { PencilIcon } from 'lucide-react';
 import { useState } from 'react';
 import CategoryStatusBadge from './category-status-badge';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
-import ModalCategoriesEdit from './modal/modal-categories-edit';
 interface columnsItems {
     id: number;
     encrypted_id: string;
@@ -43,7 +43,7 @@ function ActionCell({ row }: { row: columnsItems }) {
                 <PencilIcon />
             </Button>
 
-            {open && <ModalCategoriesEdit open={open} onOpenChange={setOpen} category={row} />}
+            {open && <EditDialog open={open} onOpenChange={setOpen} category={row} />}
 
             <ColumnsDatatableActionDelete url={route('master.categories.destroy', [row])} />
         </div>

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TransactionRequest;
 use App\Http\Resources\TransactionResource;
+use App\Models\Bank;
 use App\Models\Category;
 use App\Models\Transactions;
 use App\Traits\HasFile;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -87,13 +89,17 @@ class TransactionController extends Controller
                 'action' => route('transactions.store'),
             ],
             'page_data' => [
-                'categoryIncome' => Category::select(['id', 'name'])->where('organization_id', getOrganizationiId())->get()->map(fn($item) => [
+                'categoryIncome' => Category::select(['id', 'name'])->where('organization_id', getOrganizationiId())->where('type', 'Pemasukan')->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
                 ]),
-                'categoryExpense' => Category::select(['id', 'name'])->where('organization_id', getOrganizationiId())->get()->map(fn($item) => [
+                'categoryExpense' => Category::select(['id', 'name'])->where('organization_id', getOrganizationiId())->where('type', 'Pengeluaran')->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
+                ]),
+                'banks' => Bank::select(['id', 'name', 'alias'])->where('organization_id', getOrganizationiId())->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name . ' (' . $item->alias . ')',
                 ]),
             ],
         ]);
@@ -102,24 +108,49 @@ class TransactionController extends Controller
     public function store(TransactionRequest $request): RedirectResponse
     {
         // dd($request->validated());
+
+        // Validasi khusus: hanya cek bank aktif saat type = in
+        $bank = Bank::find($request->bank_id);
+
+        if ($request->type === 'Pemasukan') {
+            if ($bank->status == 'Tidak Aktif') {
+                return back()->with([
+                    'type' => 'error',
+                    'message' => "transaksi gagal, $bank->name tidak aktif."
+                ]);
+                // return response()->json(['message' => 'Bank ini tidak aktif untuk transaksi.'], 422);
+            }
+        } else if ($request->type === 'Pengeluaran') {
+            if (bccomp((string)$bank->amount, (string)$request->amount, 2) < 0) {
+                return back()->with([
+                    'type' => 'error',
+                    'message' => "Saldo bank tidak mencukupi."
+                ]);
+            }
+        }
+
+        DB::beginTransaction();
+
         try {
             //code...
             Transactions::create([
                 'user_id' => Auth::user()->id,
                 'organization_id' => getOrganizationiId(),
                 'category_id' => $request->category_id,
+                'bank_id' => $request->bank_id,
                 'type' => $request->type,
                 'amount' => $request->amount,
                 'date' => $request->date,
                 'description' => $request->description,
                 'file_image' => $this->upload_file($request, 'file_image', 'transactions'),
             ]);
-
+            DB::commit();
             return to_route('transactions.index')->with([
                 'type' => 'success',
                 'message' => 'Transaksi Successfully'
             ]);
         } catch (\Throwable $err) {
+            DB::rollBack();
             return back()->with([
                 'type' => 'error',
                 'message' => $err->getMessage()
@@ -139,13 +170,17 @@ class TransactionController extends Controller
                 'action' => route('transactions.update', $transaction),
             ],
             'page_data' => [
-                'categoryIncome' => Category::where('type', 'Pemasukan')->get()->map(fn($item) => [
+                'categoryIncome' => Category::select(['id', 'name'])->where('organization_id', getOrganizationiId())->where('type', 'Pemasukan')->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
                 ]),
-                'categoryExpense' => Category::where('type', 'Pengeluaran')->get()->map(fn($item) => [
+                'categoryExpense' => Category::select(['id', 'name'])->where('organization_id', getOrganizationiId())->where('type', 'Pengeluaran')->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
+                ]),
+                'banks' => Bank::select(['id', 'name', 'alias'])->where('organization_id', getOrganizationiId())->get()->map(fn($item) => [
+                    'value' => $item->id,
+                    'label' => $item->name . ' (' . $item->alias . ')',
                 ]),
             ],
             'transactions' => new TransactionResource($transaction),
@@ -159,6 +194,7 @@ class TransactionController extends Controller
         try {
             $transaction->update([
                 'category_id' => $request->category_id,
+                'bank_id' => $request->bank_id,
                 'type' => $request->type,
                 'amount' => $request->amount,
                 'date' => $request->date,

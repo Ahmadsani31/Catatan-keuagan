@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -65,6 +66,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('categories/create', 'create_json')->name('master.categories.create');
             Route::get('categories/edit/{category}', 'edit_json')->name('master.categories.edit');
         });
+
+        Route::controller(BankController::class)->group(function () {
+            Route::get('bank', 'index')->name('master.bank.index');
+            Route::post('bank/store', 'store')->name('master.bank.store');
+            Route::put('bank/update/{bank}', 'update')->name('master.bank.update');
+        });
     });
 
     Route::controller(TransactionController::class)->group(function () {
@@ -101,17 +108,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-// Route::get('/email-test', function () {
+Route::get('/email-test', function () {
 
-//     $data = [
-//         'name' => 'John Doe',
-//         'message' => 'This is a test email from Laravel 12.'
-//     ];
+    $data = [
+        'name' => 'John Doe',
+        'message' => 'This is a test email from Laravel 12.'
+    ];
 
-//     Mail::to('ahmaddarma0@gmail.com')->send(new SendEmail($data));
+    Mail::to('ahmaddarma0@gmail.com')->send(new SendEmail($data));
 
-//     return response()->json(['success' => 'Email sent successfully.']);
-// });
+    return response()->json(['success' => 'Email sent successfully.']);
+});
 
 
 require __DIR__ . '/settings.php';

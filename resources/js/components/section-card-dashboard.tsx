@@ -10,7 +10,7 @@ export function SectionCardDashboard({ items, loading }: { items?: { income: num
     });
 
     return (
-        <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid auto-rows-min gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:grid-cols-3">
+        <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid auto-rows-min gap-4 font-mono *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:grid-cols-3">
             {loading ? (
                 <div className="from-primary/5 to-card flex flex-col items-center gap-2 rounded-md border bg-gradient-to-t p-4 shadow-xs">
                     <Skeleton className="h-8 w-full" />
