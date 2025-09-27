@@ -20,6 +20,7 @@ Route::middleware(['guest', 'web'])->group(function () {
         ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login-google', [AuthenticatedSessionController::class, 'storeGoogle'])->name('google-auth');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
