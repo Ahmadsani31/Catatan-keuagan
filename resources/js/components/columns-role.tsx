@@ -19,24 +19,26 @@ export const ColumnsRole: ColumnDef<columnsItems>[] = [
     {
         id: 'actions',
         header: () => <span className="flex justify-center">Aksi</span>,
-        cell: ({ row }) => {
-            const [open, setOpen] = useState<boolean>(false);
-
-            return (
-                <div className="flex justify-center gap-x-1">
-                    <Button variant={'default'} size={'sm'} onClick={() => setOpen(true)}>
-                        <PencilIcon />
-                    </Button>
-                    <Button variant={'secondary'} size={'sm'} asChild>
-                        <Link href={route('roles.edit', { id: row.original.encrypted_id })}>
-                            <RotateCcwIcon />
-                        </Link>
-                    </Button>
-                    <ModalRolesUpdate open={open} onOpenChange={setOpen} roles={row.original} />
-
-                    <ColumnsDatatableActionDelete url={route('roles.delete', { id: row.original })} />
-                </div>
-            );
-        },
+        cell: ({ row }) => <ActionCell row={row.original} />,
     },
 ];
+
+function ActionCell({ row }: { row: columnsItems }) {
+    const [open, setOpen] = useState<boolean>(false);
+
+    return (
+        <div className="flex justify-center gap-x-1">
+            <Button variant={'default'} size={'sm'} onClick={() => setOpen(true)}>
+                <PencilIcon />
+            </Button>
+            <Button variant={'secondary'} size={'sm'} asChild>
+                <Link href={route('roles.edit', { id: row.encrypted_id })}>
+                    <RotateCcwIcon />
+                </Link>
+            </Button>
+            <ModalRolesUpdate open={open} onOpenChange={setOpen} roles={row} />
+
+            <ColumnsDatatableActionDelete url={route('roles.delete', [row])} />
+        </div>
+    );
+}

@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { columnsItems } from '@/types/page-roles';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { PencilIcon } from 'lucide-react';
@@ -7,6 +6,19 @@ import AddTooltip from './add-tooltip';
 import CategoryStatusBadge from './category-status-badge';
 import ColumnsDatatableActionDelete from './columns-datatable-action-delete';
 import DialogPreviewImage from './dialog-preview-image';
+
+interface columnsItems {
+    id: number;
+    encrypted_id: string;
+    date: string;
+    description: string;
+    amount: number;
+    category: {
+        name: string;
+    };
+    type: string;
+    file_image: string;
+}
 
 export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
     {
@@ -20,13 +32,13 @@ export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'amount',
         header: 'Harga',
-        cell: ({ row }: any) => {
+        cell: (row) => {
             const currencyFormatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-            return currencyFormatter.format(row.original.amount);
+            return currencyFormatter.format(row.getValue() as number);
         },
     },
     {
@@ -36,12 +48,12 @@ export const ColumnsTransaction: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'type',
         header: 'Jenis',
-        cell: ({ row }: any) => <CategoryStatusBadge status={row.original.type} />,
+        cell: (row) => <CategoryStatusBadge status={row.getValue()} />,
     },
     {
         accessorKey: 'file_image',
         header: () => <span className="flex justify-center">Screnshoot</span>,
-        cell: ({ row }: any) => (
+        cell: ({ row }) => (
             <div className="flex items-center justify-center">
                 <DialogPreviewImage
                     url_image={row.original.file_image}

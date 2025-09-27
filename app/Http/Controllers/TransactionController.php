@@ -78,6 +78,7 @@ class TransactionController extends Controller
 
     public function create(): Response
     {
+
         return Inertia::render('transactions/create', [
             'page_info' => [
                 'title' => 'Tambah Transaksi',
@@ -86,11 +87,11 @@ class TransactionController extends Controller
                 'action' => route('transactions.store'),
             ],
             'page_data' => [
-                'categoryIncome' => Category::where('type', 'Pemasukan')->get()->map(fn($item) => [
+                'categoryIncome' => Category::select(['id', 'name'])->where('organization_id', getOrganizationiId())->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
                 ]),
-                'categoryExpense' => Category::where('type', 'Pengeluaran')->get()->map(fn($item) => [
+                'categoryExpense' => Category::select(['id', 'name'])->where('organization_id', getOrganizationiId())->get()->map(fn($item) => [
                     'value' => $item->id,
                     'label' => $item->name,
                 ]),

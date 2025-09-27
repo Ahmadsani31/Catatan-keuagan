@@ -60,7 +60,7 @@ class DashboardController extends Controller
                     'value'   => (float) ($r->amount ?? 0)
                 ];
             })
-            ->whenEmpty(fn($c) => collect([[
+            ->whenEmpty(fn() => collect([[
                 'id'    => 'Tanpa Kategori',
                 'label' => 'Tanpa Kategori',
                 'value' => 0,

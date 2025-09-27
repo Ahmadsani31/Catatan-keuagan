@@ -24,7 +24,7 @@ class KrediturController extends Controller
         return Inertia::render('krediturs/index', [
             'krediturs' => KrediturResource::collection($krediturs),
             'page_info' => [
-                'title' => 'Hutang / Piutang',
+                'title' => 'Hutang Piutang',
                 'subtitle' => 'Menampilkan semua data kredit orang yang ada di platform ini, untuk di kelola',
             ],
         ]);
@@ -35,8 +35,8 @@ class KrediturController extends Controller
     {
         return Inertia::render('krediturs/create', [
             'page_info' => [
-                'title' => 'Tambah Kreditur / Peminjam',
-                'subtitle' => 'Buat data kreditur / peminjam baru disini, klik simpan setelah selesai',
+                'title' => 'Tambah Hutang Piutang',
+                'subtitle' => 'Buat data Hutang Piutang baru disini, klik simpan setelah selesai',
                 'method' => 'POST',
                 'action' => route('krediturs.store'),
             ],

@@ -66,7 +66,7 @@ export default function Dashboard({
         });
     }, [inputBulan, inputType]);
 
-    console.log(page_data);
+    console.log(pie_transaksi);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

@@ -1,6 +1,17 @@
-import { columnsItems } from '@/types/page-roles';
 import { ColumnDef } from '@tanstack/react-table';
 import CategoryStatusBadge from './category-status-badge';
+
+interface columnsItems {
+    id: number;
+    date: string;
+    description: string;
+    amount: number;
+    category: {
+        name: string;
+    };
+    type: string;
+    file_image: string;
+}
 
 export const ColumnsTransactionDashboard: ColumnDef<columnsItems>[] = [
     {
@@ -14,13 +25,13 @@ export const ColumnsTransactionDashboard: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'amount',
         header: 'Harga',
-        cell: ({ row }: any) => {
+        cell: (row) => {
             const currencyFormatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
             });
-            return currencyFormatter.format(row.original.amount);
+            return currencyFormatter.format(row.getValue() as number);
         },
     },
     {
@@ -30,6 +41,6 @@ export const ColumnsTransactionDashboard: ColumnDef<columnsItems>[] = [
     {
         accessorKey: 'type',
         header: 'Jenis',
-        cell: ({ row }: any) => <CategoryStatusBadge status={row.original.type} />,
+        cell: (row) => <CategoryStatusBadge status={row.getValue()} />,
     },
 ];

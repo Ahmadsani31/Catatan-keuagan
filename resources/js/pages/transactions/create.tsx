@@ -158,6 +158,9 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                                 <SelectValue placeholder="Pilih Kategori pemasukan" />
                                             </SelectTrigger>
                                             <SelectContent>
+                                                {page_data.categoryIncome.length < 1 && (
+                                                    <div className="p-3 text-sm text-gray-500">Kategori Pemasukan belum tersedia</div>
+                                                )}
                                                 {page_data.categoryIncome.map((data, index: number) => (
                                                     <SelectItem
                                                         className="h-10 hover:cursor-pointer hover:bg-green-100"
@@ -189,6 +192,9 @@ export default function Create({ page_info, page_data }: pageCreate) {
                                                 <SelectValue placeholder="Pilih Kategori pengeluaran" />
                                             </SelectTrigger>
                                             <SelectContent>
+                                                {page_data.categoryExpense.length < 1 && (
+                                                    <div className="p-3 text-sm text-gray-500">Kategori Pengeluaran belum tersedia</div>
+                                                )}
                                                 {page_data.categoryExpense.map((data, index: number) => (
                                                     <SelectItem
                                                         className="h-10 hover:cursor-pointer hover:bg-green-100"

@@ -67,19 +67,6 @@ export function ChartPie({ pieData, onChangeRadio, value }: ChartPieProps) {
                         arcLinkLabelsColor={{ from: 'color' }}
                         arcLabelsSkipAngle={10}
                         arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
-                        // margin={{ top: 40, right: 150, bottom: 40, left: 40 }}
-                        // legends={[
-                        //     {
-                        //         anchor: 'right',
-                        //         direction: 'column',
-                        //         translateX: 100,
-                        //         itemWidth: 100,
-                        //         itemHeight: 18,
-                        //         itemsSpacing: 10,
-                        //         symbolSize: 18,
-                        //         symbolShape: 'circle',
-                        //     },
-                        // ]}
                     />
                 </div>
             </CardContent>
