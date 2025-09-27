@@ -70,9 +70,15 @@ function CreditCardItem({ card }: { card: ItemsData }) {
 export default function AccountCard({ items }: { items: ItemsData[] }) {
     return (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {items.map((card) => (
-                <CreditCardItem key={card.id} card={card} />
-            ))}
+            {items.length > 0 ? (
+                items.map((card) => <CreditCardItem key={card.id} card={card} />)
+            ) : (
+                <Card className="border-muted-foreground/30 bg-muted/10 col-span-full max-w-[460px] border-2 border-dashed text-center">
+                    <CardContent className="flex h-48 items-center justify-center p-10">
+                        <p className="text-muted-foreground">Belum ada data, tekan tombol tambah untuk membuat data</p>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 }
