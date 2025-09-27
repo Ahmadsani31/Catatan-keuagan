@@ -1,10 +1,9 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Download, Maximize2, Minimize2, Minus, Plus, X } from 'lucide-react';
 import * as React from 'react';
-import { ReactZoomPanPinchRef, TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
+import { ReactZoomPanPinchRef, TransformComponent, TransformWrapper, useControls } from 'react-zoom-pan-pinch';
 
 // ------------------------------------------------------------
 // DialogPreviewImage (with touch pinch-zoom & mouse panning)
@@ -67,6 +66,17 @@ export default function DialogPreviewImage({
         );
     }
 
+    const Controls = () => {
+        const { zoomIn, zoomOut, resetTransform } = useControls();
+        return (
+            <>
+                <button onClick={() => zoomIn()}>Zoom In</button>
+                <button onClick={() => zoomOut()}>Zoom Out</button>
+                <button onClick={() => resetTransform()}>Reset</button>
+            </>
+        );
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>
@@ -78,9 +88,9 @@ export default function DialogPreviewImage({
                 />
             </DialogTrigger>
 
-            <DialogContent className="max-w-[95vw] sm:max-w-[90vw] lg:max-w-[70vw] [&>button]:hidden">
+            <DialogContent className="sm:max-w-[425px] md:max-w-[768px] [&>button]:hidden">
                 <DialogHeader>
-                    <DialogTitle className="flex items-center justify-between text-base sm:text-lg">
+                    <DialogTitle className="flex flex-col items-center justify-between text-base sm:text-lg lg:flex-row">
                         <span className="truncate">{title || 'Image preview'}</span>
                         <div className="flex items-center gap-2">
                             {!hadError && (
@@ -109,62 +119,44 @@ export default function DialogPreviewImage({
                     </DialogTitle>
                     {description ? <DialogDescription className="text-xs sm:text-sm">{description}</DialogDescription> : null}
                 </DialogHeader>
-
-                <div className="relative">
-                    <div className="bg-muted/20 mx-auto max-h-[75vh] overflow-hidden rounded-lg border p-2">
-                        <div className="w-full items-center justify-center overflow-hidden rounded">
-                            {/* TransformWrapper menyediakan pinch-zoom & panning */}
-                            <TransformWrapper
-                                ref={apiRef}
-                                initialScale={1}
-                                minScale={0.25}
-                                maxScale={4}
-                                doubleClick={{ disabled: false }}
-                                wheel={{ disabled: false }}
-                                pinch={{ disabled: false }}
-                                panning={{ disabled: false }}
-                                // update persen saat transform berubah
-                                onTransformed={(ref) => {
-                                    const s = Math.round(ref.state.scale * 100);
-                                    setPercent(s);
-                                }}
+                <div className="max-h-[80vh] overflow-y-auto">
+                    <TransformWrapper
+                        ref={apiRef}
+                        initialScale={1}
+                        minScale={0.25}
+                        maxScale={4}
+                        doubleClick={{ disabled: false }}
+                        wheel={{ disabled: false }}
+                        pinch={{ disabled: false }}
+                        panning={{ disabled: false }}
+                        // update persen saat transform berubah
+                        onTransformed={(ref) => {
+                            const s = Math.round(ref.state.scale * 100);
+                            setPercent(s);
+                        }}
+                    >
+                        <div className="flex w-full items-center justify-center bg-gray-50">
+                            <TransformComponent
+                                wrapperStyle={{ width: '100%', height: '100%' }}
+                                contentStyle={{ width: 'fit-content', height: 'fit-content' }}
                             >
-                                <TransformComponent
-                                    wrapperClass="w-full h-full flex items-center justify-center"
-                                    contentClass="w-full h-full flex items-center justify-center"
-                                >
-                                    <div className="flex w-full items-center justify-center">
-                                        {isLoading && !hadError && (
-                                            <div className="absolute inset-0 z-10 flex items-center justify-center">
-                                                <Skeleton className="h-[50vh] w-[70vw] max-w-full" />
-                                            </div>
-                                        )}
-
-                                        {!hadError ? (
-                                            <img
-                                                src={url_image}
-                                                alt={title || 'preview'}
-                                                onLoad={() => setIsLoading(false)}
-                                                onError={() => setHadError(true)}
-                                                className="select-none"
-                                                style={{
-                                                    maxWidth: fitMode === 'contain' ? 'min(100%, 1200px)' : undefined,
-                                                    maxHeight: fitMode === 'contain' ? '70vh' : undefined,
-                                                    objectFit: fitMode === 'contain' ? 'contain' : undefined,
-                                                    // TransformWrapper mengurus scale & translate
-                                                }}
-                                                draggable={false}
-                                            />
-                                        ) : (
-                                            <div className="text-muted-foreground flex h-[50vh] w-full items-center justify-center text-sm">
-                                                Gambar gagal dimuat.
-                                            </div>
-                                        )}
-                                    </div>
-                                </TransformComponent>
-                            </TransformWrapper>
+                                <img
+                                    src={url_image}
+                                    alt={title || 'preview'}
+                                    onLoad={() => setIsLoading(false)}
+                                    onError={() => setHadError(true)}
+                                    className="select-none"
+                                    style={{
+                                        maxWidth: fitMode === 'contain' ? 'min(100%, 1200px)' : undefined,
+                                        maxHeight: fitMode === 'contain' ? '70vh' : undefined,
+                                        objectFit: fitMode === 'contain' ? 'contain' : undefined,
+                                        // TransformWrapper mengurus scale & translate
+                                    }}
+                                    draggable={false}
+                                />
+                            </TransformComponent>
                         </div>
-                    </div>
+                    </TransformWrapper>
                 </div>
             </DialogContent>
         </Dialog>

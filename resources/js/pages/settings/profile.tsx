@@ -1,7 +1,7 @@
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 
 import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
@@ -30,6 +30,12 @@ type ProfileForm = {
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
     const { auth } = usePage<SharedData>().props;
 
+    useEffect(() => {
+        if (auth.user.avatar) {
+            setFile(auth.user.avatar);
+        }
+    }, [auth]);
+
     const { data, setData, post, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
         email: auth.user.email,
@@ -37,15 +43,8 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
         _method: 'PATCH',
     });
 
-    console.log('====================================');
-    console.log(errors);
-    console.log('====================================');
-
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        console.log('====================================');
-        console.log(data);
-        console.log('====================================');
         post(route('profile.update'), {
             preserveScroll: true,
         });

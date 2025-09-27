@@ -3,6 +3,7 @@ import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { type User } from '@/types';
 import { Link, router } from '@inertiajs/react';
+import { googleLogout } from '@react-oauth/google';
 import { LogOut, Settings } from 'lucide-react';
 
 interface UserMenuContentProps {
@@ -14,6 +15,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
 
     const handleLogout = () => {
         cleanup();
+        googleLogout();
         router.flushAll();
     };
 
