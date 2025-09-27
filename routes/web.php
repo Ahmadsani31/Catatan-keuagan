@@ -108,17 +108,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-Route::get('/email-test', function () {
+// Route::get('/email-test', function () {
 
-    $data = [
-        'name' => 'John Doe',
-        'message' => 'This is a test email from Laravel 12.'
-    ];
+//     $data = [
+//         'name' => 'John Doe',
+//         'message' => 'This is a test email from Laravel 12.'
+//     ];
 
-    Mail::to('ahmaddarma0@gmail.com')->send(new SendEmail($data));
+//     Mail::to('ahmaddarma0@gmail.com')->send(new SendEmail($data));
 
-    return response()->json(['success' => 'Email sent successfully.']);
-});
+//     return response()->json(['success' => 'Email sent successfully.']);
+// });
 
 
 require __DIR__ . '/settings.php';
