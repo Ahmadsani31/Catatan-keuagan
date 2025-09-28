@@ -1,5 +1,6 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Link } from '@inertiajs/react';
+import { cn } from '@/lib/utils';
+import { Link, usePage } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 
 export default function AuthCardLayout({
@@ -11,9 +12,10 @@ export default function AuthCardLayout({
     title?: string;
     description?: string;
 }>) {
+    const { url, component } = usePage();
     return (
         <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 bg-gradient-to-r from-green-100 to-blue-100 p-6 md:p-10">
-            <div className="flex w-full max-w-md flex-col gap-2">
+            <div className={cn('flex w-full flex-col gap-2', url === '/register' ? 'max-w-3xl' : 'max-w-md')}>
                 <Link href={route('home')} className="flex items-center gap-2 self-center font-medium">
                     <div className="flex h-9 w-9 items-center justify-center">
                         <Avatar className="size-[85px]">
