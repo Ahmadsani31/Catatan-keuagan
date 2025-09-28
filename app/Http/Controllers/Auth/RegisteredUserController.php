@@ -61,9 +61,9 @@ class RegisteredUserController extends Controller
             return to_route('dashboard');
         } catch (\Throwable $err) {
             DB::rollBack();
-            return back()->with([
+            return back()->withInput()->withErrors([
                 'type' => 'error',
-                'message' => $err->getMessage()
+                'message' => $err->getMessage(),
             ]);
         }
     }

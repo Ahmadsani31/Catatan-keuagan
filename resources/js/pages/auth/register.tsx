@@ -1,218 +1,381 @@
-import { Head, useForm } from '@inertiajs/react';
-import { EyeIcon, EyeOffIcon, LoaderCircle } from 'lucide-react';
-import { FormEventHandler, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import AuthLayout from '@/layouts/auth-layout';
+import { cn } from '@/lib/utils';
+import { Head, router } from '@inertiajs/react';
+import { Check, Circle, CircleDot, EyeIcon, EyeOffIcon, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
-type RegisterForm = {
-    organization: string;
-    address: string;
-    keterangan: string;
-    name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-};
+const accountBaseSchema = z.object({
+    name: z.string().min(3, 'Wajib isi'),
+    email: z.string().email('Email tidak valid'),
+    password: z.string().min(8, 'Min 8 karakter'),
+    password_confirmation: z.string().min(8, 'Min 8 karakter'),
+});
 
-export default function Register() {
-    const [passVisible, setPassVisible] = useState(false);
+export const profileSchema = z.object({
+    organization: z.string().min(3, 'Wajib diisi'),
+    address: z.string().min(3, 'Wajib diisi'),
+    keterangan: z.string().max(200, 'Maks 200 karakter').optional(),
+});
 
-    const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
-        organization: '',
-        address: '',
-        keterangan: '',
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
+export const termsSchema = z.object({
+    agree: z.boolean().refine((v) => v, 'Anda harus menyetujui syarat & ketentuan'),
+});
+
+export const formSchema = accountBaseSchema
+    .merge(profileSchema)
+    .merge(termsSchema)
+    .refine((d) => d.password === d.password_confirmation, {
+        message: 'Password tidak sama',
+        path: ['password_confirmation'],
     });
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
-            onSuccess: (success) => {
-                console.log(success.props);
-            },
-        });
+export type WizardValues = z.infer<typeof formSchema>;
+
+// —— Step Config ----------------------------------------------------------
+export const steps = [
+    { key: 'account', title: 'Akun', description: 'Buat akun admin.', fields: ['name', 'email', 'password', 'password_confirmation'] as const },
+    {
+        key: 'profile',
+        title: 'Profil',
+        description: 'Lengkapi data profile company.',
+        fields: ['organization', 'address', 'keterangan'] as const,
+    },
+    { key: 'confirm', title: 'Konfirmasi', description: 'Tinjau & setujui.', fields: ['agree'] as const },
+] as const;
+
+// —— Helper components ----------------------------------------------------
+function Stepper({ current }: { current: number }) {
+    return (
+        <div className="flex items-center justify-between gap-4">
+            {steps.map((s, idx) => {
+                const state = idx < current ? 'done' : idx === current ? 'current' : 'next';
+                return (
+                    <div className="flex flex-1 items-center gap-3" key={s.key}>
+                        <div
+                            className={cn(
+                                'grid size-8 place-items-center rounded-full border transition',
+                                state === 'done' && 'bg-primary text-primary-foreground border-primary',
+                                state === 'current' && 'bg-background text-foreground border-foreground',
+                                state === 'next' && 'bg-muted text-muted-foreground border-muted',
+                            )}
+                        >
+                            {state === 'done' ? (
+                                <Check className="size-4" />
+                            ) : state === 'current' ? (
+                                <CircleDot className="size-4" />
+                            ) : (
+                                <Circle className="size-4" />
+                            )}
+                        </div>
+                        <div className="hidden sm:block">
+                            <p className="text-sm leading-none font-medium">{s.title}</p>
+                            <p className="text-muted-foreground text-xs">{s.description}</p>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+// —— Main Component -------------------------------------------------------
+export default function Register() {
+    const [step, setStep] = useState(0);
+    const [submitting, setSubmitting] = useState(false);
+    const [passVisible, setPassVisible] = useState(false);
+    const form = useForm<WizardValues>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: '',
+            email: '',
+            password: '',
+            password_confirmation: '',
+            organization: '',
+            keterangan: '',
+            agree: false,
+        },
+        mode: 'onChange',
+    });
+
+    const progress = Math.round(((step + 1) / steps.length) * 100);
+
+    const next = async () => {
+        // Validate only fields in current step
+        const fields = steps[step].fields as readonly (keyof WizardValues)[];
+        const valid = await form.trigger(fields as any, { shouldFocus: true });
+        if (!valid) return;
+        setStep((s) => Math.min(s + 1, steps.length - 1));
     };
 
-    const [visibleDiv, setVisibleDiv] = useState(false);
+    const prev = () => setStep((s) => Math.max(s - 1, 0));
 
-    const [formError, setFormError] = useState({ organization: '', address: '' });
-
-    const handleNext = () => {
-        const newErrors = { organization: '', address: '' };
-
-        let isValid = true;
-
-        if (!data.organization) {
-            newErrors.organization = 'Organisasi wajib diisi';
-            isValid = false;
+    const onSubmit = async (values: WizardValues) => {
+        setSubmitting(true);
+        try {
+            // Simulasi request
+            // await new Promise((r) => setTimeout(r, 900));
+            // toast.success('Berhasil');
+            router.post(route('register'), values, {
+                onSuccess: (success) => {
+                    console.log(success.props);
+                    setSubmitting(false);
+                },
+                onError: (err) => {
+                    console.log(err);
+                    if (err.message) {
+                        toast.error(err.message || 'Register Failed');
+                    } else {
+                        toast.error(JSON.stringify(err) || 'Login via Google Failed');
+                    }
+                    setSubmitting(false);
+                },
+            });
+            // console.log('Wizard submit payload:', values);
+        } catch (e) {
+            toast.error('Gagal ' + e);
         }
-
-        if (!data.address) {
-            newErrors.address = 'Alamat wajib diisi';
-            isValid = false;
-        }
-
-        setFormError(newErrors);
-        isValid ? setVisibleDiv(true) : setVisibleDiv(false);
-        return isValid;
     };
 
     return (
-        <AuthLayout
-            title="Buat Keuangan mu lebih mudah dimonitor"
-            description="Silahkan masukan nama organisasi / company kamu dan lanjutkan untuk langkah awal buat akun"
-        >
+        <AuthLayout title="Register Account" description="Lengkapi data register untuk memulai langkah keuangan yang baru.">
             <Head title="Register" />
-            <form className="flex flex-col gap-6" onSubmit={submit}>
-                <Card className="rounded-xl">
-                    <CardContent className="px-10 py-8">
-                        <div className={`grid gap-4 ${visibleDiv ? 'hidden' : ''} transition delay-150 duration-300 ease-in-out`}>
-                            <div className="grid">
-                                <Label htmlFor="organization" className="mb-2">
-                                    Organisasi / Company
-                                </Label>
-                                <Input
-                                    id="organization"
-                                    type="text"
-                                    className={formError.organization ? 'border-red-500' : ''}
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="organization"
-                                    value={data.organization}
-                                    onChange={(e) => setData('organization', e.target.value)}
-                                    disabled={processing}
-                                    placeholder="Ex: Keluarga kecil, Toko Ayah.."
-                                />
-                                <InputError message={formError.organization} />
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Alamat</Label>
-                                <Textarea
-                                    value={data.address}
-                                    className={formError.address ? 'border-red-500' : ''}
-                                    onChange={(e) => setData('address', e.target.value)}
-                                    placeholder="alamat.."
-                                />
-                                <InputError message={formError.address} />
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Keterangan</Label>
-                                <Textarea
-                                    value={data.keterangan}
-                                    onChange={(e) => setData('keterangan', e.target.value)}
-                                    placeholder="keterangan.. (opsional)"
-                                />
-                                <InputError message={errors.keterangan} />
-                            </div>
-                            <div className="flex justify-end">
-                                <Button type="button" className="mt-2" onClick={handleNext}>
-                                    Next
-                                </Button>
-                            </div>
-                        </div>
-                        <div className={`grid gap-4 ${visibleDiv ? '' : 'hidden'}`}>
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="name"
-                                    value={data.name}
-                                    onChange={(e) => setData('name', e.target.value)}
-                                    disabled={processing}
-                                    placeholder="Full name"
-                                />
-                                <InputError message={errors.name} className="mt-2" />
-                            </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="email"
-                                    value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
-                                    disabled={processing}
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
-                            <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                </div>
-                                <div className="relative flex items-center">
-                                    <Input
-                                        id="password"
-                                        type={passVisible ? 'text' : 'password'}
-                                        required
-                                        tabIndex={2}
-                                        autoComplete="current-password"
-                                        value={data.password}
-                                        onChange={(e) => setData('password', e.target.value)}
-                                        placeholder="Password"
-                                        disabled={processing}
+            <Card className="border-muted-foreground/20 w-full shadow-sm">
+                <CardContent className="space-y-6">
+                    <Stepper current={step} />
+
+                    <div>
+                        <Progress value={progress} className="h-2" />
+                        <div className="text-muted-foreground mt-2 text-xs">{progress}% selesai</div>
+                    </div>
+
+                    <Separator />
+
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            {step === 0 && (
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="name"
+                                        render={({ field }) => (
+                                            <FormItem className="sm:col-span-2">
+                                                <FormLabel>Nama</FormLabel>
+                                                <FormControl>
+                                                    <Input type="text" placeholder="nama" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
-                                    <span className="absolute right-2 cursor-pointer text-gray-400" onClick={() => setPassVisible(!passVisible)}>
-                                        {passVisible ? <EyeIcon /> : <EyeOffIcon />}
-                                    </span>
+                                    <FormField
+                                        control={form.control}
+                                        name="email"
+                                        render={({ field }) => (
+                                            <FormItem className="sm:col-span-2">
+                                                <FormLabel>Email</FormLabel>
+                                                <FormControl>
+                                                    <Input type="email" placeholder="nama@email.com" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="password"
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-col items-start">
+                                                <FormLabel>Password</FormLabel>
+                                                <FormControl>
+                                                    <div className="relative flex w-full items-center">
+                                                        <Input type={passVisible ? 'text' : 'password'} placeholder="••••••" {...field} />
+                                                        <span
+                                                            className="absolute right-2 cursor-pointer text-gray-400"
+                                                            onClick={() => setPassVisible(!passVisible)}
+                                                        >
+                                                            {passVisible ? <EyeIcon /> : <EyeOffIcon />}
+                                                        </span>
+                                                    </div>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="password_confirmation"
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-col items-start">
+                                                <FormLabel>Konfirmasi Password</FormLabel>
+                                                <FormControl>
+                                                    <Input type={passVisible ? 'text' : 'password'} placeholder="••••••" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            )}
+
+                            {step === 1 && (
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="organization"
+                                        render={({ field }) => (
+                                            <FormItem className="sm:col-span-2">
+                                                <FormLabel> Organisasi / Company</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Ex: Keluarga kecil, Toko Ayah.." {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="address"
+                                        render={({ field }) => (
+                                            <FormItem className="sm:col-span-2">
+                                                <FormLabel>Alamat</FormLabel>
+                                                <FormControl>
+                                                    <Textarea placeholder="alamat" className="resize-none" rows={3} {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="keterangan"
+                                        render={({ field }) => (
+                                            <FormItem className="sm:col-span-2">
+                                                <FormLabel>Keterangan (opsional)</FormLabel>
+                                                <FormControl>
+                                                    <Textarea
+                                                        placeholder="Ceritakan sedikit tentang perusahaan Anda"
+                                                        className="resize-none"
+                                                        rows={4}
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            )}
+
+                            {step === 2 && (
+                                <div className="space-y-4">
+                                    <p className="mb-2 text-sm font-medium">Ringkasan</p>
+
+                                    <div className="bg-muted/30 rounded-xl border p-4">
+                                        <dl className="grid grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+                                            <div>
+                                                <dt className="text-muted-foreground">Nama</dt>
+                                                <dd className="font-medium">{form.getValues('name')}</dd>
+                                            </div>
+                                            <div>
+                                                <dt className="text-muted-foreground">Email</dt>
+                                                <dd className="font-medium">{form.getValues('email')}</dd>
+                                            </div>
+                                            <div>
+                                                <dt className="text-muted-foreground">Organisasi / Company</dt>
+                                                <dd className="font-medium">{form.getValues('organization')}</dd>
+                                            </div>
+                                            <div className="sm:col-span-2">
+                                                <dt className="text-muted-foreground">Alamat</dt>
+                                                <dd className="font-medium">{form.getValues('address') || '-'}</dd>
+                                            </div>
+                                            <div className="sm:col-span-2">
+                                                <dt className="text-muted-foreground">Keterangan (opsional)</dt>
+                                                <dd className="font-medium">{form.getValues('keterangan') || '-'}</dd>
+                                            </div>
+                                        </dl>
+                                    </div>
+
+                                    <FormField
+                                        control={form.control}
+                                        name="agree"
+                                        render={({ field }) => (
+                                            <FormItem className="flex items-start gap-3">
+                                                <FormControl>
+                                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                                </FormControl>
+                                                <div className="space-y-1 leading-none">
+                                                    <FormLabel>Saya setuju dengan Syarat & Ketentuan</FormLabel>
+                                                    <p className="text-muted-foreground text-xs">Anda harus mencentang ini untuk melanjutkan.</p>
+                                                </div>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            )}
+
+                            <CardFooter className="flex flex-col justify-between gap-3 px-0 sm:flex-row">
+                                <div className="order-2 flex gap-2 sm:order-1">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className={step === 0 ? 'hidden' : ''}
+                                        onClick={prev}
+                                        disabled={step === 0 || submitting}
+                                    >
+                                        Kembali
+                                    </Button>
+                                    {step < steps.length - 1 ? (
+                                        <Button type="button" onClick={next} disabled={submitting}>
+                                            Lanjut
+                                        </Button>
+                                    ) : (
+                                        <Button type="submit" disabled={submitting}>
+                                            {submitting ? (
+                                                <>
+                                                    <Loader2 className="mr-2 size-4 animate-spin" /> Send...
+                                                </>
+                                            ) : (
+                                                'Create Account'
+                                            )}
+                                        </Button>
+                                    )}
                                 </div>
 
-                                <InputError message={errors.password} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">Confirm password</Label>
-                                <Input
-                                    id="password_confirmation"
-                                    type={passVisible ? 'text' : 'password'}
-                                    required
-                                    tabIndex={4}
-                                    autoComplete="new-password"
-                                    value={data.password_confirmation}
-                                    onChange={(e) => setData('password_confirmation', e.target.value)}
-                                    disabled={processing}
-                                    placeholder="Confirm password"
-                                />
-                                <InputError message={errors.password_confirmation} />
-                            </div>
-                            <div className="flex justify-between gap-2">
-                                <Button type="button" className="mt-2" onClick={() => setVisibleDiv(!visibleDiv)}>
-                                    Back
-                                </Button>
-                                <Button type="submit" className="mt-2" tabIndex={5} disabled={processing}>
-                                    {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                    Create account
-                                </Button>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-                <div className="text-muted-foreground text-center text-sm">
-                    Already have an account?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
-                        Log in
-                    </TextLink>
-                </div>
-            </form>
+                                <div className="text-muted-foreground order-1 self-start text-xs sm:order-2 sm:self-center">
+                                    Langkah {step + 1} dari {steps.length}
+                                </div>
+                            </CardFooter>
+                        </form>
+                    </Form>
+                    <Separator />
+                    <div className="text-muted-foreground text-center text-sm">
+                        Already have an account?{' '}
+                        <TextLink href={route('login')} tabIndex={6}>
+                            Log in
+                        </TextLink>
+                    </div>
+                </CardContent>
+            </Card>
         </AuthLayout>
     );
 }
